@@ -113,7 +113,7 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 
 /* CARTA */
 .pilewrap{flex:1;display:flex;align-items:center;justify-content:center;perspective:1000px;min-height:340px}
-.pile{position:relative;width:210px;height:300px;transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-22deg);transition:transform .6s}
+.pile{position:relative;width:224px;height:340px;transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-22deg);transition:transform .6s}
 .pile.drawing{transform:rotateX(18deg) rotateZ(-4deg)}
 .pl{position:absolute;inset:0;border-radius:14px;background:#111;border:2px solid #333;box-shadow:0 2px 0 #000}
 .back,.front{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;border:2px solid #000;overflow:hidden}
@@ -130,12 +130,13 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .front .kind{font-family:var(--display);font-size:13px;letter-spacing:.15em;color:#fff;padding:3px 10px;border-radius:3px;align-self:center}
 .front .kind.sit{background:var(--y);color:#111}
 .front .kind.sorte{background:var(--green)}.front .kind.reves{background:var(--red)}
-.front .ico{font-size:52px;margin:12px 0 6px}
+.front .ico{font-size:40px;margin:8px 0 4px}
 .front .ct{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1.05}
-.front .tx{font-size:13px;margin-top:8px;line-height:1.35}
+.front .tx{font-size:12.5px;margin-top:6px;line-height:1.3}
 .front.res{animation:pop2 .4s cubic-bezier(.2,1.6,.4,1)}
+.front .nota{font-size:11px;font-weight:800;color:#8a4a00;background:#f7a81b33;border-radius:4px;padding:2px 6px;margin-top:6px}
 .front .saldo{font-size:11px;font-weight:800;margin-top:4px;color:#555}
-.front .eff{margin-top:auto;font-family:var(--hand);font-size:17px}
+.front .eff{margin-top:auto;font-family:var(--hand);font-size:14px;line-height:1.2}
 .front .eff.g{color:#1f8a47}.front .eff.r{color:#c0352a}
 
 /* config */
@@ -260,37 +261,132 @@ nav button.lock{opacity:.35}
 // Situações Sorte/Revés — troque/adicione à vontade.
 // Cada situação tem 2 opções; ao escolher, o app sorteia 1 desfecho da lista r da opção (g:1 = sorte, g:0 = azar). Pode ter só bons, só ruins ou mistos.
 const SITUACOES = [
- {ico:'🚌',t:'Assalto no BRT',x:'Você foi rendido no BRT por um assaltante. E agora?',opts:[
+ {ico:'🚌',for:['baixa','media','estudante'],t:'Assalto no BRT',x:'Você foi rendido no BRT por um assaltante. E agora?',opts:[
   {l:'Passar tudo',r:[{g:1,x:'O assaltante achou seu bilhete único vazio, ficou com pena e te devolveu o celular.',eff:'+ R$ 20'},{g:0,x:'Levou celular, carteira e até o fone do ouvido.',eff:'– R$ 200'},{g:0,x:'Levou o celular E a mochila, e ainda desejou bom dia.',eff:'– R$ 250'}]},
-  {l:'Tentar reagir',r:[{g:1,x:'Você gritou "É O FISCAL!" e o cara saiu correndo. Herói do 485.',eff:'Avance 3 casas'},{g:0,x:'Tomou um tiro na perna.',eff:'Volte 3 casas'},{g:0,x:'Era arma de brinquedo, mas o cara fugiu de moto e te atropelou.',eff:'Volte 2 casas'}]}]},
+  {l:'Tentar reagir',r:[{g:1,x:'Você gritou "É O FISCAL!" e o cara saiu correndo. Herói do 485.',eff:'Avance 3 casas'},{g:0,d:1,x:'Tomou um tiro na perna.',eff:'Volte 3 casas'},{g:0,d:1,x:'Era arma de brinquedo, mas o cara fugiu de moto e te atropelou.',eff:'Volte 2 casas'}]}]},
  {ico:'🏖️',t:'Praia lotada',x:'Domingo em Copacabana. O guarda-sol do vizinho tá na sua sombra.',opts:[
   {l:'Reclamar educadamente',r:[{g:1,x:'O cara era seu primo distante e pagou o mate de todo mundo.',eff:'+ R$ 30'},{g:0,x:'Virou briga de areia. Você perdeu a bermuda e a dignidade.',eff:'– R$ 80'},{g:1,x:'Seu vizinho fez as pazes e dividiu o isopor.',eff:'+ R$ 20'}]},
-  {l:'Fingir que não viu',r:[{g:1,x:'Entrou um vento, o guarda-sol voou e a sombra ficou toda sua.',eff:'Jogue de novo'},{g:0,x:'Pegou uma insolação de nível Cristo Redentor.',eff:'Perca a próxima vez'},{g:0,x:'Ficou sem sombra e sem protetor. Virou lagosta.',eff:'Perca a próxima vez'}]}]},
+  {l:'Fingir que não viu',r:[{g:1,x:'Entrou um vento, o guarda-sol voou e a sombra ficou toda sua.',eff:'Jogue de novo'},{g:0,d:1,x:'Pegou uma insolação de nível Cristo Redentor.',eff:'Perca a próxima vez'},{g:0,x:'Ficou sem sombra e sem protetor. Virou lagosta.',eff:'Perca a próxima vez'}]}]},
  {ico:'🎰',t:'Jogo do bicho',x:'O primo do porteiro jura que hoje é dia de jacaré.',opts:[
   {l:'Apostar R$ 100',r:[{g:1,x:'Deu jacaré! O primo é o novo guru financeiro.',eff:'+ R$ 400'},{g:0,x:'Deu cavalo. O primo sumiu.',eff:'– R$ 100'},{g:0,x:'Deu burro. Literalmente.',eff:'– R$ 100'}]},
   {l:'Rir e seguir a vida',r:[{g:1,x:'Hoje deu jacaré e você ficou só olhando… mas ganhou um pastel de consolação.',eff:'+ R$ 10'},{g:0,x:'Você ouviu o "eu avisei" por 3 dias.',eff:'Volte 1 casa'},{g:1,x:'Achou R$ 50 no chão ao sair.',eff:'+ R$ 50'}]}]},
- {ico:'🍺',t:'Resenha na laje',x:'Churrasco na laje do vizinho. Falta só a música… e o fogo.',opts:[
+ {ico:'🍺',for:['baixa','media','crime','estudante'],t:'Resenha na laje',x:'Churrasco na laje do vizinho. Falta só a música… e o fogo.',opts:[
   {l:'Levar o pagode',r:[{g:1,x:'Virou show. Te chamaram pra tocar na formatura.',eff:'+ R$ 150'},{g:0,x:'O som queimou e a laje quase caiu.',eff:'– R$ 120'},{g:1,x:'O som pegou e a vizinhança pediu bis.',eff:'+ R$ 80'}]},
   {l:'Só comer e sair de fininho',r:[{g:1,x:'Ganhou marmita pra semana toda.',eff:'Avance 2 casas'},{g:0,x:'Pegaram você lavando a louça. Sozinho.',eff:'Perca a próxima vez'},{g:1,x:'Ganhou picanha e ainda sobrou pra levar.',eff:'Avance 1 casa'}]}]},
- {ico:'🚇',t:'Metrô parado',x:'Falha no sistema. A plataforma tá cheia e o ônibus nem passou.',opts:[
+ {ico:'🚇',for:['baixa','media','estudante','legal'],t:'Metrô parado',x:'Falha no sistema. A plataforma tá cheia e o ônibus nem passou.',opts:[
   {l:'Chamar um Uber',r:[{g:1,x:'Preço normal e motorista que não fala. Milagre.',eff:'Avance 2 casas'},{g:0,x:'Tarifa dinâmica de 7,3x. Você pagou em prestações.',eff:'– R$ 180'},{g:0,x:'Cancelaram a corrida duas vezes.',eff:'Volte 1 casa'}]},
-  {l:'Ir a pé até o Centro',r:[{g:1,x:'Encontrou um amigo no caminho e ganhou carona de bike.',eff:'Avance 1 casa'},{g:0,x:'Choveu, o chinelo quebrou e você chegou de pés descalços.',eff:'Volte 2 casas'},{g:0,x:'Perdeu a carteira no caminho.',eff:'– R$ 70'}]}]},
+  {l:'Ir a pé até o Centro',r:[{g:1,x:'Encontrou um amigo no caminho e ganhou carona de bike.',eff:'Avance 1 casa'},{g:0,d:1,x:'Choveu, o chinelo quebrou e você chegou de pés descalços.',eff:'Volte 2 casas'},{g:0,x:'Perdeu a carteira no caminho.',eff:'– R$ 70'}]}]},
  {ico:'🌧️',t:'Temporal no Rio',x:'Choveu 10 minutos e a cidade virou Veneza. Cadê o guarda-chuva?',opts:[
   {l:'Esperar no bar',r:[{g:1,x:'O dono liberou a cerveja pra quem ficou ilhado.',eff:'+ R$ 40'},{g:0,x:'A água subiu e levou a mesa, o petisco e o seu orgulho.',eff:'– R$ 60'},{g:1,x:'O bar virou karaokê e você cantou bem.',eff:'Jogue de novo'}]},
-  {l:'Atravessar a enchente',r:[{g:1,x:'Virou meme, ganhou 10k de seguidores e uma pizza.',eff:'+ R$ 100'},{g:0,x:'Caiu num bueiro aberto.',eff:'Volte 3 casas'},{g:0,x:'O guarda-chuva virou do avesso. Chapéu de palhaço.',eff:'– R$ 30'}]}]},
+  {l:'Atravessar a enchente',r:[{g:1,x:'Virou meme, ganhou 10k de seguidores e uma pizza.',eff:'+ R$ 100'},{g:0,d:1,x:'Caiu num bueiro aberto.',eff:'Volte 3 casas'},{g:0,x:'O guarda-chuva virou do avesso. Chapéu de palhaço.',eff:'– R$ 30'}]}]},
  {ico:'🧾',t:'Preço de turista',x:'O vendedor da praia olha pra você e sorri: "só R$ 40, amigo".',opts:[
   {l:'Pagar sem pestanejar',r:[{g:1,x:'Ele era sobrinho do dono e te devolveu o troco em dobro.',eff:'+ R$ 20'},{g:0,x:'Era água de coco quente, pelo preço de um jantar.',eff:'– R$ 40'},{g:0,x:'Era água de coco com camarão. Pagou o dobro.',eff:'– R$ 70'}]},
   {l:'Pechinchar no grito',r:[{g:1,x:'Fechou a R$ 5 e ainda levou chapéu de brinde.',eff:'Avance 2 casas'},{g:0,x:'Ele chamou o tio, o primo e o fiscal. Você pagou multa.',eff:'– R$ 90'},{g:1,x:'Vendeu seu chapéu mais caro pra outro turista.',eff:'+ R$ 40'}]}]},
- {ico:'🏍️',t:'Blitz de moto',x:'Policial te para: "documento, parceiro?". O seu tá em casa.',opts:[
+ {ico:'🏍️',for:['baixa','media','estudante','crime'],t:'Blitz de moto',x:'Policial te para: "documento, parceiro?". O seu tá em casa.',opts:[
   {l:'Oferecer um "café"',r:[{g:1,x:'Ele aceitou o pastel e te liberou. O Rio é assim.',eff:'Jogue de novo'},{g:0,x:'Era corregedor à paisana. Multa e processo.',eff:'– R$ 250'},{g:1,x:'Eram colegas de pelada. Liberou e pediu ingresso.',eff:'Avance 2 casas'}]},
   {l:'Voltar pra casa',r:[{g:1,x:'Achou o documento na geladeira. Sempre estava lá.',eff:'Avance 1 casa'},{g:0,x:'Perdeu a manhã inteira e levou bronca da mãe.',eff:'Perca a próxima vez'},{g:0,x:'A moto não ligou e foi guinchada.',eff:'– R$ 130'}]}]},
  {ico:'⚽',t:'Clássico no Maracanã',x:'Seu time joga hoje e o ingresso tá pela hora da morte.',opts:[
   {l:'Comprar do cambista',r:[{g:1,x:'Ingresso verdadeiro, ainda ganhou camisa de brinde.',eff:'+ R$ 60'},{g:0,x:'Ingresso falso. Você assistiu pelo celular do vizinho.',eff:'– R$ 120'},{g:1,x:'O cambista errou o troco a seu favor.',eff:'+ R$ 30'}]},
   {l:'Ver no bar',r:[{g:1,x:'Seu time ganhou e o bar pagou a rodada.',eff:'Avance 2 casas'},{g:0,x:'Perdeu de 5 a 0 e te culparam pela pé-frieza.',eff:'Volte 2 casas'},{g:1,x:'Um vizinho de bar te levou pro camarote.',eff:'Avance 3 casas'}]}]},
- {ico:'🐕',t:'Cachorro no condomínio',x:'Um vira-lata te seguiu até em casa e comeu seu jantar.',opts:[
+ {ico:'🐕',for:['baixa','media','estudante'],t:'Cachorro no condomínio',x:'Um vira-lata te seguiu até em casa e comeu seu jantar.',opts:[
   {l:'Adotar o bicho',r:[{g:1,x:'Era o cachorro perdido de um deputado. Recompensa.',eff:'+ R$ 300'},{g:0,x:'Ele destruiu o sofá e a vizinha fez B.O.',eff:'– R$ 150'},{g:1,x:'Virou mascote do bairro: pão de graça na padaria.',eff:'+ R$ 40'}]},
-  {l:'Expulsar na vassoura',r:[{g:1,x:'Ele foi embora e deixou uma nota de R$ 50 no tapete. Ninguém explica.',eff:'+ R$ 50'},{g:0,x:'Pisou no rabo errado. Mordida e injeção de tétano.',eff:'Perca a próxima vez'},{g:0,x:'Ele voltou com 5 amigos.',eff:'– R$ 60'}]}]},
+  {l:'Expulsar na vassoura',r:[{g:1,x:'Ele foi embora e deixou uma nota de R$ 50 no tapete. Ninguém explica.',eff:'+ R$ 50'},{g:0,d:1,x:'Pisou no rabo errado. Mordida e injeção de tétano.',eff:'Perca a próxima vez'},{g:0,x:'Ele voltou com 5 amigos.',eff:'– R$ 60'}]}]},
 ];
+// Situações específicas por categoria (for:[...]) — aparecem ~55% das vezes para quem é do perfil; as demais são gerais.
+// G(texto, efeito) = sorte · B(texto, efeito, dano?) = azar; dano=true sofre ajuste por idade/classe. Valores em R$ base (escalam com a renda).
+const G=(x,eff)=>({g:1,x,eff}), B=(x,eff,d)=>({g:0,x,eff,d:d?1:0});
+SITUACOES.push(
+ // ---- classe alta
+ {for:['alta'],ico:'🍾',t:'Jantar chique em Ipanema',x:'O garçom trouxe a conta: o vinho custou o preço de um carro popular.',opts:[
+  {l:'Pagar sem olhar',r:[G('Era o aniversário do sócio e ele já tinha pago. Você ainda ganhou sobremesa.','+ R$ 200'),B('Pagou duas vezes. O sistema "bugou" e o gerente sumiu.','– R$ 600'),B('O vinho era de uma safra "inventada". Você mal percebeu.','– R$ 300')]},
+  {l:'Conferir linha por linha',r:[G('Achou erro de 800 reais e o dono te deu um espumante.','+ R$ 150'),B('Demorou tanto que a mesa ao lado filmou. Virou meme.','Perca a próxima vez'),G('O maître se desculpou e te deu 20% de desconto.','+ R$ 100')]}]},
+ {for:['alta','alto'],ico:'🚁',t:'Trânsito na Linha Vermelha',x:'Engarrafamento de 2 horas. Você tem uma reunião importante.',opts:[
+  {l:'Chamar o helicóptero',r:[G('Chegou em 12 minutos e fechou o negócio no heliponto.','+ R$ 400'),B('O piloto errou o prédio e pousou no Fundão.','– R$ 500'),B('Ficaram sem combustível e você virou notícia.','Volte 2 casas')]},
+  {l:'Aguentar no carro blindado',r:[G('Ligou pra 4 contatos e fechou 3 contratos no caminho.','+ R$ 300'),B('Blindagem não protege do pneu furado.','– R$ 150'),B('Perdeu a reunião mas ganhou uma boa soneca.','Perca a próxima vez')]}]},
+ {for:['alta','alto'],ico:'🛥️',t:'Iate em Angra',x:'Convite de última hora pra um iate em Angra dos Reis.',opts:[
+  {l:'Ir com a família',r:[G('Fechou sociedade num mergulho ao pôr-do-sol.','+ R$ 500'),B('O sogro caiu na água e levou o celular junto.','– R$ 350'),G('Pescaram um atum e ganharam o jantar.','Avance 2 casas')]},
+  {l:'Ir sozinho(a)',r:[B('Enjoou o dia todo e vomitou na tripulação.','Perca a próxima vez'),G('Conheceu um investidor que adorou sua piada ruim.','+ R$ 300'),B('A lancha de apoio sumiu e você foi resgatado de helicóptero.','– R$ 200',true)]}]},
+ {for:['alta','alto'],ico:'🎭',t:'Camarote na Sapucaí',x:'Carnaval. A celebridade do momento está a 3 metros.',opts:[
+  {l:'Fingir que conhece ela',r:[G('Ela fingiu que te conhece e posou pra foto. Viralizou.','+ R$ 200'),B('Era o ex dela. Vocês foram expulsos.','Volte 2 casas'),B('Era outra pessoa. E ela tem advogados.','– R$ 300')]},
+  {l:'Furar a fila do open bar',r:[G('O barman te ofereceu o bom, em vez do ruim.','Avance 1 casa'),B('Um segurança te derrubou no chão de glitter.','– R$ 150',true),G('Te chamaram pro "outro" camarote, o melhor.','Avance 2 casas')]}]},
+ {for:['alta'],ico:'📄',t:'Malha fina',x:'A Receita te chamou pra explicar umas "inconsistências".',opts:[
+  {l:'Contratar contador de elite',r:[G('Ele provou que você é um "autônomo isento". Mágica.','+ R$ 300'),B('Cobrou 3x mais do que a multa.','– R$ 400'),G('Ele criou uma holding nas Ilhas Cayman. Legal, talvez.','+ R$ 150')]},
+  {l:'Explicar sozinho(a)',r:[B('O auditor fotografou sua Ferrari na garagem da tia.','– R$ 500'),G('O auditor era seu ex-aluno e relevou tudo.','Avance 2 casas'),B('Passou 4 horas lá e saiu com um boleto.','– R$ 200')]}]},
+ // ---- alto padrão
+ {for:['alto'],ico:'🧳',t:'Mala de dinheiro no aeroporto',x:'Você precisa viajar com a mala "do evento". O raio-x está logo ali.',opts:[
+  {l:'Despachar como bagagem de mão',r:[G('Passou batido. O fiscal estava no celular.','+ R$ 500'),B('A mala se abriu na esteira. Tem vídeo.','– R$ 800'),B('A esteira rolou e a mala sumiu. Você fingiu nem conhecer.','Perca a próxima vez')]},
+  {l:'Mandar o assessor levar',r:[G('Assessor entregou tudo no lugar certo e ainda trouxe lembrancinha.','+ R$ 300'),B('O assessor foi pego e disse que a mala era sua. Delação!','– R$ 700'),B('O assessor sumiu com tudo. Você descobriu pela TV.','Volte 3 casas')]}]},
+ {for:['alto'],ico:'🎙️',t:'CPI na semana que vem',x:'Vão te convocar pra depor. As coisas vão esquentar.',opts:[
+  {l:'Viajar pra Paris',r:[G('Quando voltou, a CPI já tinha acabado em pizza.','Avance 3 casas'),B('Te pegaram no Aeroporto de Orly com uma mochila suspeita.','– R$ 500'),B('A viagem foi um escândalo de turismo de luxo no seu cartão.','– R$ 300')]},
+  {l:'Contratar o melhor advogado',r:[G('Ele achou uma brecha e você virou "vítima".','+ R$ 400'),B('Ele cobrou adiantado e usou como prova de culpa.','– R$ 400'),G('O advogado era amigo do relator.','Avance 2 casas')]}]},
+ {for:['alto'],ico:'📱',t:'Delação premiada',x:'Um comparsa vai delatar todo mundo. Você tem 24h.',opts:[
+  {l:'Delatar primeiro',r:[G('Virou colaborador. Ganhou tornozeleira dourada.','+ R$ 500'),B('A delação era falsa. Você virou investigado em tudo.','– R$ 600'),B('Os amigos descobriram. Almoço nunca mais.','Volte 2 casas')]},
+  {l:'Chorar na TV',r:[G('Chorou tão bem que ganhou um programa de entrevistas.','+ R$ 300'),B('O choro foi viral. De rir.','– R$ 200'),G('O povo esqueceu em 48 horas.','Avance 2 casas')]}]},
+ // ---- crime
+ {for:['crime'],ico:'🚨',t:'Operação no morro',x:'A polícia subiu cedo. Você tem material e pouco tempo.',opts:[
+  {l:'Esconder tudo',r:[G('Achou um esconderijo onde ninguém procurou: o pote de feijão da vó.','+ R$ 300'),B('A vó descobriu e te deu um sermão épico (e ficou com tudo).','– R$ 300'),B('Tava o cachorro no esconderijo. Ele latiu.','Perca a próxima vez')]},
+  {l:'Fugir pela viela',r:[G('Conhece cada beco e escapou com um sorriso.','Avance 3 casas'),B('Tomou um tombo feio na laje.','Volte 2 casas',true),B('Fugiu pro lado errado e deu de cara com a viatura.','– R$ 400')]}]},
+ {for:['crime'],ico:'🔥',t:'Disputa de território',x:'A facção vizinha mandou recado: "a rua é nossa".',opts:[
+  {l:'Negociar com o rival',r:[G('Fecharam acordo e dividiram a lucratividade do pagode.','+ R$ 400'),B('A negociação virou tiroteio.','Volte 3 casas',true),B('Pagou o "pedágio" e ainda perdeu a moto.','– R$ 300')]},
+  {l:'Chamar reforço',r:[G('Os parceiros chegaram e a rua ficou tranquila de novo.','Avance 2 casas'),B('O reforço chegou atrasado e bêbado.','– R$ 200'),B('O rival previu o movimento e mandou a polícia pra você.','Perca a próxima vez')]}]},
+ {for:['crime'],ico:'🎧',t:'Baile funk de sexta',x:'O baile vai ser o maior do ano. Mas tem convidado inesperado.',opts:[
+  {l:'Pagar o DJ pra segurar a pista',r:[G('Pista cheia, bar lotado, lucro garantido.','+ R$ 500'),B('O DJ sumiu com o cachê. A pista virou karaokê.','– R$ 300'),G('O DJ gostou e te deu um desconto pra próxima.','+ R$ 150')]},
+  {l:'Aparecer de surpresa',r:[G('A galera aplaudiu e você virou lenda por uma noite.','Avance 2 casas'),B('Era blitz disfarçada de baile.','Volte 2 casas'),B('Derrubaram a caixa de som no seu pé.','– R$ 150',true)]}]},
+ // ---- lei e ordem
+ {for:['legal'],ico:'🚓',t:'Operação suspeita',x:'Denúncia anônima: tem movimentação estranha na comunidade.',opts:[
+  {l:'Entrar de peito aberto',r:[G('A operação foi um sucesso e saiu até na TV.','+ R$ 300'),B('Era armadilha. Rendeu um coquetel de vidro quebrado.','– R$ 200',true),G('Resolveu na conversa, sem um tiro.','Avance 2 casas')]},
+  {l:'Esperar o reforço',r:[B('O reforço demorou e o suspeito fugiu.','Perca a próxima vez'),G('Chegaram juntos e tudo acabou em cinco minutos.','Avance 1 casa'),B('Pegou chuva e uma gripe feia.','– R$ 100',true)]}]},
+ {for:['legal'],ico:'📋',t:'Corregedoria te chamou',x:'Surgiu um boato de que você "aceitou um cafezinho".',opts:[
+  {l:'Ir com advogado',r:[G('Advogado achou provas de que o café era "pelo amor ao próximo".','+ R$ 200'),B('Cobrou 3x mais que o "cafezinho".','– R$ 400'),G('O corregedor era seu colega de academia.','Avance 2 casas')]},
+  {l:'Ir sozinho e confiante',r:[B('Confiou demais e entregou o celular. Tinha prints.','– R$ 500'),G('A conversa foi tão bem que você ganhou um elogio.','Avance 1 casa'),B('Perdeu a manhã inteira numa sala sem ar-condicionado.','Perca a próxima vez')]}]},
+ // ---- estudante
+ {for:['estudante'],ico:'📚',t:'Prova amanhã',x:'Você nem abriu o livro. O professor é fera.',opts:[
+  {l:'Virar a noite estudando',r:[G('Entrou no flow e tirou 9,5.','+ R$ 100'),B('Dormiu na prova e babou no papel.','Perca a próxima vez'),B('Tomou 7 cafés e passou mal.','– R$ 60',true)]},
+  {l:'Tentar colar',r:[G('Colou direitinho, mas o colega copiou o seu erro.','Avance 1 casa'),B('O professor tirou sua prova e riu na sua cara.','– R$ 100'),B('O vizinho era informante do professor.','Volte 2 casas')]}]},
+ {for:['estudante'],ico:'📢',t:'Passeata na Cinelândia',x:'Hoje tem manifestação. A causa? Ainda não decidiram.',opts:[
+  {l:'Ir com cartaz',r:[G('Seu cartaz bombou no jornal e você ganhou um estágio.','+ R$ 200'),B('Foi confundido com outro grupo e levou uma bomba de efeito moral.','– R$ 100',true),B('Chuva derreteu o cartaz e a esperança.','Perca a próxima vez')]},
+  {l:'Ficar no bar ao lado',r:[G('Debateu política com um tiozão e saiu com um sanduíche grátis.','+ R$ 40'),B('Os dois lados passaram e você pagou a conta de todos.','– R$ 150'),G('Encontrou um colega e fecharam uma startup de ideias.','Avance 2 casas')]}]},
+ // ---- classe baixa / média
+ {for:['baixa','media','estudante'],ico:'💸',t:'Dia de pagar boleto',x:'Chegaram as contas de luz, água e gás. Tudo junto, claro.',opts:[
+  {l:'Pagar tudo',r:[G('Deu certo e ainda sobrou pra um pastel.','+ R$ 30'),B('Os juros comeram o resto do mês.','– R$ 200'),B('O sistema do banco travou e você pagou duas vezes.','– R$ 150')]},
+  {l:'Deixar pro mês que vem',r:[G('Veio um desconto e você economizou.','+ R$ 100'),B('Cortaram a luz no meio do jogo do Flamengo.','– R$ 120'),B('Chegou multa e cobrador na porta.','Perca a próxima vez')]}]},
+ {for:['baixa','media'],ico:'🏥',t:'UPA lotada',x:'Você acordou com uma dor estranha. A UPA parece o Maracanã em final.',opts:[
+  {l:'Esperar na fila',r:[G('Foi atendido em 40 minutos! Milagre carioca.','Avance 1 casa'),B('Esperou 6 horas pra ouvir "é virose, tome água".','Perca a próxima vez'),B('O médico saiu pra almoçar e esqueceu de voltar.','– R$ 80')]},
+  {l:'Pagar consulta particular',r:[G('Descobriu que era só gases. Mas foi atendido na hora.','+ R$ 20'),B('A consulta custou o salário da semana.','– R$ 300'),B('Passou uma receita de 12 remédios que você nem vai comprar.','– R$ 200')]}]},
+ {for:['baixa','media'],ico:'🚨',t:'Chefe pediu hora extra',x:'"É só mais uma horinha". São 22h e o ônibus tá quase passando.',opts:[
+  {l:'Aceitar e ficar',r:[G('Ganhou bônus e uma marmita da firma.','+ R$ 150'),B('A horinha virou 4 e o último ônibus passou.','Volte 2 casas'),B('Ninguém pagou, e o chefe sumiu.','– R$ 50')]},
+  {l:'Inventar uma desculpa',r:[G('Colou, e você pegou o último busão sentado.','Avance 1 casa'),B('O chefe viu você postando no Instagram.','– R$ 200'),B('Sua desculpa foi "a vó faleceu". A vó ligou.','Perca a próxima vez')]}]}
+);
+function pickSit(p){
+  const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)), ger=SITUACOES.filter(s=>!s.for);
+  let pool=(esp.length&&Math.random()<.55)?esp:ger.length?ger:SITUACOES, sc;
+  do{sc=pick(pool)}while(sc===S.lastSit&&pool.length>1);
+  return S.lastSit=sc;
+}
+// efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
+function parseEff(e){const r={money:0,move:0,perde:false,again:false};
+  (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
+  let m=/Avance (\d+)/.exec(e);if(m)r.move=+m[1]; m=/Volte (\d+)/.exec(e);if(m)r.move=-m[1];
+  r.perde=/Perca a pr/.test(e); r.again=/Jogue de novo/.test(e); return r}
+function fmtEff(r){const a=[];
+  if(r.money)a.push((r.money>0?'+ ':'– ')+money(Math.abs(r.money)));
+  if(r.move)a.push(r.move>0?`Avance ${r.move} casa${r.move>1?'s':''}`:`Volte ${-r.move} casa${r.move<-1?'s':''}`);
+  if(r.perde)a.push('Perca a próxima vez'); if(r.again)a.push('Jogue de novo');
+  return a.join(' · ')||'Nada muda'}
+function nice(v){const a=Math.abs(v),st=a<200?10:a<2000?50:a<20000?500:2500;return Math.sign(v)*Math.max(st,Math.round(a/st)*st)}
+function adaptar(res,p){
+  const r=parseEff(res.eff),notas=[],f=Math.min(30,Math.max(.6,p.renda/3000));
+  r.money=r.money?nice(r.money*f):0;
+  if(res.d){
+    const alto=p.classe==='alta'||p.classe==='alto';
+    if(p.idade>=60){notas.push(alto?'Idoso: internado em clínica particular':'Idoso: internado no hospital');r.move-=2;r.money-=nice(150*f)*(alto?2:1);if(!alto)r.perde=true}
+    else if(alto){notas.push('Hospital particular: paga caro, mas sem fila');r.perde=false;r.money-=nice(200*f)}
+    else if(p.idade>=45){notas.push('Fila do SUS: perdeu a vez');r.perde=true}
+    else if(p.idade<=25&&r.move<0){notas.push('Jovem: se recupera rápido');r.move+=1}
+    if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
+  }
+  return {eff:fmtEff(r),notas,money:r.money}
+}
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
 // Profissões: o(categoria, masculino, feminino|null, rendaMin, rendaMax, [habilidades], [idadeMin,idadeMax]?)
@@ -415,7 +511,6 @@ const S={players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,fa
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const rnd=n=>Math.floor(Math.random()*n), pick=a=>a[rnd(a.length)];
 const money=v=>(v<0?'– ':'')+'R$ '+Math.abs(v).toLocaleString('pt-BR');
-function applyEff(p,eff){const m=/([+–-])\s*R\$\s*([\d.]+)/.exec(eff||'');if(!m)return 0;const d=(m[1]==='+'?1:-1)*parseInt(m[2].replace(/\./g,''),10);p.grana+=d;return d}
 
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
 
@@ -560,11 +655,11 @@ function cardRender(){
   draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
 }
 function frontSit(sc){return `<span class="kind sit">SITUAÇÃO</span><div class="ico">${sc.ico}</div><div class="ct">${sc.t}</div><div class="tx">${sc.x}</div>`}
-function frontRes(sc,o,good,res,d,p){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${res.x}</div><div class="eff ${g?'g':'r'}">${res.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
+function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${res.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
-  const sc=pick(SITUACOES); S.sit=sc;
+  const sc=pickSit(S.players[S.cur]); S.sit=sc;
   $('#front').className='front'; $('#front').innerHTML=frontSit(sc);
   $('#opt0').textContent='1. '+sc.opts[0].l; $('#opt1').textContent='2. '+sc.opts[1].l;
   $('#btnDraw').style.display='none';
@@ -574,8 +669,8 @@ $('#btnDraw').onclick=()=>{
   S.drawn=true;
 };
 function choose(i){
-  const sc=S.sit,o=sc.opts[i],res=pick(o.r),good=!!res.g,p=S.players[S.cur],d=applyEff(p,res.eff);
-  $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p);
+  const sc=S.sit,o=sc.opts[i],res=pick(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=ad.money;p.grana+=d;
+  $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad);
   $('#choices').style.display='none'; $('#btnCardOk').style.display=''; $('#whoMoney').textContent='💰 '+money(p.grana);
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
 }
