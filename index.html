@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0d0d0d">
+<title>RJ Tabuleiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0d0d; --bg2:#171717; --card:#1e1e1e; --line:#2e2e2e;
+  --y:#f7a81b; --y2:#ffc44d; --ink:#f4efe4; --mut:#9a958a; --paper:#e9e1cf; --red:#e0483a; --green:#3fbf6a;
+  --display:'Anton','Impact',sans-serif; --hand:'Permanent Marker','Comic Sans MS',cursive; --ui:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#050505;color:var(--ink);font-family:var(--ui)}
+body{display:flex;justify-content:center}
+#app{position:relative;width:100%;max-width:430px;height:100dvh;max-height:900px;margin:auto;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;
+  background-image:radial-gradient(circle at 20% 0%,#1d1a12 0,transparent 55%),radial-gradient(circle at 100% 100%,#1a1710 0,transparent 50%)}
+@media(min-width:431px){#app{border-radius:34px;border:6px solid #222;box-shadow:0 20px 80px #000}}
+.screen{position:absolute;inset:0 0 64px 0;padding:18px 20px;display:none;flex-direction:column;overflow-y:auto;animation:in .25s ease}
+.screen.on{display:flex}
+.screen.full{bottom:0}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.title{font-family:var(--display);font-size:24px;text-align:center;margin:6px 0 4px;text-transform:uppercase}
+.sub{color:var(--mut);text-align:center;font-size:13px;line-height:1.4;margin:0 0 14px}
+.crown{width:44px;height:30px;fill:none;stroke:var(--y);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+
+/* buttons */
+.btn{font-family:var(--display);text-transform:uppercase;font-size:20px;letter-spacing:.04em;border:0;border-radius:10px;padding:14px 18px;width:100%;display:flex;gap:10px;align-items:center;justify-content:center;
+  background:var(--y);color:#111;cursor:pointer;box-shadow:0 4px 0 #a06a0a;transition:transform .08s,box-shadow .08s,opacity .2s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a06a0a}
+.btn[disabled]{opacity:.35;pointer-events:none;filter:grayscale(.6)}
+.btn.ghost{background:#2a2a2a;color:var(--ink);box-shadow:0 4px 0 #111}
+.btn.sm{font-size:15px;padding:10px 14px;width:auto}
+.btn svg{width:22px;height:22px}
+
+/* HOME */
+#home{align-items:center;text-align:center;justify-content:space-between;padding-top:34px}
+.logo{margin-top:30px;position:relative}
+.logo .rj{font-family:var(--hand);font-size:120px;line-height:.9;color:#fff;transform:rotate(-4deg);text-shadow:4px 4px 0 #000,0 0 0 #fff}
+.logo .crown{position:absolute;left:50%;top:-34px;transform:translateX(-50%) rotate(-8deg);width:70px;height:48px}
+.logo .tab{font-family:var(--display);font-size:42px;color:var(--y);letter-spacing:.12em;margin-top:4px}
+.logo p{font-family:var(--hand);color:var(--ink);font-size:17px;margin:6px 0}
+.skyline{position:absolute;left:0;right:0;bottom:64px;height:180px;opacity:.28;pointer-events:none}
+#home .btn{position:relative;z-index:1;margin-bottom:12px}
+
+/* gerador */
+.pcard{background:var(--paper);color:#1a1a1a;border-radius:6px;padding:12px;display:flex;gap:12px;box-shadow:0 8px 24px #000a;position:relative;border:2px solid #111;transform:rotate(-.6deg);animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.85) rotate(3deg);opacity:0}to{transform:rotate(-.6deg);opacity:1}}
+.pcard .pic{width:104px;flex:none;border:2px solid #111;border-radius:4px;overflow:hidden;background:#cfc6b0;align-self:flex-start}
+.pcard .pic svg{display:block;width:100%;height:auto}
+.pcard .info{font-size:12px;line-height:1.35;min-width:0}
+.pcard .lbl{font-family:var(--hand);font-size:10px;color:#7a7160;text-transform:uppercase;margin-top:5px;display:block}
+.pcard .nm{font-family:var(--display);font-size:22px;line-height:1;text-transform:uppercase}
+.pcard .v{font-weight:800}
+.pcard .fam{margin-top:8px;border-top:1.5px dashed #9b917b;padding-top:6px;font-size:12px}
+.pcard .luck{font-family:var(--hand);text-align:center;font-size:15px;margin-top:8px;color:#222}
+.pcard .tag{position:absolute;top:-10px;right:10px;background:var(--y);color:#111;font-family:var(--display);font-size:13px;padding:2px 8px;border-radius:3px;transform:rotate(3deg)}
+.empty{border:2px dashed var(--line);border-radius:10px;padding:34px 16px;text-align:center;color:var(--mut);font-family:var(--hand)}
+.roster{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.rrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
+.rrow .av{width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--y);flex:none}
+.rrow .av svg{width:100%;height:100%;display:block}
+.rrow b{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow small{color:var(--mut);display:block;font-weight:400;font-size:11px}
+.rrow .n{font-family:var(--display);color:var(--y);font-size:18px;width:20px;text-align:center}
+.rrow button{background:none;border:0;color:var(--mut);font-size:20px;padding:6px 10px;cursor:pointer}
+.count{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--y);font-weight:800;font-size:13px;margin:14px 0 6px}
+.count.warn{color:var(--mut)}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:9px;height:9px;border-radius:50%;background:#333}.dots i.on{background:var(--y)}
+.gen-actions{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:10px}
+
+/* turn bar */
+.turnbar{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.tchip{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid #333;opacity:.45;transition:.25s;position:relative}
+.tchip svg{width:100%;height:100%;display:block}
+.tchip.cur{opacity:1;border-color:var(--y);transform:scale(1.25);box-shadow:0 0 0 3px #f7a81b44}
+.who{text-align:center;margin-bottom:4px}
+.who small{color:var(--mut);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.who h2{font-size:30px;color:var(--y)}
+.who span{display:block;color:var(--mut);font-size:12px}
+
+/* DADO 3D */
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;perspective:700px}
+.scene{width:120px;height:120px;perspective:600px;margin:30px 0 40px}
+.dice-wrap{width:120px;height:120px;transform-style:preserve-3d}
+.dice-wrap.hop{animation:hop 1.4s cubic-bezier(.3,.7,.4,1)}
+@keyframes hop{0%{transform:translateY(0)}25%{transform:translateY(-70px)}50%{transform:translateY(0)}65%{transform:translateY(-22px)}80%{transform:translateY(0)}90%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+.cube{width:120px;height:120px;position:relative;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(28deg);transition:transform 1.4s cubic-bezier(.15,.7,.2,1)}
+.face{position:absolute;inset:0;background:linear-gradient(145deg,#fff,#d9d4c7);border:2px solid #2a2a2a;border-radius:18px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:16px;backface-visibility:hidden;box-shadow:inset 0 0 18px #0003}
+.face i{width:20px;height:20px;border-radius:50%;background:#151515;place-self:center;box-shadow:inset 2px 2px 3px #000a;visibility:hidden}
+.face.f1{transform:translateZ(60px)}
+.face.f6{transform:rotateY(180deg) translateZ(60px)}
+.face.f3{transform:rotateY(90deg) translateZ(60px)}
+.face.f4{transform:rotateY(-90deg) translateZ(60px)}
+.face.f2{transform:rotateX(90deg) translateZ(60px)}
+.face.f5{transform:rotateX(-90deg) translateZ(60px)}
+.face.f1 i:nth-child(5),
+.face.f2 i:nth-child(1),.face.f2 i:nth-child(9),
+.face.f3 i:nth-child(1),.face.f3 i:nth-child(5),.face.f3 i:nth-child(9),
+.face.f4 i:nth-child(1),.face.f4 i:nth-child(3),.face.f4 i:nth-child(7),.face.f4 i:nth-child(9),
+.face.f5 i:nth-child(1),.face.f5 i:nth-child(3),.face.f5 i:nth-child(5),.face.f5 i:nth-child(7),.face.f5 i:nth-child(9),
+.face.f6 i:nth-child(1),.face.f6 i:nth-child(3),.face.f6 i:nth-child(4),.face.f6 i:nth-child(6),.face.f6 i:nth-child(7),.face.f6 i:nth-child(9){visibility:visible}
+.shadow{width:100px;height:18px;border-radius:50%;background:radial-gradient(#000c,transparent 70%);margin-top:-20px;transition:.3s}
+.result{font-family:var(--display);font-size:72px;line-height:1;color:var(--ink);height:80px;text-align:center;margin-top:6px;opacity:.2;transition:.3s}
+.result.show{opacity:1;color:var(--y);animation:pop2 .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop2{from{transform:scale(.4)}to{transform:scale(1)}}
+.actions{display:flex;flex-direction:column;gap:10px;padding-top:6px}
+.hint{text-align:center;color:var(--mut);font-size:12px;font-family:var(--hand);min-height:16px}
+
+/* CARTA */
+.pilewrap{flex:1;display:flex;align-items:center;justify-content:center;perspective:1000px;min-height:340px}
+.pile{position:relative;width:210px;height:300px;transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-22deg);transition:transform .6s}
+.pile.drawing{transform:rotateX(18deg) rotateZ(-4deg)}
+.pl{position:absolute;inset:0;border-radius:14px;background:#111;border:2px solid #333;box-shadow:0 2px 0 #000}
+.back,.front{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;border:2px solid #000;overflow:hidden}
+.back{background:linear-gradient(160deg,#242424,#121212);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--ink);background-image:repeating-linear-gradient(45deg,#ffffff08 0 6px,transparent 6px 12px)}
+.back .corner{position:absolute;left:10px;top:8px;font-family:var(--hand);font-size:11px;color:var(--mut);line-height:1.1}
+.back .big{font-family:var(--hand);font-size:34px;text-align:center;line-height:1.05;transform:rotate(-6deg)}
+.back .big b{color:var(--y);display:block;font-weight:400}
+.back .crown{width:50px;height:34px}
+.back .ring{position:absolute;inset:10px;border:2px solid #fff3;border-radius:10px}
+.flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.1,.2,1);transform:translateZ(14px)}
+.flipper.go{transform:translateZ(120px) translateY(-30px) rotateX(-52deg) rotateY(180deg) rotateZ(22deg) scale(1.15)}
+.pile.drawing .flipper.go{transform:translateZ(80px) rotateY(180deg) scale(1.28)}
+.front{transform:rotateY(180deg);background:var(--paper);color:#1a1a1a;display:flex;flex-direction:column;padding:14px;text-align:center}
+.front .kind{font-family:var(--display);font-size:13px;letter-spacing:.15em;color:#fff;padding:3px 10px;border-radius:3px;align-self:center}
+.front .kind.sorte{background:var(--green)}.front .kind.reves{background:var(--red)}
+.front .ico{font-size:58px;margin:18px 0 8px}
+.front .ct{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1.05}
+.front .tx{font-size:13px;margin-top:8px;line-height:1.35}
+.front .eff{margin-top:auto;font-family:var(--hand);font-size:17px}
+.front .eff.g{color:#1f8a47}.front .eff.r{color:#c0352a}
+
+/* config */
+.sec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.sec h3{font-family:var(--display);font-weight:400;margin:0 0 8px;text-transform:uppercase;color:var(--y);letter-spacing:.05em}
+.sec p{margin:0 0 10px;color:var(--mut);font-size:13px;line-height:1.4}
+
+/* nav */
+nav{position:absolute;left:0;right:0;bottom:0;height:64px;background:#111;border-top:1px solid var(--line);display:flex;z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:600 11px var(--ui);cursor:pointer;position:relative}
+nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--y)}
+nav button.on::before{content:"";position:absolute;top:0;width:34px;height:3px;background:var(--y);border-radius:0 0 3px 3px}
+nav button.lock{opacity:.35}
+
+.toast{position:absolute;left:50%;bottom:84px;transform:translate(-50%,20px);background:var(--y);color:#111;font-weight:800;font-size:13px;padding:10px 16px;border-radius:30px;opacity:0;pointer-events:none;transition:.3s;z-index:20;max-width:90%;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.turn-ov{position:absolute;inset:0;background:#000d;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;pointer-events:none;transition:.3s}
+.turn-ov.on{opacity:1}
+.turn-ov small{color:var(--mut);letter-spacing:.3em;font-size:12px}
+.turn-ov h2{font-size:46px;color:var(--y);text-align:center;padding:0 20px}
+.turn-ov .av{width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid var(--y)}
+.turn-ov .av svg{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+  <section id="home" class="screen on">
+    <div class="logo">
+      <svg class="crown" viewBox="0 0 70 48"><path d="M6 40 L2 12 L22 26 L35 4 L48 26 L68 12 L64 40 Z"/><circle cx="2" cy="10" r="3"/><circle cx="35" cy="3" r="3"/><circle cx="68" cy="10" r="3"/></svg>
+      <div class="rj">RJ</div>
+      <div class="tab">TABULEIRO</div>
+      <p>Seu jogo, mais completo.</p>
+    </div>
+    <svg class="skyline" viewBox="0 0 430 180" preserveAspectRatio="none" fill="none" stroke="#fff" stroke-width="1.5">
+      <path d="M0 160 L40 150 L60 120 L80 150 L110 150 L110 100 L130 100 L130 150 L180 150 L200 70 L215 30 L230 70 L250 150 L300 150 L320 110 L350 150 L430 140 L430 180 L0 180Z"/>
+      <path d="M200 70 L230 70 M215 30 L215 70 M190 90 L240 90"/>
+    </svg>
+    <div style="width:100%">
+      <button class="btn" id="btnStart">Começar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h16M14 6l6 6-6 6"/></svg></button>
+    </div>
+  </section>
+
+  <!-- GERADOR -->
+  <section id="gen" class="screen">
+    <h2 class="title">Gerador de personagem</h2>
+    <p class="sub">Cada jogador clica no botão e recebe um personagem com características aleatórias. Aceite a sorte (ou o azar).</p>
+    <button class="btn" id="btnGen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg> Gerar personagem</button>
+    <div id="preview" style="margin-top:20px"><div class="empty">Ninguém na fila ainda…<br>Aperte o botão pra ver quem você vai ser.</div></div>
+    <div id="okRow" style="display:none;margin-top:14px"><button class="btn" id="btnOk">OK, é esse mesmo →</button></div>
+    <div class="count" id="count"></div>
+    <div class="roster" id="roster"></div>
+    <div class="gen-actions">
+      <button class="btn" id="btnPlay" disabled><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg> Começar o jogo</button>
+      <div class="hint" id="minHint">Mínimo de 2 jogadores · máximo de 6</div>
+    </div>
+  </section>
+
+  <!-- DADO -->
+  <section id="dice" class="screen">
+    <div class="turnbar" id="turnbar"></div>
+    <div class="who"><small>Vez de</small><h2 id="whoName">—</h2><span id="whoInfo"></span></div>
+    <div class="stage">
+      <div class="scene"><div class="dice-wrap" id="diceWrap"><div class="cube" id="cube">
+        <div class="face f1"></div><div class="face f2"></div><div class="face f3"></div><div class="face f4"></div><div class="face f5"></div><div class="face f6"></div>
+      </div></div></div>
+      <div class="shadow" id="dshadow"></div>
+      <div class="result" id="result">?</div>
+    </div>
+    <div class="actions">
+      <div class="hint" id="diceHint">Toque em girar o dado</div>
+      <button class="btn ghost" id="btnRoll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Girar dado</button>
+      <button class="btn" id="btnEnd" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M4 12l5 5L20 6"/></svg> Finalizar vez</button>
+    </div>
+  </section>
+
+  <!-- CARTA -->
+  <section id="card" class="screen">
+    <h2 class="title">Sorte / Revés</h2>
+    <p class="sub" id="cardSub">Caiu na casa de sorte ou revés? Pegue sua carta.</p>
+    <div class="pilewrap"><div class="pile" id="pile">
+      <div class="pl" style="transform:translateZ(0)"></div><div class="pl" style="transform:translateZ(3px)"></div><div class="pl" style="transform:translateZ(6px)"></div>
+      <div class="pl" style="transform:translateZ(9px)"></div><div class="pl" style="transform:translateZ(12px)"></div>
+      <div class="flipper" id="flipper">
+        <div class="back"><div class="ring"></div><div class="corner">SORTE<br>REVÉS</div>
+          <svg class="crown" viewBox="0 0 70 48"><path d="M6 40 L2 12 L22 26 L35 4 L48 26 L68 12 L64 40 Z"/></svg>
+          <div class="big">SORTE<b>REVÉS</b></div></div>
+        <div class="front" id="front"></div>
+      </div>
+    </div></div>
+    <div class="actions">
+      <button class="btn" id="btnDraw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="3" width="14" height="18" rx="2"/></svg> Pegar carta</button>
+      <button class="btn" id="btnCardOk" style="display:none">OK</button>
+    </div>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="cfg" class="screen">
+    <h2 class="title">Config</h2>
+    <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
+      <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
+    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · protótipo v0.1.<br>Os textos das cartas de Sorte/Revés ficam no array <b>CARDS</b> do código — é só editar.</p></div>
+  </section>
+
+  <div class="turn-ov" id="ov"><small>PRÓXIMO</small><div class="av" id="ovAv"></div><h2 id="ovName"></h2></div>
+  <div class="toast" id="toast"></div>
+
+  <nav id="nav">
+    <button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
+    <button data-go="dice" class="lock"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r=".8"/><circle cx="16" cy="16" r=".8"/><circle cx="12" cy="12" r=".8"/></svg>Dado</button>
+    <button data-go="card" class="lock"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M3 6v13M21 6v13"/></svg>Carta</button>
+    <button data-go="cfg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Config</button>
+  </nav>
+</div>
+
+<script>
+/* ============ DADOS EDITÁVEIS ============ */
+// Cartas Sorte/Revés — troque pelo conteúdo definitivo. type: 'sorte' | 'reves'
+const CARDS = [
+  {type:'sorte',ico:'💵',t:'Dinheiro no bolso',x:'Achou uma nota de R$ 50 na calça que tava no varal.',eff:'+ R$ 50'},
+  {type:'sorte',ico:'🏖️',t:'Dia de praia',x:'Sol, mate gelado e biscoito Globo. Relaxou geral.',eff:'Avance 2 casas'},
+  {type:'sorte',ico:'🎟️',t:'Bicho deu',x:'Jogou no jacaré e o jacaré apareceu.',eff:'+ R$ 200'},
+  {type:'sorte',ico:'🚌',t:'Ônibus vazio',x:'Pegou o 485 vazio e sentado. Milagre carioca.',eff:'Jogue de novo'},
+  {type:'reves',ico:'🌧️',t:'Temporal no Rio',x:'Choveu 10 minutos e a cidade parou. Você ficou ilhado.',eff:'Perca a próxima vez'},
+  {type:'reves',ico:'🚨',t:'Arrastão na orla',x:'Perdeu o celular na praia. Culpa do chinelo na areia.',eff:'– R$ 150'},
+  {type:'reves',ico:'🚇',t:'Metrô parado',x:'Falha no sistema. Todo mundo no ônibus lotado.',eff:'Volte 3 casas'},
+  {type:'reves',ico:'🧾',t:'Preço de turista',x:'Pagou R$ 40 numa água de coco.',eff:'– R$ 40'},
+];
+const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
+const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
+const OCUP=[
+ ['Vendedor de mate na praia',[1400,2600]],['Motoboy',[1800,3200]],['Flanelinha',[900,2000]],['Guia de turismo sem registro',[1500,4000]],
+ ['Garçom no Leblon',[2200,4500]],['Camelô na Uruguaiana',[1200,3000]],['Professor de samba',[1800,3500]],['Motorista de aplicativo',[2500,5000]],
+ ['Barraqueiro de Copacabana',[2000,6000]],['Servidor público (atrasado)',[4500,9000]],['Influencer de 300 seguidores',[0,3000]],['Porteiro de prédio na Zona Sul',[2000,3200]],
+ ['Dono de quiosque',[3500,9000]],['Dançarino de funk',[1000,8000]],['Vendedor de biscoito Globo',[1300,2800]],['Estagiário no Centro',[1100,1800]],
+];
+const BAIRROS=['Rocinha','Copacabana','Madureira','Realengo','Ipanema','Cidade de Deus','Méier','Campo Grande','Bangu','Santa Teresa','Lapa','Tijuca','Barra da Tijuca','Complexo do Alemão','Penha','Jacarepaguá','Gardênia Azul','Vidigal'];
+const TRACOS=['Resenha','Fofoqueiro(a) oficial','Torcedor(a) fanático(a) do Flamengo','Torcedor(a) sofredor(a) do Vasco','Botafoguense (já nasceu sofrendo)','Fluminense com orgulho tricolor','Sempre atrasado(a)','Chega cedo em nada, só na fila da farmácia','Fura-fila nato(a)','Sabe todos os atalhos da cidade','Dorme no 485','Conhece o dono do bar','Fez churrasco na laje','Acredita em tudo do zap','Vive de "um bico aqui, outro ali"','Dono(a) da melhor roda de samba'];
+const FAMILIA=[
+ 'Mora com a mãe, 2 irmãos, 1 tio folgado e um cachorro chamado Neymar.',
+ 'Tem 4 filhos de 3 relacionamentos e um boleto de cada.',
+ 'Vó que cozinha pra o bairro inteiro e manda em todos.',
+ 'Primo "empreendedor" que sempre pede um dinheirinho emprestado.',
+ 'Casado(a) há 8 anos, mas a sogra mora junto desde o dia 1.',
+ 'Irmão youtuber que só grava vídeo na sala. Em horário de novela.',
+ 'Pai que tem certeza que sabe de futebol mais que o Tite.',
+ 'Tia que vende cosmético e vai bater na sua porta.',
+ 'Solteiro(a) e feliz, mas a família tá fazendo bolão do casamento.',
+ 'Tem um gato com mais seguidores que você.',
+];
+const SORTES=['Boa sorte, parceiro(a)!','Que o jacaré esteja contigo!','Cuidado com o leão da Cinelândia.','Segura o rojão!','Aqui é o Rio, meu bem.','Vai com Deus e com a cervejinha.'];
+const TOM=['#f1c9a0','#d9a577','#b87b4f','#8a5a3a','#5e3b25','#f6d9bd'];
+const CAB=['#1a1a1a','#3b2314','#5a3a1b','#9a6a2a','#d9c27a','#7a1d1d','#333'];
+const CAMISA=['#e0483a','#f7a81b','#3fbf6a','#3b7ddd','#f4efe4','#8d4fd1','#222'];
+
+/* ============ ESTADO ============ */
+const S={players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rnd=n=>Math.floor(Math.random()*n), pick=a=>a[rnd(a.length)];
+const money=v=>'R$ '+v.toLocaleString('pt-BR');
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ============ AVATAR (SVG procedural) ============ */
+function avatar(a){
+  const f=a.fem;
+  const hair=f
+   ? `<path d="M20 52 Q18 14 50 14 Q82 14 80 52 L80 80 L68 80 L68 46 Q50 40 32 46 L32 80 L20 80Z" fill="${a.cab}"/>`
+   : (a.style?`<path d="M24 46 Q24 12 50 12 Q76 12 76 46 Q64 30 50 30 Q36 30 24 46Z" fill="${a.cab}"/>`:`<path d="M26 42 Q28 18 50 18 Q72 18 74 42 Q62 34 50 34 Q38 34 26 42Z" fill="${a.cab}"/>`);
+  return `<svg viewBox="0 0 100 120"><rect width="100" height="120" fill="#bdb39a"/>
+  <path d="M-4 120 Q10 86 50 86 Q90 86 104 120Z" fill="${a.cam}" stroke="#111" stroke-width="2"/>
+  ${f?hair:''}<rect x="42" y="68" width="16" height="22" fill="${a.tom}" stroke="#111" stroke-width="2"/>
+  <ellipse cx="50" cy="50" rx="24" ry="28" fill="${a.tom}" stroke="#111" stroke-width="2"/>
+  ${f?'':hair}
+  <circle cx="41" cy="50" r="2.6" fill="#111"/><circle cx="59" cy="50" r="2.6" fill="#111"/>
+  <path d="M40 64 Q50 ${a.sorriso?72:62} 60 64" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+  ${a.barba&&!f?`<path d="M30 58 Q50 86 70 58 Q60 74 50 74 Q40 74 30 58Z" fill="${a.cab}" opacity=".9"/>`:''}
+  ${a.oculos?`<g fill="none" stroke="#111" stroke-width="2"><circle cx="41" cy="50" r="7"/><circle cx="59" cy="50" r="7"/><path d="M48 50h4"/></g>`:''}
+  </svg>`;
+}
+
+/* ============ GERADOR ============ */
+function gerar(){
+  const fem=Math.random()<.5;
+  const [oc,[mn,mx]]=pick(OCUP);
+  const renda=Math.round((mn+Math.random()*(mx-mn))/50)*50;
+  const nome=pick(NOMES); // alguns nomes são neutros; a arte segue o sorteio
+  return {
+    id:Date.now()+Math.random(),
+    nome:nome+' '+pick(SOBRE), idade:18+rnd(48), bairro:pick(BAIRROS), ocup:oc, renda,
+    traco:pick(TRACOS), fam:pick(FAMILIA), sorte:pick(SORTES),
+    av:{fem,tom:pick(TOM),cab:pick(CAB),cam:pick(CAMISA),style:Math.random()<.5,barba:Math.random()<.4,oculos:Math.random()<.25,sorriso:Math.random()<.6}
+  };
+}
+function pcardHTML(p,i){return `<div class="pcard"><span class="tag">Jogador ${i}</span>
+  <div class="pic">${avatar(p.av)}</div>
+  <div class="info"><div class="nm">${p.nome}</div>
+   <span class="lbl">Idade</span><span class="v">${p.idade} anos</span>
+   <span class="lbl">Mora em</span><span class="v">${p.bairro}</span>
+   <span class="lbl">Ocupação</span><span class="v">${p.ocup}</span>
+   <span class="lbl">Renda mensal</span><span class="v">${money(p.renda)}</span>
+   <span class="lbl">Habilidade especial</span><span class="v">${p.traco}</span></div></div>
+  <div class="pcard" style="margin-top:-6px;transform:rotate(.4deg);display:block"><b style="font-family:var(--hand);font-size:11px;color:#7a7160">FAMÍLIA</b><div class="fam" style="border:0;margin:0;padding:2px 0 0">${p.fam}</div><div class="luck">${p.sorte}</div></div>`}
+
+function renderGen(){
+  const n=S.players.length, full=n>=6;
+  $('#btnGen').disabled=full||!!S.pending;
+  $('#btnGen').lastChild.textContent=' '+(full?'Mesa cheia (6/6)':'Gerar personagem');
+  $('#okRow').style.display=S.pending?'block':'none';
+  $('#preview').innerHTML=S.pending?pcardHTML(S.pending,n+1):`<div class="empty">${n?'Passa pro próximo jogador!':'Ninguém na fila ainda…<br>Aperte o botão pra ver quem você vai ser.'}</div>`;
+  $('#count').className='count'+(n<2?' warn':'');
+  $('#count').innerHTML=`<span>👥 ${n} jogador${n===1?'':'es'} pronto${n===1?'':'s'}</span><span class="dots">${[...Array(6)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span>`;
+  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><button data-rm="${i}" aria-label="Remover">✕</button></div>`).join('');
+  $('#btnPlay').disabled=n<2;
+  $('#minHint').textContent=n<2?`Faltam ${2-n} jogador${2-n>1?'es':''} para começar (mínimo 2)`:(full?'Mesa cheia — bora jogar!':'Pode começar ou adicionar até 6 jogadores');
+}
+$('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=gerar();renderGen()};
+$('#btnOk').onclick=()=>{S.players.push(S.pending);S.pending=null;renderGen()};
+$('#roster').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;S.players.splice(+b.dataset.rm,1);renderGen()};
+$('#btnPlay').onclick=()=>{
+  if(S.players.length<2){toast('Mínimo de 2 jogadores!');return}
+  S.pending=null;S.started=true;S.cur=0;S.rolled=false;S.drawn=false;S.face=1;
+  updateLocks();renderTurn();go('dice');
+};
+
+/* ============ NAV ============ */
+function go(id){
+  if((id==='dice'||id==='card')&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
+  $$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
+  $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id||(id==='gen'&&b.dataset.go==='home')));
+  if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen();
+  $('#nav').style.display='flex';
+}
+function updateLocks(){$$('nav [data-go=dice],nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
+$('#btnStart').onclick=()=>go('gen');
+
+/* ============ DADO ============ */
+const ROT={1:[0,0],2:[-90,0],3:[0,-90],4:[0,90],5:[90,0],6:[0,180]};
+function setFace(v,anim){
+  const cube=$('#cube');const [x,y]=ROT[v];
+  S.spins+=anim?2:0;
+  const ex=360*S.spins, ey=360*S.spins*1.5;
+  cube.style.transition=anim?'':'none';
+  cube.style.transform=`rotateX(${x+ex-24}deg) rotateY(${y+ey+28}deg)`;
+}
+function faceHTML(){$$('.face').forEach(f=>f.innerHTML='<i></i>'.repeat(9))}
+function renderTurn(){
+  const p=S.players[S.cur]; if(!p)return;
+  $('#turnbar').innerHTML=S.players.map((q,i)=>`<div class="tchip ${i===S.cur?'cur':''}">${avatar(q.av)}</div>`).join('');
+  $('#whoName').textContent=p.nome; $('#whoInfo').textContent=`${p.ocup} · ${p.bairro}`;
+  $('#result').textContent='?'; $('#result').classList.remove('show');
+  $('#btnRoll').disabled=S.rolled; $('#btnEnd').disabled=!S.rolled;
+  $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize sua vez':'Toque em girar o dado';
+}
+function roll(){
+  if(S.rolling||S.rolled)return;
+  S.rolling=true; $('#btnRoll').disabled=true; $('#diceHint').textContent='Rolando…';
+  const v=1+rnd(6); S.face=v;
+  const w=$('#diceWrap'); w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop');
+  $('#cube').style.transition=''; setFace(v,true);
+  if(navigator.vibrate)navigator.vibrate(30);
+  setTimeout(()=>{
+    S.rolling=false;S.rolled=true;
+    const r=$('#result');r.textContent=v;r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
+    $('#btnEnd').disabled=false;
+    $('#diceHint').textContent=`${S.players[S.cur].nome} andou ${v} casa${v>1?'s':''}. Caiu em Sorte/Revés? Vá na aba Carta.`;
+  },1450);
+}
+$('#btnRoll').onclick=roll; $('.scene').onclick=roll;
+$('#btnEnd').onclick=()=>{
+  if(!S.rolled)return;
+  S.cur=(S.cur+1)%S.players.length; S.rolled=false; S.drawn=false;
+  showOverlay(S.players[S.cur]); resetCard(); renderTurn(); go('dice');
+};
+function showOverlay(p){
+  $('#ovAv').innerHTML=avatar(p.av);$('#ovName').textContent=p.nome;
+  const o=$('#ov');o.classList.add('on');setTimeout(()=>o.classList.remove('on'),1300);
+}
+
+/* ============ CARTA ============ */
+function resetCard(){
+  $('#flipper').classList.remove('go');$('#pile').classList.remove('drawing');
+  $('#btnDraw').style.display='';$('#btnCardOk').style.display='none';
+}
+function cardRender(){
+  const p=S.players[S.cur];
+  $('#cardSub').innerHTML=`Vez de <b style="color:var(--y)">${p.nome}</b>. `+(S.drawn?'Carta já tirada nesta vez.':(S.rolled?'Caiu na casa de sorte ou revés? Pegue sua carta.':'Gire o dado antes de pegar a carta.'));
+  const draw=$('#btnDraw');
+  draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
+}
+$('#btnDraw').onclick=()=>{
+  if(!S.rolled){toast('Gire o dado primeiro');return}
+  if(S.drawn)return;
+  const c=pick(CARDS), good=c.type==='sorte';
+  $('#front').innerHTML=`<span class="kind ${c.type}">${good?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${c.x}</div><div class="eff ${good?'g':'r'}">${c.eff}</div>`;
+  $('#btnDraw').style.display='none';
+  $('#pile').classList.add('drawing');
+  $('#flipper').classList.add('go');
+  setTimeout(()=>{$('#btnCardOk').style.display=''},900);
+  S.drawn=true;
+};
+$('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
+
+/* ============ CONFIG ============ */
+function cfgRender(){
+  $('#cfgInfo').innerHTML=S.started?`Jogo em andamento com <b>${S.players.length}</b> jogadores. Vez de <b>${S.players[S.cur].nome}</b>.`:`Nenhum jogo em andamento (${S.players.length}/6 personagens).`;
+}
+$('#btnReset').onclick=()=>{
+  if(!confirm('Reiniciar a partida e apagar os personagens?'))return;
+  Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null});
+  updateLocks();resetCard();go('home');
+};
+
+faceHTML(); setFace(1,false); updateLocks(); renderGen();
+</script>
+</body>
+</html>
