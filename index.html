@@ -382,12 +382,19 @@ SITUACOES.push(
   {l:'Aceitar e ficar',r:[G('Ganhou bônus e uma marmita da firma.','+ R$ 150'),B('A horinha virou 4 e o último ônibus passou.','Volte 2 casas'),B('Ninguém pagou, e o chefe sumiu.','– R$ 50')]},
   {l:'Inventar uma desculpa',r:[G('Colou, e você pegou o último busão sentado.','Avance 1 casa'),B('O chefe viu você postando no Instagram.','– R$ 200'),B('Sua desculpa foi "a vó faleceu". A vó ligou.','Perca a próxima vez')]}]}
 );
+function idadeOk(it,p){if(!it.ag)return true;const m=/^(<=)?(\d+)(\+)?$/.exec(it.ag);if(!m)return true;return m[1]?p.idade<=+m[2]:p.idade>=+m[2]}
 function pickSit(p){
-  const idadeOk=s=>{if(!s.ag)return true;const m=/^(<=)?(\d+)(\+)?$/.exec(s.ag);if(!m)return true;return m[1]?p.idade<=+m[2]:p.idade>=+m[2]};
-  const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)&&idadeOk(s)), ger=SITUACOES.filter(s=>!s.for&&idadeOk(s));
+  const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)&&idadeOk(s,p)), ger=SITUACOES.filter(s=>!s.for&&idadeOk(s,p));
   const usaEsp=esp.length&&Math.random()<.55;
   return dr('sit_'+(usaEsp?p.classe:'ger'),usaEsp?esp:ger.length?ger:SITUACOES);
 }
+// cartas diretas (sem escolha): ~22% das vezes, quando existem no banco
+function pickDireta(p){
+  if(!window.DIRETAS||!DIRETAS.length||Math.random()>=.22)return null;
+  const l=DIRETAS.filter(c=>(!c.for||c.for.includes(p.classe))&&idadeOk(c,p));
+  return l.length?dr('dir_'+p.classe,l):null;
+}
+function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${c.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
   (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
@@ -786,7 +793,17 @@ function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind $
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
-  const sc=pickSit(S.players[S.cur]); S.sit=sc;
+  const p=S.players[S.cur], dir=pickDireta(p);
+  if(dir){
+    const ad=adaptar(dir,p),d=ad.money; p.grana+=d;
+    $('#front').className='front res'; $('#front').innerHTML=frontDireta(dir,ad,d,p);
+    $('#whoMoney').textContent='💰 '+money(p.grana);
+    $('#btnDraw').style.display='none'; $('#pile').classList.add('drawing'); $('#flipper').classList.add('go');
+    setTimeout(()=>{$('#btnCardOk').style.display=''},850);
+    if(navigator.vibrate)navigator.vibrate(dir.g?20:[40,30,40]);
+    S.drawn=true; return;
+  }
+  const sc=pickSit(p); S.sit=sc;
   $('#front').className='front'; $('#front').innerHTML=frontSit(sc);
   $('#opt0').textContent='1. '+sc.opts[0].l; $('#opt1').textContent='2. '+sc.opts[1].l;
   $('#btnDraw').style.display='none';
@@ -850,5 +867,17 @@ $('#btnReset').onclick=()=>{
 faceHTML(); setFace(1,false); updateLocks(); renderGen();
 </script>
 <script src="banco.js"></script>
+<script src="banco-cartas.js"></script>
+<script src="banco-sit-01.js"></script>
+<script src="banco-sit-02.js"></script>
+<script src="banco-sit-03.js"></script>
+<script src="banco-sit-04.js"></script>
+<script src="banco-sit-05.js"></script>
+<script src="banco-sit-06.js"></script>
+<script src="banco-sit-07.js"></script>
+<script src="banco-sit-08.js"></script>
+<script src="banco-sit-09.js"></script>
+<script src="banco-sit-10.js"></script>
+<script src="banco-sit-11.js"></script>
 </body>
 </html>

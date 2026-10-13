@@ -22,7 +22,17 @@
     if(perde)a.push('Perca a próxima vez'); if(again)a.push('Jogue de novo');
     return a.join(' · ')||'Nada muda';
   };
-  const O=s=>{const [k,x,e]=s.split('|');return {g:k==='+'?1:0,d:k==='!'?1:0,x,eff:fmt(e||'')}};
+  // desfecho sem efeito mecânico ganha um padrão: sorte avança 1 casa, azar volta 1 casa (todo resultado tem consequência no tabuleiro)
+  const efd=(f,g)=>f==='Nada muda'?(g?'Avance 1 casa':'Volte 1 casa'):f;
+  const O=s=>{const [k,x,e]=s.split('|');const g=k==='+';return {g:g?1:0,d:k==='!'?1:0,x,eff:efd(fmt(e||''),g)}};
+  // Carta direta (sem escolha): C(perfis, tipo, emoji, título, texto, efeito, idade?)  — tipo: '+' sorte · '-' azar · '!' azar com dano
+  window.DIRETAS=window.DIRETAS||[];
+  window.C=(cats,k,ico,t,x,e,ag)=>{
+    const o={ico,t,g:k==='+'?1:0,d:k==='!'?1:0,x,eff:efd(fmt(e||''),k==='+')};
+    if(cats!=='*')o.for=cats.split(',');
+    if(ag)o.ag=ag;
+    DIRETAS.push(o);
+  };
   window.SIT=(cats,ico,t,x,la,lb,ra,rb,ag)=>{
     const o={ico,t,x,opts:[{l:la,r:ra.map(O)},{l:lb,r:rb.map(O)}]};
     if(cats!=='*')o.for=cats.split(',');
@@ -347,7 +357,7 @@ SIT('crime','👟','Sapato novo','Você ganhou um sapato caríssimo. Mas ele ape
 SIT('crime','📱','Rede social do morro','Seu perfil bombou com uma foto na laje. Vários curtiram.','Apagar a foto','Aproveitar a fama',
  ['+|A foto sumiu antes de alguém notar.|+0 >1','-|Já tinha print rodando em todo lugar.|-100 <1','-|A polícia já tinha visto.|-300 P'],
  ['+|Ganhou 100 mil seguidores e uma proposta de publi.|+300 >2','-|A polícia usou a foto como prova.|-500 <2','-|Ganhou haters e perdeu a paz.|-50 <1']);
-SIT('crime','🎂','Aniversário do chefe','Hoje é aniversário do chefão. Você precisa dar um presente à altura.','Dar uma joia','Dar um cachorro',
+SIT('crime','🎂','Aniversário do chefão','Hoje é aniversário do chefão. Você precisa dar um presente à altura.','Dar uma joia','Dar um cachorro',
  ['+|O chefe amou e te promoveu.|+500 >2','-|A joia era falsa e ele percebeu.|-300 <2','-|Ele já tinha uma igual.|-100'],
  ['+|O cachorro virou o mascote do morro.|+200 >1','-|O cachorro mordeu o chefe.|-300 <2','-|O chefe é alérgico.|-100 P']);
 SIT('crime','🍺','Cerveja na laje','Tem rodada de cerveja e a conta é de quem perder no dominó.','Jogar','Fingir que passou mal',
@@ -366,7 +376,7 @@ SIT('crime','📜','Convocação do juiz','Você foi chamado pra depor num fóru
  ['+|O advogado te livrou em 10 minutos.|+0 >2','-|O advogado cobrou R$ 2 mil e não resolveu.|-300','-|O juiz era durão e te interrogou por horas.|-0 P'],
  ['-|Mandaram te buscar. Humilhação pública.|-200 <2','+|Esqueceram de você. Sorte absurda.|+0 >2','-|Virou foragido e perdeu o sossego.|-500 P']);
 // ---------------------------------------------------------------- LEI E ORDEM
-SIT('legal','🚓','Perseguição policial','Um carro fugiu da blitz e você tá na viatura. Perseguir ou esperar reforço?','Perseguir','Esperar reforço',
+SIT('legal','🚓','Perseguição a suspeito','Um carro fugiu da blitz e você tá na viatura. Perseguir ou esperar reforço?','Perseguir','Esperar reforço',
  ['+|Alcançou o carro e salvou o dia.|+200 >3','!|Bateu a viatura numa esquina.|-300 <2','-|O suspeito escapou por uma viela.|-0 <1'],
  ['-|O carro fugiu e você tomou bronca.|-0 P','+|O reforço chegou e prendeu o cara.|+100 >2','-|Ficou sem gasolina.|-50 <1']);
 SIT('legal','🍩','Rosquinha da delegacia','O delegado traz rosquinhas e todo mundo disputa.','Pegar a última','Deixar pros outros',
