@@ -383,7 +383,8 @@ SITUACOES.push(
   {l:'Inventar uma desculpa',r:[G('Colou, e você pegou o último busão sentado.','Avance 1 casa'),B('O chefe viu você postando no Instagram.','– R$ 200'),B('Sua desculpa foi "a vó faleceu". A vó ligou.','Perca a próxima vez')]}]}
 );
 function pickSit(p){
-  const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)), ger=SITUACOES.filter(s=>!s.for);
+  const idadeOk=s=>{if(!s.ag)return true;const m=/^(<=)?(\d+)(\+)?$/.exec(s.ag);if(!m)return true;return m[1]?p.idade<=+m[2]:p.idade>=+m[2]};
+  const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)&&idadeOk(s)), ger=SITUACOES.filter(s=>!s.for&&idadeOk(s));
   const usaEsp=esp.length&&Math.random()<.55;
   return dr('sit_'+(usaEsp?p.classe:'ger'),usaEsp?esp:ger.length?ger:SITUACOES);
 }
@@ -794,8 +795,10 @@ $('#btnDraw').onclick=()=>{
   setTimeout(()=>{$('#choices').style.display='flex'},850);
   S.drawn=true;
 };
+// 50% de chance de sorte e 50% de azar quando a opção tem os dois tipos; senão sorteia entre os desfechos que existem
+function sortearDesfecho(r){const g=r.filter(x=>x.g),b=r.filter(x=>!x.g);return g.length&&b.length?pick(Math.random()<.5?g:b):pick(r)}
 function choose(i){
-  const sc=S.sit,o=sc.opts[i],res=pick(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=ad.money;p.grana+=d;
+  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=ad.money;p.grana+=d;
   $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad);
   $('#choices').style.display='none'; $('#btnCardOk').style.display=''; $('#whoMoney').textContent='💰 '+money(p.grana);
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
@@ -846,5 +849,6 @@ $('#btnReset').onclick=()=>{
 })();
 faceHTML(); setFace(1,false); updateLocks(); renderGen();
 </script>
+<script src="banco.js"></script>
 </body>
 </html>
