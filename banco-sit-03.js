@@ -12,17 +12,17 @@ SIT('baixa,media','🛍️','Black Friday','A "Black Friday" tem 70% de desconto
  ['-|O preço era o mesmo da semana passada. Você foi enganado.|-250','+|Pegou uma TV pela metade do preço real. Sorte divina.|+300 >2','-|A TV chegou quebrada e o prazo de troca expirou.|-300'],
  ['+|Descobriu a fraude e denunciou. Ganhou recompensa.|+100 >2','-|Quando decidiu comprar, esgotou.|-0 <1','-|Ficou com a mão vazia e saudade da TV.|-0']);
 SIT('baixa,media','💳','Cartão de crédito','O cartão chegou pelo correio com limite de R$ 5 mil. Você sente o perigo.','Gastar um pouco','Cortar o cartão',
- ['-|Gastou R$ 800 e a fatura veio com juros de 15% ao mês.|-400','+|Pagou em dia e ganhou cashback.|+50 >1','-|Clonaram o cartão no mesmo dia.|-300'],
+ ['-|Gastou além da conta e a fatura veio com juros de 15% ao mês.|-400','+|Pagou em dia e ganhou cashback.|+50 >1','-|Clonaram o cartão no mesmo dia.|-300'],
  ['+|Economizou e passou o mês sem dívida.|+100 >1','-|O banco cobrou anuidade mesmo assim.|-80','-|A funcionária do banco te chamou de "preguiçoso".|-0 <1']);
 SIT('baixa,media','🏠','Reforma da laje','Você decidiu fazer um andar a mais na laje. O mestre de obra jura que "é rapidinho".','Contratar o mestre','Fazer sozinho',
  ['+|O mestre era craque e a obra ficou perfeita.|+0 >3','-|A obra demorou 8 meses e custou o triplo.|-500','-|O mestre sumiu com o dinheiro.|-400'],
  ['!|Caiu da escada e quebrou o braço.|-150 <2','+|Fez um trabalho digno de arquiteto.|+0 >2','-|A laje rachou e o vizinho chamou a prefeitura.|-250']);
 SIT('baixa,media','🔧','Carro no mecânico','Seu carro velho faz um barulho estranho. O mecânico diz "pode ser o motor, pode ser seu futuro".','Deixar no mecânico','Tentar resolver sozinho',
- ['+|Era só um parafuso solto. Cobrou R$ 30.|+0 >2','-|Cobrou R$ 800 pra trocar uma peça de R$ 40.|-800','-|Demorou 3 semanas pra consertar.|-0 P'],
+ ['+|Era só um parafuso solto. Cobrou R$ 30.|+0 >2','-|Cobrou uma fortuna pra trocar uma peça baratinha.|-800','-|Demorou 3 semanas pra consertar.|-0 P'],
  ['!|Se machucou tentando.|-60 <1','+|Descobriu o defeito pelo YouTube e consertou.|+0 >2','-|Piorou. Agora o carro virou ferro-velho.|-500']);
 SIT('baixa,media','⚕️','Dente com dor','O dente dói há 3 dias. O dentista particular cobra R$ 400 só pra olhar.','Ir ao SUS','Ir ao particular',
  ['-|A fila do SUS tem 6 meses de espera.|-0 P','+|O dentista do SUS era ótimo e resolveu em 10 minutos.|+0 >2','-|Ele arrancou o dente errado.|-50 <2'],
- ['-|Pagou R$ 400 e o dentista pediu mais R$ 800.|-800','+|O dentista era seu amigo e fez de graça.|+0 >2','-|O canal precisa de 4 sessões.|-300 P']);
+ ['-|Pagou caro e o dentista pediu mais ainda.|-800','+|O dentista era seu amigo e fez de graça.|+0 >2','-|O canal precisa de 4 sessões.|-300 P']);
 SIT('baixa,media','👓','Óculos de grau','Seus óculos quebraram. A ótica vende uma armação por R$ 400. A da feira custa R$ 30.','Comprar na ótica','Comprar na feira',
  ['+|A ótica fez um desconto e você saiu lindo.|+0 >2','-|Cobraram R$ 800 pelas lentes.|-800','-|Esqueceram as lentes e te mandaram voltar.|-0 <1'],
  ['+|A armação da feira é perfeita e você virou fashion.|+0 >2','-|Quebrou em 2 dias.|-30','!|Os óculos eram de outro grau. Tontura e dor de cabeça.|-30 P']);

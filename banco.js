@@ -161,9 +161,9 @@ SIT('baixa,media','🛍️','Camelô vende relógio','Um camelô jura que o rel�
  ['+|Seguiu o caminho e achou uma moeda de R$ 1.|+1','-|O camelô te xingou até a esquina.|-0','-|Foi seguido por 3 camelôs insistentes.|<1']);
 SIT('baixa,media','🍽️','Marmita da firma','O almoço de hoje é a marmita de ontem. Cheiro suspeito.','Comer assim mesmo','Almoçar fora',
  ['-|Passou mal e ficou o dia no banheiro.|-0 P','+|Tava ótima, até repetiu.|>1','-|Descobriu uma mosca. Perdeu a fome pra sempre.|-0'],
- ['-|Gastou R$ 40 num self-service por quilo.|-40','+|Achou um prato feito de R$ 12 delicioso.|+10 >1','-|O restaurante fechou na hora que você chegou.|-0 <1']);
+ ['-|Gastou R$ 40 num self-service por quilo.|-40','+|Achou um prato feito baratinho e delicioso.|+10 >1','-|O restaurante fechou na hora que você chegou.|-0 <1']);
 SIT('baixa,media','🔧','Geladeira quebrou','A geladeira parou e a carne descongela. Chamar técnico ou arrumar sozinho?','Chamar o técnico','Arrumar sozinho',
- ['-|O técnico cobrou R$ 300 e trocou uma peça de R$ 10.|-300','+|O técnico era vizinho e cobrou só uma cerveja.|+0 >1','-|Não consertou e ainda levou sua caixa de ferramentas.|-150'],
+ ['-|O técnico cobrou uma fortuna e trocou uma peça de nada.|-300','+|O técnico era vizinho e cobrou só uma cerveja.|+0 >1','-|Não consertou e ainda levou sua caixa de ferramentas.|-150'],
  ['!|Levou um choque e ficou arrepiado por 1 hora.|-0 P','+|Achou o defeito num fio solto e resolveu na raça.|+0 >2','-|Piorou. Agora precisa de geladeira nova.|-400']);
 SIT('baixa,media','🏠','Aluguel atrasado','O proprietário bate na porta. "Cadê o aluguel, meu filho?"','Pedir mais prazo','Pagar parte e prometer o resto',
  ['+|Ele deu mais 15 dias e ainda te desejou boa sorte.|>1','-|Ele aumentou o juro e te deu prazo de 3 dias.|-100','-|Ele chamou o advogado.|-200 P'],
@@ -205,7 +205,7 @@ SIT('baixa,media','📚','Livro emprestado','Um amigo te emprestou um livro raro
  ['+|Ele disse "tudo bem" e te deu outro livro.|+0 >1','-|Ele cobrou R$ 200 pelo livro raro.|-200','-|Ele ficou chateado e parou de te emprestar coisas.|<1'],
  ['-|Ele descobriu a mentira e te chamou de falso.|-0 <2','+|Ele acreditou e achou o livro embaixo do sofá.|+0 >2','-|Ele pediu pra procurar na sua casa.|-0 P']);
 SIT('baixa,media','🛏️','Colchão novo','O colchão velho tá com mola saindo. Mas o novo custa R$ 1.500.','Comprar parcelado','Dormir no chão',
- ['+|Aproveitou uma promoção e ainda ganhou um travesseiro.|+30 >1','-|Os juros foram pesados. Total: R$ 2.200.|-500','-|O colchão veio errado e a troca demorou.|-100 P'],
+ ['+|Aproveitou uma promoção e ainda ganhou um travesseiro.|+30 >1','-|Os juros foram pesados e o total quase dobrou.|-500','-|O colchão veio errado e a troca demorou.|-100 P'],
  ['!|A coluna reclamou. Dor de cabeça e nas costas.|-0 P','+|Descobriu que o chão é mais confortável.|>1','-|Um vizinho viu e começou a rir.|-0']);
 SIT('baixa,media','🎂','Aniversário do chefe','O chefe faz aniversário e todo mundo vai ao bar. Você vai ou fala que tem compromisso?','Ir ao bar','Inventar desculpa',
  ['+|Todo mundo bebeu por conta do chefe.|+30 >2','-|A conta sobrou pra você porque o chefe "esqueceu a carteira".|-200','-|Ficou bêbado e contou segredos de todo mundo.|<2'],
@@ -245,7 +245,7 @@ SIT('alta','🏝️','Casa em Angra','Seu sócio quer vender a casa de Angra. Ma
  ['+|Vendeu por 3x o valor para um investidor estrangeiro.|+500 >2','-|O comprador sumiu e deixou um cheque sem fundo.|-300','-|Descobriu que a casa era do seu pai. Briga familiar.|-100 <1'],
  ['+|A casa rendeu um fim de semana inesquecível.|+100 >1','-|O jardineiro pediu aumento e você precisou pagar.|-200','-|Uma tempestade levou o telhado.|-400']);
 SIT('alta','🚗','Carro importado','Seu carro quebrou. A oficina da concessionária cobra uma fortuna.','Levar na concessionária','Levar numa oficina de bairro',
- ['-|Cobraram R$ 3.000 pra trocar uma lâmpada.|-300','+|O gerente te deu um carro reserva de luxo.|+0 >2','-|Demorou 3 meses e você ficou sem carro.|-0 P'],
+ ['-|Cobraram uma fortuna pra trocar uma lâmpada.|-300','+|O gerente te deu um carro reserva de luxo.|+0 >2','-|Demorou 3 meses e você ficou sem carro.|-0 P'],
  ['+|O mecânico era um gênio e cobrou 1/10.|+0 >1','-|Arrumou mal e o carro pegou fogo na saída.|-500 <1','-|Perdeu a garantia por ter ido fora.|-200']);
 SIT('alta','⛳','Golfe com o diretor','Seu diretor te chamou pra jogar golfe. Você nunca jogou.','Aceitar','Inventar desculpa',
  ['+|Deu uma tacada de sorte e fechou negócio.|+400 >2','-|Acertou o carrinho do diretor.|-200 <1','-|Perdeu a bolinha 7 vezes. Humilhante.|-0'],
@@ -258,7 +258,7 @@ SIT('alta','🏥','Check-up executivo','O médico recomenda "cuidar do estresse"
  ['!|Teve um piripaque no meio da reunião.|-200 P','+|Ficou ótimo e o médico elogiou sua saúde.|+0 >1','-|Foi multado pelo plano por falta de cuidado.|-80']);
 SIT('alta','🛬','Voo executivo','O jatinho tá disponível pra uma viagem de última hora. Destino?','Ir pra Nova York','Ir pra Paris',
  ['+|Fechou um negócio que rendeu uma fortuna.|+500 >3','-|O voo foi cancelado e você ficou preso no aeroporto.|-0 P','-|Perdeu a mala com tudo dentro.|-300'],
- ['+|Encontrou um sócio no avião e fez negócio.|+300 >2','-|A conta do hotel chegou: R$ 8.000.|-400','-|Uma greve parou tudo e você voltou de ônibus.|-0 <2']);
+ ['+|Encontrou um sócio no avião e fez negócio.|+300 >2','-|A conta do hotel chegou com número de telefone.|-400','-|Uma greve parou tudo e você voltou de ônibus.|-0 <2']);
 SIT('alta','🎩','Jantar de gala','O evento beneficente cobra R$ 1.000 por pessoa. Você vai levar quem?','O cônjuge','O amante',
  ['+|Foi um sucesso e saíram na coluna social.|+100 >2','-|O cônjuge flertou com o garçom. Climão.|-0 <1','-|Brigaram e saíram antes do jantar.|-200'],
  ['-|A fofoca chegou ao cônjuge em 5 minutos.|-500 <3','+|Passou despercebido e foi uma noite ótima.|+0 >1','-|O amante pediu aumento de "carinho".|-300']);
@@ -269,7 +269,7 @@ SIT('alta','🎨','Obra de arte','Um artista famoso quer te vender uma obra "que
  ['-|Era falsificada. O artista foi preso.|-800','+|Valorizou 300% em um ano.|+800 >2','-|A obra foi roubada do seu cofre.|-500'],
  ['+|Poupou dinheiro e fez outro investimento.|+100 >1','-|O artista ficou ofendido e te difamou.|-0 <1','-|Descobriu que outro rico comprou e lucrou.|-0']);
 SIT('alta','👑','Festa de debutante','A filha do sócio faz 15 anos. O tema é "Cinderela" e custa R$ 200 mil.','Presentear com joias','Dar um cheque',
- ['+|A família amou e te promoveu a padrinho.|+100 >1','-|A joia era do mesmo modelo de outra convidada.|-100 <1','-|Gastou R$ 8 mil e ninguém agradeceu.|-300'],
+ ['+|A família amou e te promoveu a padrinho.|+100 >1','-|A joia era do mesmo modelo de outra convidada.|-100 <1','-|Gastou uma pequena fortuna e ninguém agradeceu.|-300'],
  ['+|O sócio ficou emocionado e fechou um contrato novo.|+300 >2','-|A debutante achou "pouco" e fez bico.|-0','-|O cheque voltou sem fundos. Mico.|-100 <1']);
 SIT('alta','🏠','Obra da cobertura','A reforma da cobertura saiu 3x mais cara. O arquiteto some.','Processar','Pagar e esquecer',
  ['+|Ganhou na justiça e recuperou tudo.|+500 >2','-|O processo durou 8 anos.|-300 P','-|O arquiteto contra-processou.|-400'],
@@ -294,7 +294,7 @@ SIT('alta','🍾','Réveillon em Copacabana','Camarote com vista pros fogos cust
  ['-|A praia tava lotada e você não viu quase nada.|-0','+|Achou um lugar perfeito e conheceu gente interessante.|+50 >1','-|Foi assaltado por um bando de meninos.|-100']);
 SIT('alta','👶','Escolha da escola','O filho precisa entrar numa escola chique. A mensalidade é R$ 15 mil.','Matricular','Procurar mais barata',
  ['+|O filho fez amizade com herdeiros e abriu portas.|+200 >2','-|Descobriu que a escola é cara e ruim.|-300','-|O filho foi expulso no primeiro mês.|-200 <1'],
- ['+|Achou uma ótima escola de R$ 4 mil.|+400 >1','-|O filho ficou revoltado.|-0','-|O filho sofreu bullying e você pagou terapia.|-300']);
+ ['+|Achou uma ótima escola bem mais barata.|+400 >1','-|O filho ficou revoltado.|-0','-|O filho sofreu bullying e você pagou terapia.|-300']);
 SIT('alta','🥂','Brinde com o sócio','Seu sócio quer brindar o fechamento do ano. Ele tá bêbado.','Brindar também','Evitar',
  ['+|Fecharam um contrato milionário na euforia.|+400 >2','-|Ele revelou um desvio de dinheiro.|-500 <2','-|Você aceitou um cheque sem pensar.|-300'],
  ['-|Ele te chamou de "traidor".|-0 <1','+|Ficou sóbrio e fechou um negócio melhor.|+200 >1','-|Ele quebrou a taça e cortou a mão.|-50']);
@@ -312,7 +312,7 @@ SIT('alto','🛩️','Viagem oficial','Uma viagem a Dubai "a trabalho" vai custa
  ['-|A imprensa descobriu e você virou notícia.|-400 <2','+|Fechou um acordo e voltou rico.|+600 >3','-|Perdeu o passaporte no aeroporto.|-100 P'],
  ['+|Ninguém notou e a viagem foi um sucesso.|+200 >2','-|O avião atrasou e você perdeu a reunião.|-0 <1','-|Você foi confundido com um turista comum.|-0']);
 SIT('alto','⚖️','Julgamento no STJ','Um processo contra você chegou ao tribunal. O relator é desconhecido.','Contratar o melhor advogado','Fazer um acordo',
- ['+|O advogado achou prescrição e você se safou.|+500 >2','-|O advogado cobrou R$ 500 mil e perdeu.|-800','-|Descobriu que o juiz é seu inimigo.|-300 <2'],
+ ['+|O advogado achou prescrição e você se safou.|+500 >2','-|O advogado cobrou os olhos da cara e perdeu.|-800','-|Descobriu que o juiz é seu inimigo.|-300 <2'],
  ['+|Acordo rápido e discreto.|+0 >1','-|O acordo vazou e a imprensa te devorou.|-500 <1','-|O rival exigiu muito e você pagou.|-400']);
 SIT('alto','🍽️','Jantar com empreiteiros','Um empresário te convida pra um jantar. "Só pra conversar".','Ir ao jantar','Recusar o convite',
  ['+|Saiu com um contrato novo e uma caixa de vinhos.|+700 >2','-|Tinha jornalista disfarçado na mesa.|-500 <2','-|Pagaram a conta e depois cobraram favor.|-300'],
@@ -350,10 +350,10 @@ SIT('crime','🏚️','Casa de segurança','Você precisa de um esconderijo. A c
  ['-|Passou frio e dormiu mal.|-0 P','+|Achou um lugar tranquilo.|>1','-|A polícia multou o carro por parada irregular.|-100']);
 SIT('crime','🧾','Contabilidade paralela','O contador sumiu com o caderninho. Faltam R$ 80 mil nas contas.','Procurar o contador','Refazer a conta',
  ['+|Achou o contador numa praia, ele devolveu tudo.|+300 >2','-|O contador virou delator.|-400 <2','-|Perdeu 3 dias procurando.|P'],
- ['-|A conta refeita deu R$ 200 mil de prejuízo.|-300','+|Descobriu que era só um erro de digitação.|+80 >1','-|Um sócio aproveitou e sumiu com o resto.|-500']);
+ ['-|A conta refeita revelou um prejuízo enorme.|-300','+|Descobriu que era só um erro de digitação.|+80 >1','-|Um sócio aproveitou e sumiu com o resto.|-500']);
 SIT('crime','👟','Sapato novo','Você ganhou um sapato caríssimo. Mas ele aperta.','Usar mesmo assim','Vender',
  ['!|Ficou com bolhas e andou manco o dia todo.|-0 <1','+|O sapato amaciou e virou a sensação do baile.|+0 >2','-|Alguém pisou e deixou marca eterna.|-30'],
- ['+|Vendeu por R$ 500 e ainda ganhou um brinde.|+300 >1','-|O comprador era policial disfarçado.|-300 P','-|O sapato era falsificado.|-0']);
+ ['+|Vendeu por um bom dinheiro e ainda ganhou um brinde.|+300 >1','-|O comprador era policial disfarçado.|-300 P','-|O sapato era falsificado.|-0']);
 SIT('crime','📱','Rede social do morro','Seu perfil bombou com uma foto na laje. Vários curtiram.','Apagar a foto','Aproveitar a fama',
  ['+|A foto sumiu antes de alguém notar.|+0 >1','-|Já tinha print rodando em todo lugar.|-100 <1','-|A polícia já tinha visto.|-300 P'],
  ['+|Ganhou 100 mil seguidores e uma proposta de publi.|+300 >2','-|A polícia usou a foto como prova.|-500 <2','-|Ganhou haters e perdeu a paz.|-50 <1']);
@@ -373,7 +373,7 @@ SIT('crime','🔦','Falta de luz no morro','A luz caiu no morro inteiro. Reclama
  ['+|Consertou o gato e virou herói local.|+100 >1','-|Levou choque e ficou tonto.|-0 P','-|Piorou e o morro ficou 3 dias no escuro.|-200 <1'],
  ['+|Todo mundo foi pra laje ver estrelas. Bonito.|+0 >1','-|Houve um tumulto no escuro.|-100 <1','-|Alguém roubou sua moto.|-300']);
 SIT('crime','📜','Convocação do juiz','Você foi chamado pra depor num fórum. Comparecer?','Ir com advogado','Não ir',
- ['+|O advogado te livrou em 10 minutos.|+0 >2','-|O advogado cobrou R$ 2 mil e não resolveu.|-300','-|O juiz era durão e te interrogou por horas.|-0 P'],
+ ['+|O advogado te livrou em 10 minutos.|+0 >2','-|O advogado cobrou caro e não resolveu.|-300','-|O juiz era durão e te interrogou por horas.|-0 P'],
  ['-|Mandaram te buscar. Humilhação pública.|-200 <2','+|Esqueceram de você. Sorte absurda.|+0 >2','-|Virou foragido e perdeu o sossego.|-500 P']);
 // ---------------------------------------------------------------- LEI E ORDEM
 SIT('legal','🚓','Perseguição a suspeito','Um carro fugiu da blitz e você tá na viatura. Perseguir ou esperar reforço?','Perseguir','Esperar reforço',
@@ -458,7 +458,7 @@ SIT('*','🎮','Campeonato de videogame','O sobrinho te chamou pra um torneio. O
  ['+|Torcendo, virou o "técnico" do sobrinho e ganhou parte do prêmio.|+100 >1','-|Gritou demais e levou advertência.|-0','-|Perdeu a voz.|-0 P'],'<=30');
 SIT('*','🎓','Formatura','A formatura vai custar R$ 5 mil. A família quer fazer festa.','Pagar a festa','Fazer uma festinha caseira',
  ['+|Todos amaram e te deram presentes.|+200 >2','-|O buffet cobrou extra por "taxa de alegria".|-500','-|A banda não apareceu.|-300 <1'],
- ['+|Foi um churrasco inesquecível por R$ 600.|+50 >2','-|Choveu e ninguém foi.|-0 <1','-|Os convidados reclamaram.|-100'],'<=30');
+ ['+|Foi um churrasco inesquecível e barato.|+50 >2','-|Choveu e ninguém foi.|-0 <1','-|Os convidados reclamaram.|-100'],'<=30');
 SIT('*','💍','Pedido de casamento','Você vai pedir em casamento. Prefere um jantar romântico ou um flash mob?','Jantar romântico','Flash mob',
  ['+|A resposta foi "sim". Todos choraram.|+0 >3','-|O restaurante cobrou R$ 800 e a resposta foi "preciso pensar".|-800 <1','-|O garçom derrubou o anel na sopa.|-300'],
  ['+|Deu tudo certo e viralizou.|+100 >3','-|Ninguém dançou e todo mundo riu.|-0 <2','-|O flash mob invadiu o evento errado.|-100 <1'],'<=40');
@@ -497,7 +497,7 @@ SIT('*','🔥','Churrasqueira na laje','Alguém acendeu uma churrasqueira com um
  ['+|O dono agradeceu e te deu uma picanha.|+50 >2','-|O dono se ofendeu e te expulsou.|-0 <2','-|O fogo se espalhou e você tentou apagar.|-100'],
  ['+|A carne ficou ótima (tinta é detalhe).|+0 >1','!|Passou mal depois de comer.|-80 P','-|A churrasqueira explodiu.|-200 <2']);
 SIT('*','🚨','Dia de blitz da lei seca','A Lei Seca montou uma blitz na saída do bar. Você tomou uns dois chopes.','Passar de cara limpa','Mudar de caminho',
- ['+|Passou no teste do bafômetro por pouco.|+0 >2','-|Falhou e levou multa de R$ 3 mil.|-300 P','-|O policial implicou com seu jeito de falar.|-0 <1'],
+ ['+|Passou no teste do bafômetro por pouco.|+0 >2','-|Falhou e levou uma multa pesadíssima.|-300 P','-|O policial implicou com seu jeito de falar.|-0 <1'],
  ['+|Desviou e chegou em casa.|+0 >1','-|Tinha outra blitz no outro caminho.|-300 P','-|Pegou um engarrafamento e dormiu no carro.|-0']);
 SIT('*','🍍','Abacaxi na praia','Um vendedor oferece abacaxi: "doce igual a minha ex". Você tá com fome.','Comprar','Recusar',
  ['+|O abacaxi era doce de verdade.|+0 >1','-|Era azedo igual a ex.|-10','-|O vendedor cobrou o dobro.|-20'],
@@ -555,14 +555,14 @@ SIT('*','📱','Golpe do PIX','Chegou uma mensagem: "Olá, sou o gerente do seu 
  ['-|Perdeu o saldo, o limite e a vergonha. O golpista deixou um "obrigado".|-400 <1','+|Era o gerente de verdade e ele te ofereceu um cartão black.|+100 >1','-|O golpista usou seus dados pra abrir um bufê no seu nome.|-200 P'],
  ['+|O golpista caiu no seu golpe e você levou o PIX dele.|+150 >2','-|Era mesmo o gerente e você perdeu a oferta de empréstimo.|-0 <1','+|Você denunciou e a polícia te deu um certificado de "cidadão cívico".|+0 >1']);
 SIT('*','🚓','Policial corrupto de bom humor','Um guarda te para: "Documento, parceiro? Olha, tá tudo meio errado… mas eu te ajudo".','Pagar o "cafezinho"','Exigir o procedimento correto',
- ['-|O cafezinho custou R$ 800. O guarda ainda pediu o troco.|-500','+|O guarda era seu vizinho, riu da situação e só pediu um pastel.|+0 >2','-|Gravaram a cena e você foi preso por corrupção ativa.|-400 P'],
+ ['-|O cafezinho saiu caríssimo. O guarda ainda pediu o troco.|-500','+|O guarda era seu vizinho, riu da situação e só pediu um pastel.|+0 >2','-|Gravaram a cena e você foi preso por corrupção ativa.|-400 P'],
  ['+|O guarda se atrapalhou, te liberou e pediu desculpas.|+0 >2','-|O guarda gostou da cara de honesto e te levou pra delegacia pra explicar.|-0 P','-|Ele te multou por "excesso de educação".|-120']);
 SIT('*','🎰','Bicheiro generoso','O bicheiro do bairro distribui cesta básica e cerveja. Todo mundo sabe de onde vem, ninguém pergunta.','Aceitar a cesta','Recusar com um sermão',
  ['+|A cesta tinha até azeite importado. O bairro te chamou de "xodó".|+60 >1','-|A cesta veio com um "pedido de favor" e agora você é o intermediário.|-0 <2','-|A polícia viu a cesta na sua casa. Interrogatório de 3 horas.|-0 P'],
  ['-|O bicheiro ficou sentido e você nunca mais vai ter fiado no mercado.|-100 <1','+|Ele respeitou sua posição e te mandou um panetone de consolação.|+30 >1','-|Um repórter te filmou e o vídeo bombou: "O bicheiro tem inimigos!".|-0 <2']);
 SIT('*','🍷','Sommelier de boteco','No boteco novo da moda, o garçom explica a carta: "esse chope tem notas de couro e saudade".','Pedir o chope premium','Pedir o chope normal',
  ['-|O chope premium custou R$ 38 e tinha gosto de chope. Notas de nada.|-38','+|O garçom era o dono, gostou de você e te serviu o melhor da casa.|+0 >2','-|Você disse "tem gosto de cerveja" e o garçom chorou.|-0 <1'],
- ['+|O normal tava ótimo e custava R$ 8. Vitória do povo!|+10 >1','-|O garçom te olhou com desprezo e te deu a mesa do banheiro.|-0 <1','-|Fez uma piada e o dono te expulsou por "conduta inadequada".|-20 P']);
+ ['+|O normal tava ótimo e custava uma pechincha. Vitória do povo!|+10 >1','-|O garçom te olhou com desprezo e te deu a mesa do banheiro.|-0 <1','-|Fez uma piada e o dono te expulsou por "conduta inadequada".|-20 P']);
 SIT('*','🏍️','Motoboy em alta velocidade','Um motoboy passa a 120 km/h no corredor e leva seu retrovisor de lembrança.','Gritar com ele','Anotar a placa',
  ['-|Ele voltou de ré e te deu uma bronca de 7 minutos. Você pediu desculpa.|-0 <1','+|Ele parou, pediu desculpa e pagou o retrovisor.|+50 >1','-|Ele era o filho do síndico e você foi multado pelo condomínio.|-100'],
  ['-|A placa era falsa. O motoboy ainda te seguiu no Instagram.|-0 <1','+|A polícia achou o cara e ele pagou tudo com juros.|+100 >2','-|Você tropeçou no meio-fio anotando e caiu de cara.|-30 <1']);

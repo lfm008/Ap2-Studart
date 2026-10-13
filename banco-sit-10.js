@@ -34,9 +34,9 @@ SIT('*','🎅','Papai Noel de shopping','O Papai Noel do shopping tá fumando at
  ['+|O Papai Noel te deu um pirulito de agradecimento.|+0 >1','-|Uma criança viu e gritou. Virou escândalo.|-0 <2','-|O Papai Noel te seguiu até o carro.|-0']);
 SIT('*','🧚','Fada do dente','Seu sobrinho perdeu um dente. Ele quer que a "fada" deixe R$ 100. Você só tem R$ 5.','Dar os R$ 5','Dar R$ 100',
  ['+|O sobrinho ficou feliz com os R$ 5: "a fada é pobre".|+0 >2','-|O sobrinho chorou e acusou a fada de "sovina".|-0 <2','-|O sobrinho descobriu que era você.|-0 <2'],
- ['+|O sobrinho ficou radiante e te abraçou.|+0 >3','-|O sobrinho contou pros primos e todos exigiram R$ 100.|-400','-|Você ficou sem dinheiro pro mês.|-100']);
+ ['+|O sobrinho ficou radiante e te abraçou.|+0 >3','-|O sobrinho contou pros primos e todos exigiram o mesmo valor.|-400','-|Você ficou sem dinheiro pro mês.|-100']);
 SIT('*','🔮','Cartomante','Uma cartomante te diz: "você vai ficar rico". Ela te cobra R$ 100. Você se pergunta se ficaria rico sem pagar.','Pagar e acreditar','Recusar',
- ['+|Ganhou R$ 200 no bicho no mesmo dia.|+200 >3','-|A previsão era "rico de espírito".|-100','-|Ela te vendeu um amuleto de R$ 80.|-180'],
+ ['+|Ganhou R$ 200 no bicho no mesmo dia.|+200 >3','-|A previsão era "rico de espírito".|-100','-|Ela te vendeu um amuleto "abençoado" caríssimo.|-180'],
  ['+|Foi embora e achou R$ 50 no bolso.|+50 >1','-|Ela amaldiçoou seu cachorro.|-0 <2','-|Tropeçou na saída.|-30 <1']);
 SIT('*','🧙','Mágico de festa','O mágico da festa pede uma carteira emprestada. Você cede. Ele a faz sumir. De verdade.','Pedir de volta','Rir',
  ['+|Ele devolveu cheia de dinheiro. Era um truque.|+300 >3','-|Ele fugiu e levou sua carteira.|-300 <2','-|A carteira apareceu no bolso do vizinho.|-0 <2'],

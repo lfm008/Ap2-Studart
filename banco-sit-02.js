@@ -21,10 +21,10 @@ SIT('*','🛗','Elevador quebrado','Você mora no 12º andar e o elevador pifou.
  ['+|Chegou ao topo e se sentiu um atleta olímpico.|+0 >2','!|Torceu o tornozelo na escada escura.|-50 <2','-|Chegou sem fôlego e a pizza esfriou.|-0 P'],
  ['-|Esperou 3 horas. O técnico nem apareceu.|-0 P','+|O elevador voltou 5 minutos depois.|+0 >1','-|Dormiu no saguão e perdeu o dia.|-0 <2']);
 SIT('*','🏠','Vazamento no teto','Um vazamento no teto do banheiro. A mancha parece o mapa do Brasil.','Chamar o encanador','Tapar com fita',
- ['+|O encanador era honesto e cobrou só R$ 80.|+0 >2','-|Cobrou R$ 400 por trocar um cano de R$ 5.|-400','-|Ele esqueceu a ferramenta e foi buscar. Demorou 4 horas.|-0 P'],
+ ['+|O encanador era honesto e cobrou só R$ 80.|+0 >2','-|Cobrou uma fortuna por trocar um cano que custa quase nada.|-400','-|Ele esqueceu a ferramenta e foi buscar. Demorou 4 horas.|-0 P'],
  ['-|A fita não aguentou. Inundou o banheiro.|-250','+|A fita segurou. Milagre de 3 meses.|+0 >1','-|O vizinho de baixo reclamou da mancha.|-80']);
 SIT('*','🔌','Curto-circuito','Você ligou o ar-condicionado e a casa inteira ficou no escuro.','Chamar o eletricista','Mexer no quadro',
- ['+|O eletricista era vizinho e cobrou só uma cerveja.|+0 >2','-|Cobrou R$ 300 e trocou um fusível de R$ 3.|-300','-|Ficou 5 horas sem luz esperando.|-0 P'],
+ ['+|O eletricista era vizinho e cobrou só uma cerveja.|+0 >2','-|Cobrou uma fortuna e trocou um fusível de centavos.|-300','-|Ficou 5 horas sem luz esperando.|-0 P'],
  ['!|Levou um choque que te deixou cabelo em pé por 1 hora.|-60 P','+|Resolveu sozinho e ficou herói da casa.|+0 >2','-|Queimou o quadro e piorou tudo.|-350']);
 SIT('*','🐜','Formigas na cozinha','Uma fila de formigas invade sua cozinha. Elas parecem organizadas.','Matar com veneno','Fazer amizade com elas',
  ['+|O veneno funcionou e a cozinha ficou limpa.|+0 >1','-|O veneno afetou o cachorro e você levou 2 horas no veterinário.|-120 P','-|As formigas voltaram com reforço.|-0 <1'],

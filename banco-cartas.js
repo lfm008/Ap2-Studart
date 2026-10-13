@@ -87,14 +87,14 @@ C('alta','+','🥂','Brinde de negócios','Fechou contrato em jantar de 5 estrel
 C('alta','+','📈','Ações em alta','Suas ações subiram 12% em um dia.','+1200');
 C('alta','+','🛥️','Passeio de lancha','Um amigo te levou pra almoçar em Angra de lancha.','+0 >3');
 C('alta','+','🏠','Imóvel valorizou','O apartamento do Leblon valorizou 15%.','+1500');
-C('alta','+','🎨','Obra de arte','O quadro que comprou por R$ 50 mil vale R$ 400 mil.','+2000');
+C('alta','+','🎨','Obra de arte','O quadro que você comprou barato agora vale uma fortuna.','+2000');
 C('alta','+','🍷','Adega premiada','Um sommelier avaliou sua adega em 10x o valor.','+900');
 C('alta','+','🚁','Heliponto livre','Chegou na reunião de helicóptero em 15 minutos.','>3');
 C('alta','+','💎','Herança inesperada','Uma tia distante deixou uma coleção de joias.','+1500');
 C('alta','-','📉','Bolsa despenca','A bolsa caiu 8% e levou parte do seu patrimônio.','-1500');
 C('alta','-','🚨','Alarme da mansão','Alarme disparou às 3h. Era um gambá. Segurança cobrou visita.','-300');
 C('alta','-','🍣','Intoxicação no rodízio','O sushi do restaurante da moda não caiu bem.','-200 P');
-C('alta','-','🚗','Carro importado riscado','Alguém riscou seu carro de R$ 400 mil.','-900');
+C('alta','-','🚗','Carro importado riscado','Alguém riscou seu carro de luxo.','-900');
 C('alta','-','🏖️','Casa de Angra alagou','A chuva danificou a casa de veraneio.','-1200');
 C('alta','-','👩‍⚖️','Pensão alimentícia','O ex-cônjuge pediu revisão da pensão.','-1000');
 C('alta','-','📺','Entrevista infeliz','Falou besteira ao vivo e virou meme nacional.','-500 <2');

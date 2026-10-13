@@ -43,7 +43,7 @@ SIT('*','🎸','Banda dos anos 80','Sua banda dos anos 80 foi convidada pra toca
  ['-|A banda terminou por causa disso.|-0 <2','+|Ficaram em casa e lembraram dos velhos tempos.|+0 >1','-|Um jovem tocou no lugar e fez sucesso.|-0'],'45+');
 SIT('*','🏡','Casa na praia','Você herdou uma casa na praia. Ela precisa de reforma completa. O preço é R$ 80 mil.','Reformar','Vender',
  ['+|A reforma ficou linda e você ganhou uma fortuna no aluguel.|+800 >3','-|O orçamento dobrou e a obra parou.|-500 <2','-|A casa foi invadida por morcegos.|-300'],
- ['+|Vendeu por R$ 300 mil e fez uma viagem.|+500 >3','-|O comprador deu um golpe.|-1000 <2','-|O imposto comeu 40% do valor.|-400'],'40+');
+ ['+|Vendeu por um bom dinheiro e fez uma viagem.|+500 >3','-|O comprador deu um golpe.|-1000 <2','-|O imposto comeu 40% do valor.|-400'],'40+');
 SIT('*','🎓','Primeiro dia de faculdade','Você começou a faculdade aos 50. Os colegas têm 18 anos e te chamam de "professor".','Fingir que é professor','Ser você mesmo',
  ['+|Ficou famoso na turma e ganhou um apelido legal.|+0 >3','-|Foi pego e riram da brincadeira.|-0 <2','-|O professor te mandou calar.|-0 <1'],
  ['+|Os colegas te adotaram como "tio" e te levaram pro bar.|+0 >3','-|Ninguém falou com você.|-0 <2','-|Foi confundido com o zelador.|-0 <1'],'45+');

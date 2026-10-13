@@ -394,7 +394,7 @@ function pickDireta(p){
   const l=DIRETAS.filter(c=>(!c.for||c.for.includes(p.classe))&&idadeOk(c,p));
   return l.length?dr('dir_'+p.classe,l):null;
 }
-function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${c.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
+function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
   (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
@@ -406,9 +406,17 @@ function fmtEff(r){const a=[];
   if(r.perde)a.push('Perca a próxima vez'); if(r.again)a.push('Jogue de novo');
   return a.join(' · ')||'Nada muda'}
 function nice(v){const a=Math.abs(v),st=a<200?10:a<2000?50:a<20000?500:2500;return Math.sign(v)*Math.max(st,Math.round(a/st)*st)}
+// se o texto cita um único valor em R$ igual ao do efeito base, o texto passa a citar o valor realmente aplicado
+function textoComValor(x,base,v){
+  const re=/R\$ ?(\d[\d.]*)( milhões| milhão| mil)?/g, m=[...x.matchAll(re)];
+  if(!v||m.length!==1)return x;
+  let n=parseFloat(m[0][1].replace(/\./g,''));if(m[0][2]===' mil')n*=1e3;else if(m[0][2])n*=1e6;
+  return n===base?x.replace(re,'R$ '+Math.abs(v).toLocaleString('pt-BR')):x;
+}
 function adaptar(res,p){
   const r=parseEff(res.eff),notas=[],f=Math.min(30,Math.max(.6,p.renda/3000));
   r.money=r.money?nice(r.money*f):0;
+  const shown=r.money; // valor escalado (sem custos de dano) — o texto passa a citar exatamente esse valor
   if(res.d){
     const alto=p.classe==='alta'||p.classe==='alto';
     if(p.idade>=60){notas.push(alto?'Idoso: internado em clínica particular':'Idoso: internado no hospital');r.move-=2;r.money-=nice(150*f)*(alto?2:1);if(!alto)r.perde=true}
@@ -417,7 +425,7 @@ function adaptar(res,p){
     else if(p.idade<=25&&r.move<0){notas.push('Jovem: se recupera rápido');r.move+=1}
     if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
   }
-  return {eff:fmtEff(r),notas,money:r.money}
+  return {eff:fmtEff(r),notas,money:r.money,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha','Ferreira','Ribeiro','Araújo','Costa','Martins','Alves','Rodrigues','Castro','Dias','Teixeira','Moreira','Cardoso','Pinto','Machado','Monteiro','Freitas','Vieira','Batista','Ramos','Moraes','dos Santos','de Souza','Xavier','Fontes'];
@@ -789,7 +797,7 @@ function cardRender(){
   draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
 }
 function frontSit(sc){return `<span class="kind sit">SITUAÇÃO</span><div class="ico">${sc.ico}</div><div class="ct">${sc.t}</div><div class="tx">${sc.x}</div>`}
-function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${res.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
+function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
@@ -879,5 +887,15 @@ faceHTML(); setFace(1,false); updateLocks(); renderGen();
 <script src="banco-sit-09.js"></script>
 <script src="banco-sit-10.js"></script>
 <script src="banco-sit-11.js"></script>
+<script src="banco-sit-12.js"></script>
+<script src="banco-sit-13.js"></script>
+<script src="banco-sit-14.js"></script>
+<script src="banco-sit-15.js"></script>
+<script src="banco-sit-16.js"></script>
+<script src="banco-sit-17.js"></script>
+<script src="banco-sit-18.js"></script>
+<script src="banco-sit-19.js"></script>
+<script src="banco-sit-20.js"></script>
+<script src="banco-sit-21.js"></script>
 </body>
 </html>
