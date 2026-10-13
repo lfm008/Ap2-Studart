@@ -113,8 +113,8 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 
 /* CARTA */
 .pilewrap{flex:1;display:flex;align-items:center;justify-content:center;perspective:1000px;min-height:0;padding:12px 0 18px;overflow:hidden}
-.pile{position:relative;height:clamp(250px,calc(100dvh - 380px),340px);aspect-ratio:2/3;transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-22deg);transition:transform .6s}
-.pile.drawing{transform:rotateX(18deg) rotateZ(-4deg)}
+.pile{position:relative;height:clamp(250px,calc(100dvh - 380px),340px);aspect-ratio:2/3;transform-style:preserve-3d;transform:rotateX(24deg);transition:transform .8s ease}
+.pile.drawing{transform:rotateX(0deg)}
 .pl{position:absolute;inset:0;border-radius:14px;background:#111;border:2px solid #333;box-shadow:0 2px 0 #000}
 .back,.front{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;border:2px solid #000;overflow:hidden}
 .back{background:linear-gradient(160deg,#242424,#121212);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--ink);background-image:repeating-linear-gradient(45deg,#ffffff08 0 6px,transparent 6px 12px)}
@@ -123,9 +123,8 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .back .big b{color:var(--y);display:block;font-weight:400}
 .back .crown{width:50px;height:34px}
 .back .ring{position:absolute;inset:10px;border:2px solid #fff3;border-radius:10px}
-.flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.1,.2,1);transform:translateZ(14px)}
-.flipper.go{transform:translateZ(120px) translateY(-30px) rotateX(-52deg) rotateY(180deg) rotateZ(22deg) scale(1.15)}
-.pile.drawing .flipper.go{transform:translateZ(30px) rotateY(180deg) scale(1)}
+.flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.45,.05,.25,1);transform:translateZ(14px)}
+.flipper.go{transform:translateZ(30px) rotateY(180deg)}
 .front{transform:rotateY(180deg);background:var(--paper);color:#1a1a1a;display:flex;flex-direction:column;padding:14px;text-align:center}
 .front .kind{font-family:var(--display);font-size:13px;letter-spacing:.15em;color:#fff;padding:3px 10px;border-radius:3px;align-self:center}
 .front .kind.sit{background:var(--y);color:#111}
@@ -360,9 +359,8 @@ SITUACOES.push(
 );
 function pickSit(p){
   const esp=SITUACOES.filter(s=>s.for&&s.for.includes(p.classe)), ger=SITUACOES.filter(s=>!s.for);
-  let pool=(esp.length&&Math.random()<.55)?esp:ger.length?ger:SITUACOES, sc;
-  do{sc=pick(pool)}while(sc===S.lastSit&&pool.length>1);
-  return S.lastSit=sc;
+  const usaEsp=esp.length&&Math.random()<.55;
+  return dr('sit_'+(usaEsp?p.classe:'ger'),usaEsp?esp:ger.length?ger:SITUACOES);
 }
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
@@ -389,7 +387,7 @@ function adaptar(res,p){
   return {eff:fmtEff(r),notas,money:r.money}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
-const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
+const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha','Ferreira','Ribeiro','Araújo','Costa','Martins','Alves','Rodrigues','Castro','Dias','Teixeira','Moreira','Cardoso','Pinto','Machado','Monteiro','Freitas','Vieira','Batista','Ramos','Moraes','dos Santos','de Souza','Xavier','Fontes'];
 // Profissões: o(categoria, masculino, feminino|null, rendaMin, rendaMax, [habilidades], [idadeMin,idadeMax]?)
 const OC=[];
 const o=(c,m,f,a,b,t,ag)=>OC.push({c,m,f,r:[a,b],t,ag});
@@ -473,8 +471,8 @@ const BAIRROS_CRIME=['Rocinha','Complexo do Alemão','Cidade de Deus','Maré','J
 const BAIRROS_LEI=['Realengo','Méier','Campo Grande','Bangu','Tijuca','Jacarepaguá','Vila Militar','Santa Cruz'];
 const BAIRROS_ALTO=['Leblon','Urca','Joá','Península','São Conrado','Brasília (mas finge que mora no Rio)'];
 const BAIRROS_UNI=['Tijuca','Flamengo','Botafogo','Lapa','Madureira','Maracanã','Urca'];
-const NOMES_M=['Zeca','Thiago','Marcelo','Wesley','Rogerinho','Fabrício','Seu Jorge','Jefferson','Dudu','Lucas','Rafael','Gustavo'];
-const NOMES_F=['Juliana','Cris','Dona Neuza','Tati','Bia','Luana','Vanessa','Camila','Patrícia','Mônica','Fernanda','Larissa'];
+const NOMES_M=['Zeca','Thiago','Marcelo','Wesley','Rogerinho','Fabrício','Seu Jorge','Jefferson','Dudu','Lucas','Rafael','Gustavo','Anderson','Bruno','Caio','Diego','Everton','Felipe','Gabriel','Heitor','Igor','Júnior','Kaique','Leandro','Matheus','Nathan','Otávio','Pedrão','Renan','Sérgio','Vinícius','Alan','Cauã','Maycon','Tonho','Ricardão'];
+const NOMES_F=['Juliana','Cris','Dona Neuza','Tati','Bia','Luana','Vanessa','Camila','Patrícia','Mônica','Fernanda','Larissa','Aline','Bruna','Carol','Daniele','Eduarda','Fabiana','Gabriela','Helena','Isabela','Jéssica','Kelly','Letícia','Marina','Natália','Priscila','Rafaela','Sabrina','Thaís','Viviane','Yasmin','Rosângela','Michele','Zuleica','Nanda'];
 const BAIRROS_RICO=['Leblon','Ipanema','Gávea','Lagoa','São Conrado','Barra da Tijuca','Jardim Botânico','Urca','Joá','Península'];
 const FAM_CAT={
  crime:['Mãe que reza o terço por ele e lava o dinheiro no tanque.','Tio que "trabalha com logística" e nunca explica o quê.','Avó que sabe de tudo e finge que não ouve nada.','Primo que é policial. Almoço de domingo é tenso.','Irmão caçula que quer entrar no "ramo" e só sabe fazer meme.'],
@@ -586,6 +584,18 @@ const CAMISA=['#e0483a','#f7a81b','#3fbf6a','#3b7ddd','#f4efe4','#8d4fd1','#222'
 /* ============ ESTADO ============ */
 const S={players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+// Sacola persistente: sorteia sem repetir até esgotar a lista (guardada no aparelho, vale entre partidas)
+const MEMO={};
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function dr(key,list){
+  if(list.length<2)return list[0];
+  const k='rjt_'+key; let st=MEMO[k];
+  try{if(!st)st=JSON.parse(localStorage.getItem(k)||'null')}catch(e){}
+  if(!st||st.n!==list.length||!st.q||!st.q.length){const q=shuffle([...list.keys()]);if(st&&st.last===q[q.length-1]&&q.length>1)q.unshift(q.pop());st={n:list.length,q}}
+  st.last=st.q.pop(); MEMO[k]=st;
+  try{localStorage.setItem(k,JSON.stringify(st))}catch(e){}
+  return list[st.last];
+}
 const rnd=n=>Math.floor(Math.random()*n), pick=a=>a[rnd(a.length)];
 const money=v=>(v<0?'– ':'')+'R$ '+Math.abs(v).toLocaleString('pt-BR');
 
@@ -615,22 +625,32 @@ function gerar(){
   // sorteia a categoria pelos pesos de CAT (alta 20% + alto padrão 5% = 25% de ricos)
   let x=Math.random()*100,cat='baixa';
   for(const k in CAT){if((x-=CAT[k].p)<0){cat=k;break}}
-  const pr=pick(OC.filter(q=>q.c===cat));
+  const pr=dr('oc_'+cat,OC.filter(q=>q.c===cat));
   let oc=fem?(pr.f||femize(pr.m)):pr.m;
   const rico=pr.r[1]>=20000, step=rico?500:50;
   const renda=Math.round((pr.r[0]+Math.random()*(pr.r[1]-pr.r[0]))/step)*step;
   const grana=Math.max(step,Math.round(renda*(.5+Math.random())/step)*step); // reserva = 0,5x a 1,5x a renda
   const popular=cat==='baixa'||cat==='crime';
-  const nome=pick((fem?NOMES_F:NOMES_M).filter(n=>popular||!/^(Dona|Seu)/.test(n)));
+  const nome=dr('nm_'+(fem?'f':'m')+(popular?'p':'n'),(fem?NOMES_F:NOMES_M).filter(n=>popular||!/^(Dona|Seu)/.test(n)));
   const ag=pr.ag||(cat==='alta'?[30,65]:cat==='media'?[22,65]:cat==='alto'?[45,70]:cat==='legal'?[24,55]:cat==='estudante'?[18,25]:[18,61]);
   const fams=FAM_CAT[cat]||(cat==='alta'?FAMILIA_RICO:cat==='media'?FAMILIA_MEDIA:FAMILIA);
   return {
     id:Date.now()+Math.random(), classe:cat, tag:CAT[cat].tag,
-    nome:nome+' '+pick(SOBRE), idade:ag[0]+rnd(ag[1]-ag[0]+1),
-    bairro:pick({baixa:BAIRROS,media:BAIRROS_MEDIA,alta:BAIRROS_RICO,crime:BAIRROS_CRIME,legal:BAIRROS_LEI,alto:BAIRROS_ALTO,estudante:BAIRROS_UNI}[cat]), ocup:oc, renda, grana, rico,
-    traco:pick(pr.t), fam:pick(fams)+(Math.random()<.7?' '+pick(FAM_EXTRA):''), sorte:pick(SORTES),
+    nome:nome+' '+dr('sob',SOBRE), idade:ag[0]+rnd(ag[1]-ag[0]+1),
+    bairro:dr('br_'+cat,{baixa:BAIRROS,media:BAIRROS_MEDIA,alta:BAIRROS_RICO,crime:BAIRROS_CRIME,legal:BAIRROS_LEI,alto:BAIRROS_ALTO,estudante:BAIRROS_UNI}[cat]), ocup:oc, renda, grana, rico,
+    traco:dr('tr_'+pr.m,pr.t), fam:dr('fam_'+cat,fams)+(Math.random()<.7?' '+dr('fx',FAM_EXTRA):''), sorte:dr('sorte',SORTES),
     av:{fem,tom:pick(TOM),cab:pick(CAB),cam:pick(CAMISA),style:Math.random()<.5,barba:Math.random()<.4,oculos:Math.random()<.25,sorriso:Math.random()<.6}
   };
+}
+// garante que nenhum jogador da mesa repita nome, profissão, habilidade ou família
+function gerarUnico(){
+  let g;
+  for(let i=0;i<12;i++){
+    g=gerar();
+    const dup=S.players.some(q=>q.nome===g.nome||q.nome.split(' ')[0]===g.nome.split(' ')[0]||q.ocup===g.ocup||q.traco===g.traco||q.fam.split('. ')[0]===g.fam.split('. ')[0]);
+    if(!dup)break;
+  }
+  return g;
 }
 function femize(n){return n.replace(/^Vendedor/,'Vendedora').replace(/^Garçom/,'Garçonete').replace(/^Professor/,'Professora').replace(/^Dançarino/,'Dançarina').replace(/^Barraqueiro/,'Barraqueira').replace(/^Porteiro/,'Porteira').replace(/^Estagiário/,'Estagiária').replace(/^Dono/,'Dona').replace(/^Motorista/,'Motorista')}
 function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.tag?p.tag+' · ':''}Jogador ${i}</span>
@@ -656,7 +676,7 @@ function renderGen(){
   $('#btnPlay').disabled=n<2;
   $('#minHint').textContent=n<2?`Faltam ${2-n} jogador${2-n>1?'es':''} para começar (mínimo 2)`:(full?'Mesa cheia — bora jogar!':'Pode começar ou adicionar até 6 jogadores');
 }
-$('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=gerar();renderGen()};
+$('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=gerarUnico();renderGen()};
 $('#btnOk').onclick=()=>{S.players.push(S.pending);S.pending=null;renderGen()};
 $('#roster').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;S.players.splice(+b.dataset.rm,1);renderGen()};
 $('#btnPlay').onclick=()=>{
@@ -742,7 +762,7 @@ $('#btnDraw').onclick=()=>{
   $('#btnDraw').style.display='none';
   $('#pile').classList.add('drawing');
   $('#flipper').classList.add('go');
-  setTimeout(()=>{$('#choices').style.display='flex'},900);
+  setTimeout(()=>{$('#choices').style.display='flex'},850);
   S.drawn=true;
 };
 function choose(i){
