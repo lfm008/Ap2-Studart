@@ -128,10 +128,12 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .pile.drawing .flipper.go{transform:translateZ(80px) rotateY(180deg) scale(1.28)}
 .front{transform:rotateY(180deg);background:var(--paper);color:#1a1a1a;display:flex;flex-direction:column;padding:14px;text-align:center}
 .front .kind{font-family:var(--display);font-size:13px;letter-spacing:.15em;color:#fff;padding:3px 10px;border-radius:3px;align-self:center}
+.front .kind.sit{background:var(--y);color:#111}
 .front .kind.sorte{background:var(--green)}.front .kind.reves{background:var(--red)}
 .front .ico{font-size:58px;margin:18px 0 8px}
 .front .ct{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1.05}
 .front .tx{font-size:13px;margin-top:8px;line-height:1.35}
+.front.res{animation:pop2 .4s cubic-bezier(.2,1.6,.4,1)}
 .front .eff{margin-top:auto;font-family:var(--hand);font-size:17px}
 .front .eff.g{color:#1f8a47}.front .eff.r{color:#c0352a}
 
@@ -227,6 +229,7 @@ nav button.lock{opacity:.35}
     </div></div>
     <div class="actions">
       <button class="btn" id="btnDraw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="3" width="14" height="18" rx="2"/></svg> Pegar carta</button>
+      <div id="choices" style="display:none;flex-direction:column;gap:10px"><button class="btn" id="opt0"></button><button class="btn ghost" id="opt1"></button></div>
       <button class="btn" id="btnCardOk" style="display:none">OK</button>
     </div>
   </section>
@@ -236,7 +239,7 @@ nav button.lock{opacity:.35}
     <h2 class="title">Config</h2>
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
-    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · protótipo v0.1.<br>Os textos das cartas de Sorte/Revés ficam no array <b>CARDS</b> do código — é só editar.</p></div>
+    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · protótipo v0.1.<br>Os textos das cartas de Sorte/Revés ficam no array <b>SITUACOES</b> do código — é só editar.</p></div>
   </section>
 
   <div class="turn-ov" id="ov"><small>PRÓXIMO</small><div class="av" id="ovAv"></div><h2 id="ovName"></h2></div>
@@ -252,16 +255,39 @@ nav button.lock{opacity:.35}
 
 <script>
 /* ============ DADOS EDITÁVEIS ============ */
-// Cartas Sorte/Revés — troque pelo conteúdo definitivo. type: 'sorte' | 'reves'
-const CARDS = [
-  {type:'sorte',ico:'💵',t:'Dinheiro no bolso',x:'Achou uma nota de R$ 50 na calça que tava no varal.',eff:'+ R$ 50'},
-  {type:'sorte',ico:'🏖️',t:'Dia de praia',x:'Sol, mate gelado e biscoito Globo. Relaxou geral.',eff:'Avance 2 casas'},
-  {type:'sorte',ico:'🎟️',t:'Bicho deu',x:'Jogou no jacaré e o jacaré apareceu.',eff:'+ R$ 200'},
-  {type:'sorte',ico:'🚌',t:'Ônibus vazio',x:'Pegou o 485 vazio e sentado. Milagre carioca.',eff:'Jogue de novo'},
-  {type:'reves',ico:'🌧️',t:'Temporal no Rio',x:'Choveu 10 minutos e a cidade parou. Você ficou ilhado.',eff:'Perca a próxima vez'},
-  {type:'reves',ico:'🚨',t:'Arrastão na orla',x:'Perdeu o celular na praia. Culpa do chinelo na areia.',eff:'– R$ 150'},
-  {type:'reves',ico:'🚇',t:'Metrô parado',x:'Falha no sistema. Todo mundo no ônibus lotado.',eff:'Volte 3 casas'},
-  {type:'reves',ico:'🧾',t:'Preço de turista',x:'Pagou R$ 40 numa água de coco.',eff:'– R$ 40'},
+// Situações Sorte/Revés — troque/adicione à vontade.
+// Cada situação tem 2 opções; ao escolher, o app sorteia na hora se deu sorte (good) ou azar (bad).
+const SITUACOES = [
+ {ico:'🚌',t:'Assalto no BRT',x:'Você foi rendido no BRT por um assaltante. E agora?',opts:[
+  {l:'Passar tudo',good:{x:'O assaltante achou seu bilhete único vazio, ficou com pena e te devolveu o celular.',eff:'+ R$ 20'},bad:{x:'Levou celular, carteira e até o fone do ouvido.',eff:'– R$ 200'}},
+  {l:'Tentar reagir',good:{x:'Você gritou "É O FISCAL!" e o cara saiu correndo. Herói do 485.',eff:'Avance 3 casas'},bad:{x:'Tomou um tiro na perna.',eff:'Volte 3 casas'}}]},
+ {ico:'🏖️',t:'Praia lotada',x:'Domingo em Copacabana. O guarda-sol do vizinho tá na sua sombra.',opts:[
+  {l:'Reclamar educadamente',good:{x:'O cara era seu primo distante e pagou o mate de todo mundo.',eff:'+ R$ 30'},bad:{x:'Virou briga de areia. Você perdeu a bermuda e a dignidade.',eff:'– R$ 80'}},
+  {l:'Fingir que não viu',good:{x:'Entrou um vento, o guarda-sol voou e a sombra ficou toda sua.',eff:'Jogue de novo'},bad:{x:'Pegou uma insolação de nível Cristo Redentor.',eff:'Perca a próxima vez'}}]},
+ {ico:'🎰',t:'Jogo do bicho',x:'O primo do porteiro jura que hoje é dia de jacaré.',opts:[
+  {l:'Apostar R$ 100',good:{x:'Deu jacaré! O primo é o novo guru financeiro.',eff:'+ R$ 400'},bad:{x:'Deu cavalo. O primo sumiu.',eff:'– R$ 100'}},
+  {l:'Rir e seguir a vida',good:{x:'Hoje deu jacaré e você ficou só olhando… mas ganhou um pastel de consolação.',eff:'+ R$ 10'},bad:{x:'Você ouviu o "eu avisei" por 3 dias.',eff:'Volte 1 casa'}}]},
+ {ico:'🍺',t:'Resenha na laje',x:'Churrasco na laje do vizinho. Falta só a música… e o fogo.',opts:[
+  {l:'Levar o pagode',good:{x:'Virou show. Te chamaram pra tocar na formatura.',eff:'+ R$ 150'},bad:{x:'O som queimou e a laje quase caiu.',eff:'– R$ 120'}},
+  {l:'Só comer e sair de fininho',good:{x:'Ganhou marmita pra semana toda.',eff:'Avance 2 casas'},bad:{x:'Pegaram você lavando a louça. Sozinho.',eff:'Perca a próxima vez'}}]},
+ {ico:'🚇',t:'Metrô parado',x:'Falha no sistema. A plataforma tá cheia e o ônibus nem passou.',opts:[
+  {l:'Chamar um Uber',good:{x:'Preço normal e motorista que não fala. Milagre.',eff:'Avance 2 casas'},bad:{x:'Tarifa dinâmica de 7,3x. Você pagou em prestações.',eff:'– R$ 180'}},
+  {l:'Ir a pé até o Centro',good:{x:'Encontrou um amigo no caminho e ganhou carona de bike.',eff:'Avance 1 casa'},bad:{x:'Choveu, o chinelo quebrou e você chegou de pés descalços.',eff:'Volte 2 casas'}}]},
+ {ico:'🌧️',t:'Temporal no Rio',x:'Choveu 10 minutos e a cidade virou Veneza. Cadê o guarda-chuva?',opts:[
+  {l:'Esperar no bar',good:{x:'O dono liberou a cerveja pra quem ficou ilhado.',eff:'+ R$ 40'},bad:{x:'A água subiu e levou a mesa, o petisco e o seu orgulho.',eff:'– R$ 60'}},
+  {l:'Atravessar a enchente',good:{x:'Virou meme, ganhou 10k de seguidores e uma pizza.',eff:'+ R$ 100'},bad:{x:'Caiu num bueiro aberto.',eff:'Volte 3 casas'}}]},
+ {ico:'🧾',t:'Preço de turista',x:'O vendedor da praia olha pra você e sorri: "só R$ 40, amigo".',opts:[
+  {l:'Pagar sem pestanejar',good:{x:'Ele era sobrinho do dono e te devolveu o troco em dobro.',eff:'+ R$ 20'},bad:{x:'Era água de coco quente, pelo preço de um jantar.',eff:'– R$ 40'}},
+  {l:'Pechinchar no grito',good:{x:'Fechou a R$ 5 e ainda levou chapéu de brinde.',eff:'Avance 2 casas'},bad:{x:'Ele chamou o tio, o primo e o fiscal. Você pagou multa.',eff:'– R$ 90'}}]},
+ {ico:'🏍️',t:'Blitz de moto',x:'Policial te para: "documento, parceiro?". O seu tá em casa.',opts:[
+  {l:'Oferecer um "café"',good:{x:'Ele aceitou o pastel e te liberou. O Rio é assim.',eff:'Jogue de novo'},bad:{x:'Era corregedor à paisana. Multa e processo.',eff:'– R$ 250'}},
+  {l:'Voltar pra casa',good:{x:'Achou o documento na geladeira. Sempre estava lá.',eff:'Avance 1 casa'},bad:{x:'Perdeu a manhã inteira e levou bronca da mãe.',eff:'Perca a próxima vez'}}]},
+ {ico:'⚽',t:'Clássico no Maracanã',x:'Seu time joga hoje e o ingresso tá pela hora da morte.',opts:[
+  {l:'Comprar do cambista',good:{x:'Ingresso verdadeiro, ainda ganhou camisa de brinde.',eff:'+ R$ 60'},bad:{x:'Ingresso falso. Você assistiu pelo celular do vizinho.',eff:'– R$ 120'}},
+  {l:'Ver no bar',good:{x:'Seu time ganhou e o bar pagou a rodada.',eff:'Avance 2 casas'},bad:{x:'Perdeu de 5 a 0 e te culparam pela pé-frieza.',eff:'Volte 2 casas'}}]},
+ {ico:'🐕',t:'Cachorro no condomínio',x:'Um vira-lata te seguiu até em casa e comeu seu jantar.',opts:[
+  {l:'Adotar o bicho',good:{x:'Era o cachorro perdido de um deputado. Recompensa.',eff:'+ R$ 300'},bad:{x:'Ele destruiu o sofá e a vizinha fez B.O.',eff:'– R$ 150'}},
+  {l:'Expulsar na vassoura',good:{x:'Ele foi embora e deixou uma nota de R$ 50 no tapete. Ninguém explica.',eff:'+ R$ 50'},bad:{x:'Pisou no rabo errado. Mordida e injeção de tétano.',eff:'Perca a próxima vez'}}]},
 ];
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
@@ -418,7 +444,7 @@ function showOverlay(p){
 /* ============ CARTA ============ */
 function resetCard(){
   $('#flipper').classList.remove('go');$('#pile').classList.remove('drawing');
-  $('#btnDraw').style.display='';$('#btnCardOk').style.display='none';
+  $('#btnDraw').style.display='';$('#btnCardOk').style.display='none';$('#choices').style.display='none';
 }
 function cardRender(){
   const p=S.players[S.cur];
@@ -426,17 +452,27 @@ function cardRender(){
   const draw=$('#btnDraw');
   draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
 }
+function frontSit(sc){return `<span class="kind sit">SITUAÇÃO</span><div class="ico">${sc.ico}</div><div class="ct">${sc.t}</div><div class="tx">${sc.x}</div>`}
+function frontRes(sc,o,good,res){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${res.x}</div><div class="eff ${g?'g':'r'}">${res.eff}</div>`}
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
-  const c=pick(CARDS), good=c.type==='sorte';
-  $('#front').innerHTML=`<span class="kind ${c.type}">${good?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${c.x}</div><div class="eff ${good?'g':'r'}">${c.eff}</div>`;
+  const sc=pick(SITUACOES); S.sit=sc;
+  $('#front').className='front'; $('#front').innerHTML=frontSit(sc);
+  $('#opt0').textContent='1. '+sc.opts[0].l; $('#opt1').textContent='2. '+sc.opts[1].l;
   $('#btnDraw').style.display='none';
   $('#pile').classList.add('drawing');
   $('#flipper').classList.add('go');
-  setTimeout(()=>{$('#btnCardOk').style.display=''},900);
+  setTimeout(()=>{$('#choices').style.display='flex'},900);
   S.drawn=true;
 };
+function choose(i){
+  const sc=S.sit,o=sc.opts[i],good=Math.random()<.5;
+  $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,good?o.good:o.bad);
+  $('#choices').style.display='none'; $('#btnCardOk').style.display='';
+  if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
+}
+$('#opt0').onclick=()=>choose(0); $('#opt1').onclick=()=>choose(1);
 $('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
 
 /* ============ CONFIG ============ */
