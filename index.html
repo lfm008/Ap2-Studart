@@ -67,7 +67,11 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .rrow b{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rrow small{color:var(--mut);display:block;font-weight:400;font-size:11px}
 .rrow .n{font-family:var(--display);color:var(--y);font-size:18px;width:20px;text-align:center}
-.rrow button{background:none;border:0;color:var(--mut);font-size:20px;padding:6px 10px;cursor:pointer}
+.rrow.tap{cursor:pointer}.rrow.tap:active{background:#262626}
+.rrow .chev{color:var(--mut);font-size:22px;padding:0 6px}
+#modal{position:absolute;inset:0;background:#000c;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+#modal.on{display:flex}
+#modalBox{width:100%;max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:14px 0}
 .count{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--y);font-weight:800;font-size:13px;margin:14px 0 6px}
 .count.warn{color:var(--mut)}
 .dots{display:flex;gap:6px;justify-content:center}.dots i{width:9px;height:9px;border-radius:50%;background:#333}.dots i.on{background:var(--y)}
@@ -245,6 +249,7 @@ nav button.lock{opacity:.35}
     <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · protótipo v0.1.<br>Os textos das cartas de Sorte/Revés ficam no array <b>SITUACOES</b> do código — é só editar.</p></div>
   </section>
 
+  <div id="modal"><div id="modalBox"><div id="modalBody"></div><button class="btn" id="modalClose">Fechar</button></div></div>
   <div class="turn-ov" id="ov"><small>PRÓXIMO</small><div class="av" id="ovAv"></div><h2 id="ovName"></h2></div>
   <div class="toast" id="toast"></div>
 
@@ -672,13 +677,17 @@ function renderGen(){
   $('#preview').innerHTML=S.pending?pcardHTML(S.pending,n+1):`<div class="empty">${n?'Passa pro próximo jogador!':'Ninguém na fila ainda…<br>Aperte o botão pra ver quem você vai ser.'}</div>`;
   $('#count').className='count'+(n<2?' warn':'');
   $('#count').innerHTML=`<span>👥 ${n} jogador${n===1?'':'es'} pronto${n===1?'':'s'}</span><span class="dots">${[...Array(6)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span>`;
-  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><span style="font-weight:800;font-size:12px;color:var(--y)">${money(p.grana)}</span><button data-rm="${i}" aria-label="Remover">✕</button></div>`).join('');
+  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-view="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><span style="font-weight:800;font-size:12px;color:var(--y)">${money(p.grana)}</span><span class="chev">›</span></div>`).join('');
   $('#btnPlay').disabled=n<2;
   $('#minHint').textContent=n<2?`Faltam ${2-n} jogador${2-n>1?'es':''} para começar (mínimo 2)`:(full?'Mesa cheia — bora jogar!':'Pode começar ou adicionar até 6 jogadores');
 }
 $('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=gerarUnico();renderGen()};
 $('#btnOk').onclick=()=>{S.players.push(S.pending);S.pending=null;renderGen()};
-$('#roster').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;S.players.splice(+b.dataset.rm,1);renderGen()};
+$('#roster').onclick=e=>{const r=e.target.closest('[data-view]');if(r)verPersonagem(+r.dataset.view)};
+$('#board').onclick=e=>{const r=e.target.closest('[data-pid]');if(r){const i=S.players.findIndex(p=>String(p.id)===r.dataset.pid);if(i>=0)verPersonagem(i)}};
+function verPersonagem(i){const p=S.players[i];if(!p)return;$('#modalBody').innerHTML=pcardHTML(p,i+1)+`<div class="count" style="margin-top:12px">💰 Saldo atual: ${money(p.grana)}</div>`;$('#modal').classList.add('on')}
+$('#modalClose').onclick=()=>$('#modal').classList.remove('on');
+$('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
 $('#btnPlay').onclick=()=>{
   if(S.players.length<2){toast('Mínimo de 2 jogadores!');return}
   S.pending=null;S.started=true;S.cur=0;S.rolled=false;S.drawn=false;S.face=1;
@@ -776,7 +785,7 @@ $('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender(
 
 /* ============ CONFIG ============ */
 function cfgRender(){
-  $('#board').innerHTML=[...S.players].sort((a,b)=>b.grana-a.grana).map((p,i)=>`<div class="rrow"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span style="font-weight:800;font-size:13px;color:${p.grana<0?'var(--red)':'var(--y)'}">${money(p.grana)}</span></div>`).join('')||'<p>Sem jogadores ainda.</p>';
+  $('#board').innerHTML=[...S.players].sort((a,b)=>b.grana-a.grana).map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span style="font-weight:800;font-size:13px;color:${p.grana<0?'var(--red)':'var(--y)'}">${money(p.grana)}</span></div>`).join('')||'<p>Sem jogadores ainda.</p>';
   $('#cfgInfo').innerHTML=S.started?`Jogo em andamento com <b>${S.players.length}</b> jogadores. Vez de <b>${S.players[S.cur].nome}</b>.`:`Nenhum jogo em andamento (${S.players.length}/6 personagens).`;
 }
 $('#btnReset').onclick=()=>{
