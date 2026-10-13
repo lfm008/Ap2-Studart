@@ -295,15 +295,32 @@ const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','T
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
 const OCUP=[
  ['Vendedor de mate na praia',[1400,2600]],['Motoboy',[1800,3200]],['Flanelinha',[900,2000]],['Guia de turismo sem registro',[1500,4000]],
- ['Garçom no Leblon',[2200,4500]],['Camelô na Uruguaiana',[1200,3000]],['Professor de samba',[1800,3500]],['Motorista de aplicativo',[2500,5000]],
- ['Barraqueiro de Copacabana',[2000,6000]],['Servidor público (atrasado)',[4500,9000]],['Influencer de 300 seguidores',[0,3000]],['Porteiro de prédio na Zona Sul',[2000,3200]],
- ['Dono de quiosque',[3500,9000]],['Dançarino de funk',[1000,8000]],['Vendedor de biscoito Globo',[1300,2800]],['Estagiário no Centro',[1100,1800]],
+ ['Garçom no Leblon',[2200,3800]],['Camelô na Uruguaiana',[1200,3000]],['Professor de samba',[1800,3500]],['Motorista de aplicativo',[2500,4000]],
+ ['Barraqueiro de Copacabana',[2000,4500]],['Influencer de 300 seguidores',[0,3000]],['Porteiro de prédio na Zona Sul',[2000,3200]],
+ ['Dançarino de funk',[1000,4500]],['Vendedor de biscoito Globo',[1300,2800]],['Estagiário no Centro',[1100,1800]],
 ];
-const OCUP_RICO=[
- ['Herdeiro(a) de família tradicional',[25000,90000]],['Dono(a) de rede de restaurantes',[30000,80000]],['Cirurgião(ã) plástico(a) em Ipanema',[40000,120000]],
- ['Juiz(a) de direito',[35000,70000]],['Executivo(a) de petroleira',[40000,100000]],['Sócio(a) de escritório de advocacia',[30000,90000]],
- ['Dono(a) de camarote na Sapucaí',[30000,100000]],['Empresário(a) de shopping',[35000,85000]],['Médico(a) com consultório na Barra',[25000,60000]],
- ['Jogador(a) de futebol aposentado(a)',[20000,150000]],['Influencer com 2 milhões de seguidores',[20000,120000]],['Banqueiro(a) em home office no Leblon',[40000,110000]]];
+const OCUP_RICO=[ // [masculino, feminino, [renda mín, máx]]
+ ['Advogado Corporativo','Advogada Corporativa',[25000,60000]],['Advogado Tributarista','Advogada Tributarista',[25000,70000]],
+ ['Auditor Fiscal','Auditora Fiscal',[28000,55000]],['Banker (Mercado Financeiro)','Banker (Mercado Financeiro)',[35000,120000]],
+ ['Cardiologista','Cardiologista',[30000,80000]],['CEO / Diretor Executivo','CEO / Diretora Executiva',[60000,200000]],
+ ['Cirurgião Plástico','Cirurgiã Plástica',[40000,120000]],['CFO / Diretor Financeiro','CFO / Diretora Financeira',[50000,150000]],
+ ['Dermatologista','Dermatologista',[30000,80000]],['Desembargador','Desembargadora',[45000,90000]],
+ ['Engenheiro de Petróleo e Gás','Engenheira de Petróleo e Gás',[30000,70000]],['Engenheiro de Software Sênior','Engenheira de Software Sênior',[25000,60000]],
+ ['Especialista em Cibersegurança','Especialista em Cibersegurança',[25000,55000]],['Especialista em Fusões e Aquisições (M&A)','Especialista em Fusões e Aquisições (M&A)',[40000,130000]],
+ ['Gestor de Private Banking','Gestora de Private Banking',[30000,90000]],['Juiz de Direito','Juíza de Direito',[35000,70000]],
+ ['Neurocirurgião','Neurocirurgiã',[50000,130000]],['Piloto de Linha Aérea','Piloto de Linha Aérea',[30000,80000]],
+ ['Procurador da República','Procuradora da República',[40000,80000]],['Psiquiatra','Psiquiatra',[25000,60000]],
+];
+const OCUP_MEDIA=[
+ ['Professor da rede estadual','Professora da rede estadual',[3500,6000]],['Enfermeiro','Enfermeira',[4000,7000]],['Bancário','Bancária',[5000,9000]],
+ ['Policial militar','Policial militar',[4500,8000]],['Contador','Contadora',[5000,9000]],['Dentista','Dentista',[5000,12000]],
+ ['Engenheiro civil','Engenheira civil',[6000,11000]],['Jornalista','Jornalista',[3500,8000]],['Fisioterapeuta','Fisioterapeuta',[4000,8000]],
+ ['Gerente de loja no Shopping','Gerente de loja no Shopping',[4500,9000]],['Servidor público (com salário atrasado)','Servidora pública (com salário atrasado)',[5000,9000]],
+ ['Dono de quiosque','Dona de quiosque',[4500,10000]],['Programador pleno','Programadora plena',[7000,12000]],['Arquiteto','Arquiteta',[5000,11000]],
+];
+const BAIRROS_MEDIA=['Tijuca','Botafogo','Flamengo','Vila Isabel','Laranjeiras','Grajaú','Méier','Recreio','Jacarepaguá','Cachambi'];
+const NOMES_M=['Zeca','Thiago','Marcelo','Wesley','Rogerinho','Fabrício','Seu Jorge','Jefferson','Dudu','Lucas','Rafael','Gustavo'];
+const NOMES_F=['Juliana','Cris','Dona Neuza','Tati','Bia','Luana','Vanessa','Camila','Patrícia','Mônica','Fernanda','Larissa'];
 const BAIRROS_RICO=['Leblon','Ipanema','Gávea','Lagoa','São Conrado','Barra da Tijuca','Jardim Botânico','Urca','Joá','Península'];
 const TRACOS_RICO=['Nunca pegou ônibus na vida','Fala "tá caro" pra tudo que custa menos de R$ 500','Só come em lugar com nome em inglês','Tem personal trainer pro cachorro','Contratou assessor pra escolher o assessor','Chama a praia de "meu quintal"','Acha que Madureira é outro país'];
 const FAMILIA_RICO=[
@@ -363,19 +380,25 @@ function avatar(a){
 /* ============ GERADOR ============ */
 function gerar(){
   const fem=Math.random()<.5;
-  const rico=Math.random()<.25;
-  const [oc,[mn,mx]]=pick(rico?OCUP_RICO:OCUP);
-  const renda=Math.round((mn+Math.random()*(mx-mn))/50)*50;
-  const grana=rico?500*Math.round((20000+Math.random()*80000)/500):50*Math.round((300+Math.random()*2200)/50);
-  const nome=pick(NOMES); // alguns nomes são neutros; a arte segue o sorteio
+  const r=Math.random();
+  const classe=r<.25?'alta':r<.6?'media':'baixa'; // 25% alta · 35% média · 40% baixa
+  const rico=classe==='alta';
+  let oc,mn,mx;
+  if(classe==='baixa'){[oc,[mn,mx]]=pick(OCUP);if(fem)oc=oc.replace(/^Vendedor/,'Vendedora').replace(/^Garçom/,'Garçonete').replace(/^Professor/,'Professora').replace(/^Dançarino/,'Dançarina').replace(/^Barraqueiro/,'Barraqueira').replace(/^Porteiro/,'Porteira').replace(/^Estagiário/,'Estagiária')}
+  else{const [m,f,rg]=pick(classe==='alta'?OCUP_RICO:OCUP_MEDIA);oc=fem?f:m;[mn,mx]=rg}
+  const step=rico?500:50;
+  const renda=Math.round((mn+Math.random()*(mx-mn))/step)*step;
+  const grana=Math.max(step,Math.round(renda*(.5+Math.random())/step)*step); // reserva = 0,5x a 1,5x a renda
+  const nome=pick((fem?NOMES_F:NOMES_M).filter(n=>classe==='baixa'||!/^(Dona|Seu)/.test(n)));
   return {
-    id:Date.now()+Math.random(),
-    nome:nome+' '+pick(SOBRE), idade:18+rnd(48), bairro:pick(rico?BAIRROS_RICO:BAIRROS), ocup:oc, renda, grana, rico,
+    id:Date.now()+Math.random(), classe,
+    nome:nome+' '+pick(SOBRE), idade:(rico?30:classe==='media'?22:18)+rnd(rico?36:44),
+    bairro:pick(rico?BAIRROS_RICO:classe==='media'?BAIRROS_MEDIA:BAIRROS), ocup:oc, renda, grana, rico,
     traco:pick(rico?TRACOS_RICO:TRACOS), fam:pick(rico?FAMILIA_RICO:FAMILIA), sorte:pick(SORTES),
     av:{fem,tom:pick(TOM),cab:pick(CAB),cam:pick(CAMISA),style:Math.random()<.5,barba:Math.random()<.4,oculos:Math.random()<.25,sorriso:Math.random()<.6}
   };
 }
-function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.rico?'💎 Classe alta · ':''}Jogador ${i}</span>
+function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.rico?'💎 Classe alta · ':p.classe==='media'?'Classe média · ':''}Jogador ${i}</span>
   <div class="pic">${avatar(p.av)}</div>
   <div class="info"><div class="nm">${p.nome}</div>
    <span class="lbl">Idade</span><span class="v">${p.idade} anos</span>
