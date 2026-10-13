@@ -58,7 +58,7 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .pcard .v{font-weight:800}
 .pcard .fam{margin-top:8px;border-top:1.5px dashed #9b917b;padding-top:6px;font-size:12px}
 .pcard .luck{font-family:var(--hand);text-align:center;font-size:15px;margin-top:8px;color:#222}
-.pcard .tag{position:absolute;top:-10px;right:10px;background:var(--y);color:#111;font-family:var(--display);font-size:13px;padding:2px 8px;border-radius:3px;transform:rotate(3deg)}
+.pcard .tag{position:absolute;top:-15px;right:10px;white-space:nowrap;background:var(--y);color:#111;font-family:var(--display);font-size:13px;padding:2px 8px;border-radius:3px;transform:rotate(3deg)}
 .empty{border:2px dashed var(--line);border-radius:10px;padding:34px 16px;text-align:center;color:var(--mut);font-family:var(--hand)}
 .roster{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
@@ -186,7 +186,7 @@ nav button.lock{opacity:.35}
     <h2 class="title">Gerador de personagem</h2>
     <p class="sub">Cada jogador clica no botão e recebe um personagem com características aleatórias. Aceite a sorte (ou o azar).</p>
     <button class="btn" id="btnGen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg> Gerar personagem</button>
-    <div id="preview" style="margin-top:20px"><div class="empty">Ninguém na fila ainda…<br>Aperte o botão pra ver quem você vai ser.</div></div>
+    <div id="preview" style="margin-top:26px"><div class="empty">Ninguém na fila ainda…<br>Aperte o botão pra ver quem você vai ser.</div></div>
     <div id="okRow" style="display:none;margin-top:14px"><button class="btn" id="btnOk">OK, é esse mesmo →</button></div>
     <div class="count" id="count"></div>
     <div class="roster" id="roster"></div>
@@ -293,36 +293,97 @@ const SITUACOES = [
 ];
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha'];
-const OCUP=[
- ['Vendedor de mate na praia',[1400,2600]],['Motoboy',[1800,3200]],['Flanelinha',[900,2000]],['Guia de turismo sem registro',[1500,4000]],
- ['Garçom no Leblon',[2200,3800]],['Camelô na Uruguaiana',[1200,3000]],['Professor de samba',[1800,3500]],['Motorista de aplicativo',[2500,4000]],
- ['Barraqueiro de Copacabana',[2000,4500]],['Influencer de 300 seguidores',[0,3000]],['Porteiro de prédio na Zona Sul',[2000,3200]],
- ['Dançarino de funk',[1000,4500]],['Vendedor de biscoito Globo',[1300,2800]],['Estagiário no Centro',[1100,1800]],
-];
-const OCUP_RICO=[ // [masculino, feminino, [renda mín, máx]]
- ['Advogado Corporativo','Advogada Corporativa',[25000,60000]],['Advogado Tributarista','Advogada Tributarista',[25000,70000]],
- ['Auditor Fiscal','Auditora Fiscal',[28000,55000]],['Banker (Mercado Financeiro)','Banker (Mercado Financeiro)',[35000,120000]],
- ['Cardiologista','Cardiologista',[30000,80000]],['CEO / Diretor Executivo','CEO / Diretora Executiva',[60000,200000]],
- ['Cirurgião Plástico','Cirurgiã Plástica',[40000,120000]],['CFO / Diretor Financeiro','CFO / Diretora Financeira',[50000,150000]],
- ['Dermatologista','Dermatologista',[30000,80000]],['Desembargador','Desembargadora',[45000,90000]],
- ['Engenheiro de Petróleo e Gás','Engenheira de Petróleo e Gás',[30000,70000]],['Engenheiro de Software Sênior','Engenheira de Software Sênior',[25000,60000]],
- ['Especialista em Cibersegurança','Especialista em Cibersegurança',[25000,55000]],['Especialista em Fusões e Aquisições (M&A)','Especialista em Fusões e Aquisições (M&A)',[40000,130000]],
- ['Gestor de Private Banking','Gestora de Private Banking',[30000,90000]],['Juiz de Direito','Juíza de Direito',[35000,70000]],
- ['Neurocirurgião','Neurocirurgiã',[50000,130000]],['Piloto de Linha Aérea','Piloto de Linha Aérea',[30000,80000]],
- ['Procurador da República','Procuradora da República',[40000,80000]],['Psiquiatra','Psiquiatra',[25000,60000]],
-];
-const OCUP_MEDIA=[
- ['Professor da rede estadual','Professora da rede estadual',[3500,6000]],['Enfermeiro','Enfermeira',[4000,7000]],['Bancário','Bancária',[5000,9000]],
- ['Policial militar','Policial militar',[4500,8000]],['Contador','Contadora',[5000,9000]],['Dentista','Dentista',[5000,12000]],
- ['Engenheiro civil','Engenheira civil',[6000,11000]],['Jornalista','Jornalista',[3500,8000]],['Fisioterapeuta','Fisioterapeuta',[4000,8000]],
- ['Gerente de loja no Shopping','Gerente de loja no Shopping',[4500,9000]],['Servidor público (com salário atrasado)','Servidora pública (com salário atrasado)',[5000,9000]],
- ['Dono de quiosque','Dona de quiosque',[4500,10000]],['Programador pleno','Programadora plena',[7000,12000]],['Arquiteto','Arquiteta',[5000,11000]],
-];
+// Profissões: o(categoria, masculino, feminino|null, rendaMin, rendaMax, [habilidades], [idadeMin,idadeMax]?)
+const OC=[];
+const o=(c,m,f,a,b,t,ag)=>OC.push({c,m,f,r:[a,b],t,ag});
+// --- classe baixa
+o('baixa','Vendedor de mate na praia',null,1400,2600,['Grita "olha o mate" em 4 idiomas, todos errados','Detecta turista perdido a 200 metros']);
+o('baixa','Motoboy',null,1800,3200,['Passa no corredor de qualquer coisa, inclusive da vida','Conhece todo buraco do Rio pelo primeiro nome']);
+o('baixa','Flanelinha',null,900,2000,['Cobra pra "cuidar" de carro que nem é seu','Inventa vaga onde nunca existiu vaga']);
+o('baixa','Guia de turismo sem registro',null,1500,3500,['Inventa a história do Cristo na hora','Fala inglês com sotaque de Madureira']);
+o('baixa','Garçom no Leblon',null,2200,3800,['Anota o pedido de cabeça e erra com orgulho','Sorriso calibrado pra gorjeta']);
+o('baixa','Camelô na Uruguaiana',null,1200,3000,['Vende tudo, inclusive o que você nunca pediu','Corre mais que o rapa']);
+o('baixa','Professor de samba',null,1800,3500,['Faz roda de samba até em fila de banco','Cavaquinho no lugar de GPS']);
+o('baixa','Motorista de aplicativo',null,2500,4000,['Nota 4,98 e cinco balas de menta no console','Foge de blitz só na conversa']);
+o('baixa','Barraqueiro de Copacabana',null,2000,4500,['Cobra cadeira por cada grão de areia','Caipirinha de procedência misteriosa']);
+o('baixa','Influencer de 300 seguidores',null,0,3000,['Posta até o cafezinho em 7 stories','Todo mundo é "parceria", ninguém paga']);
+o('baixa','Porteiro de prédio na Zona Sul',null,2000,3200,['Sabe a vida de todo o prédio e vende a fofoca a prazo','Dorme com um olho só aberto']);
+o('baixa','Dançarino de funk',null,1000,4500,['Rebola em qualquer ocasião, inclusive reunião de condomínio','Som no talo até em velório']);
+o('baixa','Vendedor de biscoito Globo',null,1300,2800,['Detecta fome a 2 km de distância','Dá fiado pra quem tá na pior (e anota no caderninho)']);
+o('baixa','Estagiário no Centro',null,1100,1800,['Faz o trabalho de 3 pessoas com sorriso e sem vale-transporte','Café nível Starbucks, pago do próprio bolso'],[18,26]);
+// --- classe média
+o('media','Professor da rede estadual','Professora da rede estadual',3500,6000,['Corrige prova com raiva e sem caneta vermelha','Tem sempre um "não é meu horário" na manga']);
+o('media','Enfermeiro','Enfermeira',4000,7000,['Dá injeção sem dó nem aviso','Dorme em pé e acorda sorrindo']);
+o('media','Bancário','Bancária',5000,9000,['Sabe dizer "o sistema caiu" em 12 tons','Cobra tarifa até de saudade']);
+o('media','Dentista',null,5000,12000,['Anestesia só depois de contar a conta','Assobia durante o procedimento']);
+o('media','Contador','Contadora',5000,9000,['Faz imposto desaparecer só em palestra','Sabe todos os feriados do ano inteiro de cabeça']);
+o('media','Engenheiro civil','Engenheira civil',6000,11000,['Calcula tudo, menos o prazo da obra','"Aqui não cai", jura de pé junto']);
+o('media','Jornalista',null,3500,8000,['Escreve manchete que ninguém abre','Manda a pauta pro grupo da família sem querer']);
+o('media','Fisioterapeuta',null,4000,8000,['Massagem que dói mas cura (jura)','Descobre onde você sente dor só de olhar']);
+o('media','Gerente de loja no Shopping','Gerente de loja no Shopping',4500,9000,['Fala "é política da empresa" pra tudo','Persegue cliente até o estacionamento']);
+o('media','Servidor público (com salário atrasado)','Servidora pública (com salário atrasado)',5000,9000,['Mestre em "volte amanhã"','Carimba até o que não precisa']);
+o('media','Dono de quiosque','Dona de quiosque',4500,10000,['Cobra couvert até de água','Sabe quanto cada mesa vai gastar só de olhar']);
+o('media','Programador pleno','Programadora plena',7000,12000,['"Na minha máquina funciona"','Resolve qualquer coisa com café e um console.log']);
+o('media','Arquiteto','Arquiteta',5000,11000,['Faz "projeto conceitual" em guardanapo','Chama tudo de "volume" ou de "fluxo"']);
+o('media','Policial militar',null,4500,8000,['Dá enquadro até em quem não fez nada','Conhece todo mundo na delegacia pelo apelido'],[22,55]);
+// --- classe alta
+o('alta','Advogado Corporativo','Advogada Corporativa',25000,60000,['Cobra por hora até o tempo de pensar em cobrar','Acha brecha em contrato de condomínio']);
+o('alta','Advogado Tributarista','Advogada Tributarista',25000,70000,['Faz imposto sumir (legalmente, claro)','Fala "elisão fiscal" e ninguém pergunta mais nada']);
+o('alta','Auditor Fiscal','Auditora Fiscal',28000,55000,['Olho clínico pra nota fiscal esquisita','Faz o contribuinte suar frio só com um e-mail']);
+o('alta','Banker (Mercado Financeiro)','Banker (Mercado Financeiro)',35000,120000,['Fala "alpha" e "hedge" até pra pedir pizza','Vê gráfico até no horóscopo']);
+o('alta','Cardiologista',null,30000,80000,['Diz "isso é estresse" pra tudo','Ele mesmo nunca fez exame']);
+o('alta','CEO / Diretor Executivo','CEO / Diretora Executiva',60000,200000,['Pede "disrupção" até no almoço','Reunião que podia ser e-mail, mas marca pelo prazer']);
+o('alta','Cirurgião Plástico','Cirurgiã Plástica',40000,120000,['Olha pra qualquer pessoa e já vê o que dá pra "melhorar"','Cobra em dólar e opera em cinco prestações']);
+o('alta','CFO / Diretor Financeiro','CFO / Diretora Financeira',50000,150000,['Corta gasto de todo mundo menos o dele','Planilha é arte, e a dele tem 47 abas']);
+o('alta','Dermatologista',null,30000,80000,['Receita sempre "protetor solar e fé"','Consulta de 6 minutos que custa 600 reais']);
+o('alta','Desembargador','Desembargadora',45000,90000,['Auxílio-moradia mesmo morando na cobertura própria','Toga, café e 1 mês de férias']);
+o('alta','Engenheiro de Petróleo e Gás','Engenheira de Petróleo e Gás',30000,70000,['Dorme 14 dias na plataforma e folga 14 no Leblon','Sabe quanto o litro vai custar amanhã']);
+o('alta','Engenheiro de Software Sênior','Engenheira de Software Sênior',25000,60000,['Trabalha de bermuda e ganha em dólar','Diz "não é bug, é feature" sem corar']);
+o('alta','Especialista em Cibersegurança','Especialista em Cibersegurança',25000,55000,['Já invadiu o wi-fi do vizinho por "teste"','Sabe a senha de todo mundo (menos a dele)']);
+o('alta','Especialista em Fusões e Aquisições (M&A)','Especialista em Fusões e Aquisições (M&A)',40000,130000,['Compra empresa no café da manhã','Demite 200 pessoas e almoça tranquilo']);
+o('alta','Gestor de Private Banking','Gestora de Private Banking',30000,90000,['Tem o WhatsApp de gente que não paga imposto','Fala baixinho só pra rico ouvir']);
+o('alta','Juiz de Direito','Juíza de Direito',35000,70000,['"Mantenho a decisão" é o mantra','Auxílio-paletó, auxílio-livro, auxílio-tudo']);
+o('alta','Neurocirurgião','Neurocirurgiã',50000,130000,['Acha que é Deus (e cobra como tal)','Mãos de cirurgião até pra abrir cerveja']);
+o('alta','Piloto de Linha Aérea','Piloto de Linha Aérea',30000,80000,['Anuncia turbulência com voz de DJ','Tem uma namorada em cada aeroporto (jura que é folclore)']);
+o('alta','Procurador da República','Procuradora da República',40000,80000,['Sempre com um PowerPoint pronto','Denuncia até a sombra do vizinho']);
+o('alta','Psiquiatra',null,25000,60000,['Receita remedinho até pra sogra','Cobra caro pra ouvir o que você já sabe']);
+// --- crime organizado
+o('crime','Aviãozinho',null,800,2500,['Corre mais que viatura','Nunca viu nada, nunca ouviu nada, nunca soube de nada'],[18,26]);
+o('crime','Radinho',null,1000,3000,['Avisa a polícia chegando em 3 segundos','Conhece o ronco de cada viatura'],[18,30]);
+o('crime','Chefe da boca','Chefe da boca',15000,60000,['Faz gerente de banco parecer simpático','Contabilidade paralela, feita na mão']);
+o('crime','Dono do morro','Dona do morro',40000,150000,['Todo mundo diz "sim, chefe", até o padre','Sabe o nome de todo mundo e o dever de cada um'],[35,65]);
+o('crime','Bicheiro','Bicheira',20000,100000,['Patrocina escola de samba e delegacia','Tem uma anotação de tudo e nenhuma prova']);
+o('crime','Miliciano','Miliciana',8000,40000,['Cobra "taxa de segurança" até da pedra do rio','Gás, internet e sinal de TV: monopólio'],[25,55]);
+// --- legal
+o('legal','Policial do BOPE','Policial do BOPE',8000,14000,['Pede "caveira" em qualquer conversa','Entra pelo lado errado e sai pelo certo'],[26,48]);
+o('legal','Delegado da PCERJ','Delegada da PCERJ',15000,30000,['Pede para "ouvir sua versão" até no elevador','Papelada tão grande que vira uma torre']);
+o('legal','Soldado da PMERJ','Soldada da PMERJ',3500,6000,['Sabe de cor todos os artigos que não se aplicam','Bico de segurança nos dias de folga'],[22,45]);
+o('legal','Militar federal','Militar federal',6000,15000,['Acorda 5h e dá bom dia pra todo mundo (que não pediu)','Carimba continência até na cozinha'],[24,60]);
+// --- alto padrão
+o('alto','Presidente da República','Presidenta da República',150000,400000,['Faz live por qualquer coisa e fala "povo" de 10 em 10 minutos','Promete tudo e entrega só o discurso'],[45,72]);
+o('alto','Político corrupto','Política corrupta',40000,200000,['Tem sempre um "assessor" mais rico que o chefe','Pede "ajuda" e envia o PIX pro cunhado']);
+o('alto','Ministro de tribunal superior','Ministra de tribunal superior',60000,200000,['Voto longo, ninguém lê, todos comentam','Almoça com quem pode (e nunca com quem deve)'],[45,72]);
+o('alto','Dono de banco','Dona de banco',200000,500000,['Descobre rombo só no sábado de manhã','Consegue empréstimo até com concorrente falido'],[45,72]);
+// --- estudante
+o('estudante','Estudante nerd','Estudante nerd',200,1200,['Decorou o regulamento do jogo antes de abrir a caixa','Corrige o professor em voz alta'],[18,25]);
+o('estudante','Ativista','Ativista',100,900,['Faz abaixo-assinado até pra trocar o cardápio do bandejão','Lembra todo mundo que "tudo é político"'],[18,26]);
+o('estudante','Ativista maconheiro','Ativista maconheiro',100,900,['Marcha com cartaz e esquece onde parou','Convoca protesto, adormece no meio'],[18,26]);
+const CAT={ // pesos, bairros e famílias de cada categoria
+ baixa:{p:28,tag:''},media:{p:22,tag:'Classe média'},alta:{p:20,tag:'💎 Classe alta'},
+ crime:{p:10,tag:'🔥 Crime organizado'},legal:{p:8,tag:'🚓 Lei e ordem'},alto:{p:5,tag:'👑 Alto padrão'},estudante:{p:7,tag:'🎓 Estudante'}};
 const BAIRROS_MEDIA=['Tijuca','Botafogo','Flamengo','Vila Isabel','Laranjeiras','Grajaú','Méier','Recreio','Jacarepaguá','Cachambi'];
+const BAIRROS_CRIME=['Rocinha','Complexo do Alemão','Cidade de Deus','Maré','Jacarezinho','Vidigal','Penha','Rio das Pedras','Muzema','Gardênia Azul'];
+const BAIRROS_LEI=['Realengo','Méier','Campo Grande','Bangu','Tijuca','Jacarepaguá','Vila Militar','Santa Cruz'];
+const BAIRROS_ALTO=['Leblon','Urca','Joá','Península','São Conrado','Brasília (mas finge que mora no Rio)'];
+const BAIRROS_UNI=['Tijuca','Flamengo','Botafogo','Lapa','Madureira','Maracanã','Urca'];
 const NOMES_M=['Zeca','Thiago','Marcelo','Wesley','Rogerinho','Fabrício','Seu Jorge','Jefferson','Dudu','Lucas','Rafael','Gustavo'];
 const NOMES_F=['Juliana','Cris','Dona Neuza','Tati','Bia','Luana','Vanessa','Camila','Patrícia','Mônica','Fernanda','Larissa'];
 const BAIRROS_RICO=['Leblon','Ipanema','Gávea','Lagoa','São Conrado','Barra da Tijuca','Jardim Botânico','Urca','Joá','Península'];
-const TRACOS_RICO=['Nunca pegou ônibus na vida','Fala "tá caro" pra tudo que custa menos de R$ 500','Só come em lugar com nome em inglês','Tem personal trainer pro cachorro','Contratou assessor pra escolher o assessor','Chama a praia de "meu quintal"','Acha que Madureira é outro país'];
+const FAM_CAT={
+ crime:['Mãe que reza o terço por ele e lava o dinheiro no tanque.','Tio que "trabalha com logística" e nunca explica o quê.','Avó que sabe de tudo e finge que não ouve nada.','Primo que é policial. Almoço de domingo é tenso.','Irmão caçula que quer entrar no "ramo" e só sabe fazer meme.'],
+ legal:['Esposa que vive no grupo da corporação e sabe todas as promoções.','Pai que também é da farda e corrige o jeito dele bater continência.','Sogra que acha que ele devia ter virado engenheiro.','Primo que "conhece o cara" e vive pedindo carona na viatura.','Cachorro de guarda que só late pra o vizinho.'],
+ alto:['Cônjuge que assina "cunhado" em tudo o que é cargo comissionado.','Filho que estuda em Harvard e posta stories no jatinho.','Primo laranja que, por coincidência, ganhou 14 contratos.','Sogro que também é político, mas de outro partido (de mentira).','Assessor que na verdade é o tio do porteiro.'],
+ estudante:['Mãe que paga a faculdade e liga 4 vezes por dia perguntando se já comeu.','Pai que só pergunta "e o emprego?" em qualquer ocasião.','Avó que acha que o neto virou comunista (ou algo pior).','Irmão que também está desempregado, mas é "empreendedor".','Colega de república que roubou a geladeira inteira.']};
 const FAMILIA_RICO=[
  'Pai dono de meio quarteirão e mãe presidente do condomínio inteiro.',
  'Avô fundou uma empresa que ninguém sabe o que faz, mas rende muito.',
@@ -332,7 +393,6 @@ const FAMILIA_RICO=[
  'Irmão caçula gastou a herança em NFT de macaco.',
 ];
 const BAIRROS=['Rocinha','Copacabana','Madureira','Realengo','Ipanema','Cidade de Deus','Méier','Campo Grande','Bangu','Santa Teresa','Lapa','Tijuca','Barra da Tijuca','Complexo do Alemão','Penha','Jacarepaguá','Gardênia Azul','Vidigal'];
-const TRACOS=['Resenha','Fofoqueiro(a) oficial','Torcedor(a) fanático(a) do Flamengo','Torcedor(a) sofredor(a) do Vasco','Botafoguense (já nasceu sofrendo)','Fluminense com orgulho tricolor','Sempre atrasado(a)','Chega cedo em nada, só na fila da farmácia','Fura-fila nato(a)','Sabe todos os atalhos da cidade','Dorme no 485','Conhece o dono do bar','Fez churrasco na laje','Acredita em tudo do zap','Vive de "um bico aqui, outro ali"','Dono(a) da melhor roda de samba'];
 const FAMILIA=[
  'Mora com a mãe, 2 irmãos, 1 tio folgado e um cachorro chamado Neymar.',
  'Tem 4 filhos de 3 relacionamentos e um boleto de cada.',
@@ -380,25 +440,28 @@ function avatar(a){
 /* ============ GERADOR ============ */
 function gerar(){
   const fem=Math.random()<.5;
-  const r=Math.random();
-  const classe=r<.25?'alta':r<.6?'media':'baixa'; // 25% alta · 35% média · 40% baixa
-  const rico=classe==='alta';
-  let oc,mn,mx;
-  if(classe==='baixa'){[oc,[mn,mx]]=pick(OCUP);if(fem)oc=oc.replace(/^Vendedor/,'Vendedora').replace(/^Garçom/,'Garçonete').replace(/^Professor/,'Professora').replace(/^Dançarino/,'Dançarina').replace(/^Barraqueiro/,'Barraqueira').replace(/^Porteiro/,'Porteira').replace(/^Estagiário/,'Estagiária')}
-  else{const [m,f,rg]=pick(classe==='alta'?OCUP_RICO:OCUP_MEDIA);oc=fem?f:m;[mn,mx]=rg}
-  const step=rico?500:50;
-  const renda=Math.round((mn+Math.random()*(mx-mn))/step)*step;
+  // sorteia a categoria pelos pesos de CAT (alta 20% + alto padrão 5% = 25% de ricos)
+  let x=Math.random()*100,cat='baixa';
+  for(const k in CAT){if((x-=CAT[k].p)<0){cat=k;break}}
+  const pr=pick(OC.filter(q=>q.c===cat));
+  let oc=fem?(pr.f||femize(pr.m)):pr.m;
+  const rico=pr.r[1]>=20000, step=rico?500:50;
+  const renda=Math.round((pr.r[0]+Math.random()*(pr.r[1]-pr.r[0]))/step)*step;
   const grana=Math.max(step,Math.round(renda*(.5+Math.random())/step)*step); // reserva = 0,5x a 1,5x a renda
-  const nome=pick((fem?NOMES_F:NOMES_M).filter(n=>classe==='baixa'||!/^(Dona|Seu)/.test(n)));
+  const popular=cat==='baixa'||cat==='crime';
+  const nome=pick((fem?NOMES_F:NOMES_M).filter(n=>popular||!/^(Dona|Seu)/.test(n)));
+  const ag=pr.ag||(cat==='alta'?[30,65]:cat==='media'?[22,65]:cat==='alto'?[45,70]:cat==='legal'?[24,55]:cat==='estudante'?[18,25]:[18,61]);
+  const fams=FAM_CAT[cat]||(cat==='alta'?FAMILIA_RICO:FAMILIA);
   return {
-    id:Date.now()+Math.random(), classe,
-    nome:nome+' '+pick(SOBRE), idade:(rico?30:classe==='media'?22:18)+rnd(rico?36:44),
-    bairro:pick(rico?BAIRROS_RICO:classe==='media'?BAIRROS_MEDIA:BAIRROS), ocup:oc, renda, grana, rico,
-    traco:pick(rico?TRACOS_RICO:TRACOS), fam:pick(rico?FAMILIA_RICO:FAMILIA), sorte:pick(SORTES),
+    id:Date.now()+Math.random(), classe:cat, tag:CAT[cat].tag,
+    nome:nome+' '+pick(SOBRE), idade:ag[0]+rnd(ag[1]-ag[0]+1),
+    bairro:pick({baixa:BAIRROS,media:BAIRROS_MEDIA,alta:BAIRROS_RICO,crime:BAIRROS_CRIME,legal:BAIRROS_LEI,alto:BAIRROS_ALTO,estudante:BAIRROS_UNI}[cat]), ocup:oc, renda, grana, rico,
+    traco:pick(pr.t), fam:pick(fams), sorte:pick(SORTES),
     av:{fem,tom:pick(TOM),cab:pick(CAB),cam:pick(CAMISA),style:Math.random()<.5,barba:Math.random()<.4,oculos:Math.random()<.25,sorriso:Math.random()<.6}
   };
 }
-function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.rico?'💎 Classe alta · ':p.classe==='media'?'Classe média · ':''}Jogador ${i}</span>
+function femize(n){return n.replace(/^Vendedor/,'Vendedora').replace(/^Garçom/,'Garçonete').replace(/^Professor/,'Professora').replace(/^Dançarino/,'Dançarina').replace(/^Barraqueiro/,'Barraqueira').replace(/^Porteiro/,'Porteira').replace(/^Estagiário/,'Estagiária').replace(/^Dono/,'Dona').replace(/^Motorista/,'Motorista')}
+function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.tag?p.tag+' · ':''}Jogador ${i}</span>
   <div class="pic">${avatar(p.av)}</div>
   <div class="info"><div class="nm">${p.nome}</div>
    <span class="lbl">Idade</span><span class="v">${p.idade} anos</span>
