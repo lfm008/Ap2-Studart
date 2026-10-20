@@ -117,7 +117,7 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 
 /* CARTA */
 .pilewrap{flex:1;display:flex;align-items:center;justify-content:center;perspective:1000px;min-height:0;padding:12px 0 18px;overflow:hidden}
-.pile{position:relative;height:clamp(250px,calc(100dvh - 380px),340px);aspect-ratio:2/3;transform-style:preserve-3d;transform:rotateX(24deg);transition:transform .8s ease}
+.pile{position:relative;height:clamp(250px,calc(100dvh - 350px),340px);aspect-ratio:4/5;transform-style:preserve-3d;transform:rotateX(24deg);transition:transform .8s ease}
 .pile.drawing{transform:rotateX(0deg)}
 .pl{position:absolute;inset:0;border-radius:14px;background:#111;border:2px solid #333;box-shadow:0 2px 0 #000}
 .back,.front{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;border:2px solid #000;overflow:hidden}
@@ -137,6 +137,8 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .front .ct{font-family:var(--display);font-size:22px;text-transform:uppercase;line-height:1.05}
 .front .tx{font-size:12.5px;margin-top:6px;line-height:1.3}
 .front.res{animation:pop2 .4s cubic-bezier(.2,1.6,.4,1)}
+.front[data-len=m] .tx{font-size:11.5px;line-height:1.25}.front[data-len=m] .ico{font-size:30px}
+.front[data-len=l] .tx{font-size:10.5px;line-height:1.2}.front[data-len=l] .ct{font-size:17px}.front[data-len=l] .ico{font-size:24px;margin:2px 0}.front[data-len=l] .nota,.front[data-len=l] .saldo{font-size:10px}
 .front .nota{font-size:11px;font-weight:800;color:#8a4a00;background:#f7a81b33;border-radius:4px;padding:2px 6px;margin-top:6px}
 .front .saldo{font-size:11px;font-weight:800;margin-top:4px;color:#555}
 .front .eff{margin-top:auto;font-family:var(--hand);font-size:14px;line-height:1.2}
@@ -394,6 +396,7 @@ function pickDireta(p){
   const l=DIRETAS.filter(c=>(!c.for||c.for.includes(p.classe))&&idadeOk(c,p));
   return l.length?dr('dir_'+p.classe,l):null;
 }
+function ajustaCarta(){const f=$('#front'),n=f.innerText.length;f.dataset.len=n>230?'l':n>150?'m':'s'}
 function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
@@ -804,7 +807,7 @@ $('#btnDraw').onclick=()=>{
   const p=S.players[S.cur], dir=pickDireta(p);
   if(dir){
     const ad=adaptar(dir,p),d=ad.money; p.grana+=d;
-    $('#front').className='front res'; $('#front').innerHTML=frontDireta(dir,ad,d,p);
+    $('#front').className='front res'; $('#front').innerHTML=frontDireta(dir,ad,d,p); ajustaCarta();
     $('#whoMoney').textContent='💰 '+money(p.grana);
     $('#btnDraw').style.display='none'; $('#pile').classList.add('drawing'); $('#flipper').classList.add('go');
     setTimeout(()=>{$('#btnCardOk').style.display=''},850);
@@ -812,7 +815,7 @@ $('#btnDraw').onclick=()=>{
     S.drawn=true; return;
   }
   const sc=pickSit(p); S.sit=sc;
-  $('#front').className='front'; $('#front').innerHTML=frontSit(sc);
+  $('#front').className='front'; $('#front').innerHTML=frontSit(sc); ajustaCarta();
   $('#opt0').textContent='1. '+sc.opts[0].l; $('#opt1').textContent='2. '+sc.opts[1].l;
   $('#btnDraw').style.display='none';
   $('#pile').classList.add('drawing');
@@ -824,7 +827,7 @@ $('#btnDraw').onclick=()=>{
 function sortearDesfecho(r){const g=r.filter(x=>x.g),b=r.filter(x=>!x.g);return g.length&&b.length?pick(Math.random()<.5?g:b):pick(r)}
 function choose(i){
   const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=ad.money;p.grana+=d;
-  $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad);
+  $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad); ajustaCarta();
   $('#choices').style.display='none'; $('#btnCardOk').style.display=''; $('#whoMoney').textContent='💰 '+money(p.grana);
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
 }
@@ -897,5 +900,6 @@ faceHTML(); setFace(1,false); updateLocks(); renderGen();
 <script src="banco-sit-19.js"></script>
 <script src="banco-sit-20.js"></script>
 <script src="banco-sit-21.js"></script>
+<script src="banco-sit-90-reescritas-1.js"></script>
 </body>
 </html>

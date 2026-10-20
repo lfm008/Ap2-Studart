@@ -37,7 +37,8 @@
     const o={ico,t,x,opts:[{l:la,r:ra.map(O)},{l:lb,r:rb.map(O)}]};
     if(cats!=='*')o.for=cats.split(',');
     if(ag)o.ag=ag;
-    SITUACOES.push(o);
+    // situação com o mesmo título substitui a anterior (permite reescrever sem apagar o arquivo antigo)
+    const i=SITUACOES.findIndex(q=>q.t===t); if(i>=0)SITUACOES[i]=o; else SITUACOES.push(o);
   };
 })();
 // ---------------------------------------------------------------- GERAIS (qualquer personagem)
