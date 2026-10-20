@@ -1,0 +1,70 @@
+name: Gerar APK
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Validar o banco de situações
+        run: node scripts/check-bank.js
+
+      - name: Montar o app web (www/) e sincronizar com o Android
+        run: npm run sync
+
+      - name: Compilar o APK
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+          VERSION_NAME: 0.2.${{ github.run_number }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Renomear o APK
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/release/app-release.apk "dist/RJ-Tabuleiro-0.2.${{ github.run_number }}.apk"
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RJ-Tabuleiro-APK
+          path: dist/*.apk
+          retention-days: 90
+
+      - name: Publicar em Releases (link fixo para baixar)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="apk-${{ github.run_number }}"
+          gh release create "$TAG" dist/*.apk \
+            --title "RJ Tabuleiro 0.2.${{ github.run_number }}" \
+            --notes "APK de teste. Baixe no celular Android, abra o arquivo e permita a instalação de fontes desconhecidas se o Android pedir. Instala por cima da versão anterior." \
+            --target "${{ github.sha }}" --latest

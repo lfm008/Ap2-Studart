@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RJ Tabuleiro</string>
+    <string name="title_activity_main">RJ Tabuleiro</string>
+    <string name="package_name">com.rjtabuleiro.app</string>
+    <string name="custom_url_scheme">com.rjtabuleiro.app</string>
+</resources>

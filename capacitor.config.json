@@ -1,0 +1,8 @@
+{
+  "appId": "com.rjtabuleiro.app",
+  "appName": "RJ Tabuleiro",
+  "webDir": "www",
+  "backgroundColor": "#0d0d0d",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false }
+}
