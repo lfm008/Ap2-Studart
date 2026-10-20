@@ -43,7 +43,7 @@ SIT('*','🎮','Videogame novo','Você ganhou um videogame novo de aniversário.
  ['-|O irmão achou e quebrou o controle de raiva.|-200 <2','+|Jogou sozinho a noite toda.|+0 >2','-|A mãe descobriu e castigou.|-0 P']);
 SIT('*','🔋','Carregador portátil','Seu carregador portátil tem 500 mAh. Você precisa carregar um celular de 5.000 mAh.','Tentar carregar','Procurar tomada',
  ['+|Milagre: o celular carregou 100%.|+0 >2','-|O carregador esquentou e queimou.|-150','-|Carregou 2% e morreu.|-0 <1'],
- ['+|Achou uma tomada e carregou em 1 hora.|+0 >2','-|Todas estavam ocupadas.|-0 <2','-|Alguém roubou seu celular enquanto carregava.|-500']);
+ ['+|Achou uma tomada e carregou em 1 hora.|+0 >2','-|Todas esestavam ocupadas.|-0 <2','-|Alguém roubou seu celular enquanto carregava.|-500']);
 SIT('*','🕶️','Óculos escuros baratos','O vendedor de rua oferece óculos "originais, marca famosa" por R$ 20. Eles têm cheiro de plástico.','Comprar','Recusar',
  ['+|Os óculos ficaram ótimos e viraram sua marca.|+0 >2','-|Quebraram na primeira vez que usou.|-20','-|Ficou com uma marca de sol esquisita.|-0 <2'],
  ['+|Foi a uma loja e achou promoção.|+0 >1','-|O vendedor te xingou e te seguiu.|-0 <2','-|Perdeu a oportunidade e se arrependeu.|-0 <1']);

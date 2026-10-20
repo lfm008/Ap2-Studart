@@ -19,7 +19,7 @@ SIT('*','📺','Programa de auditório','Você vai a um programa de auditório. 
  ['-|O apresentador te achou e te levou ao palco.|-0 <2','+|Ficou escondido e viu o show.|+0 >2','-|O segurança te expulsou.|-0 <1']);
 SIT('*','🏆','Prêmio de "melhor boteco"','O boteco onde você bebe ganhou o prêmio de "melhor da cidade". A fila agora é de 3 horas.','Entrar na fila','Procurar outro',
  ['+|O boteco ainda tinha o mesmo chope e preço.|+0 >3','-|O preço dobrou e a cerveja virou "gourmet".|-80','-|O dono te tratou como turista.|-0 <2'],
- ['+|Achou um boteco melhor e secreto.|+0 >3','-|Todos os botecos estavam lotados.|-0 <2','-|Voltou pra casa com fome.|-0 <1']);
+ ['+|Achou um boteco melhor e secreto.|+0 >3','-|Todos os botecos esestavam lotados.|-0 <2','-|Voltou pra casa com fome.|-0 <1']);
 SIT('*','🥩','Churrasco do síndico','O síndico faz churrasco com a verba do condomínio. Todos sabem. Ninguém fala.','Comer','Denunciar',
  ['+|A carne era ótima e você ganhou uma picanha de brinde.|+0 >3','-|Passou mal.|-50 P','-|O síndico te marcou como "do contra".|-0 <2'],
  ['+|A assembleia afastou o síndico e você virou herói.|+200 >3','-|O síndico te processou.|-500','-|Ninguém te apoiou.|-0 <2']);

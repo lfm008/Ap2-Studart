@@ -108,7 +108,7 @@ SIT('*','🍫','Chocolate artesanal','Uma loja vende chocolate "bean-to-bar" por
  ['+|O chocolate era divino e você virou "conhecedor".|+0 >2','-|Tinha gosto de chocolate normal. R$ 60 por chocolate normal.|-60','-|O vendedor te fez uma palestra de 40 minutos.|-0 P'],
  ['-|O vendedor te chamou de "burguês de supermercado".|-0 <1','+|O vendedor te deu uma amostra de graça.|+0 >1','-|Comprou o de supermercado e se arrependeu.|-20']);
 SIT('*','🍞','Pão francês quentinho','O padeiro tira o pão do forno e o cheiro invade a rua. Tem fila de 20 pessoas.','Entrar na fila','Tentar outra padaria',
- ['+|Chegou o pão mais quentinho da vida. Você comeu no caminho.|+0 >2','-|O pão acabou quando faltavam 2 pessoas.|-0 <1','-|A fila demorou tanto que o pão esfriou.|-0'],
+ ['+|Chegou o pão mais quentinho da vida. Você comeu no caminho.|+0 >2','-|O pão acabou quando falestavam 2 pessoas.|-0 <1','-|A fila demorou tanto que o pão esfriou.|-0'],
  ['+|Achou uma padaria melhor, com pão de queijo de graça.|+0 >2','-|A outra padaria tava fechada.|-0 <1','-|O pão da outra era dormido.|-10']);
 SIT('*','🧈','Manteiga em falta','O mercado não tem manteiga. O gerente diz: "só tem margarina de cenoura".','Levar a margarina','Procurar manteiga',
  ['+|A margarina de cenoura era surpreendentemente boa.|+0 >1','-|Era pior que cola. O pão virou argamassa.|-10','-|O preço da margarina de cenoura era R$ 30.|-30'],

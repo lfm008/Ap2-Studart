@@ -46,7 +46,7 @@ SIT('baixa,media','🏥','Posto de saúde','O posto de saúde só atende 20 fich
  ['+|Foi a uma clínica popular e foi atendido na hora.|+0 >2','-|A dor piorou e você voltou ao posto.|-0 <1','!|Passou mal em casa e foi levado de ambulância.|-100 P']);
 SIT('baixa,media','💊','Farmácia popular','A farmácia popular não tem o remédio que você precisa. O balconista oferece uma "alternativa".','Aceitar a alternativa','Procurar outra farmácia',
  ['+|A alternativa funcionou igual e era mais barata.|+0 >2','!|A alternativa tinha efeito colateral estranho.|-60 P','-|Era placebo. A dor continuou.|-30'],
- ['+|Achou o remédio original numa farmácia vizinha.|+0 >2','-|Andou 3 km e todas estavam sem.|-0 <2','-|Pagou R$ 200 numa farmácia chique.|-200']);
+ ['+|Achou o remédio original numa farmácia vizinha.|+0 >2','-|Andou 3 km e todas esestavam sem.|-0 <2','-|Pagou R$ 200 numa farmácia chique.|-200']);
 SIT('baixa,media','🍞','Cesta básica atrasada','A cesta básica do trabalho atrasou. O mercado cobra o dobro agora.','Esperar a cesta','Comprar mesmo caro',
  ['+|A cesta chegou com um mimo extra: um panetone.|+30 >1','-|A cesta veio sem arroz e feijão.|-0 P','-|A cesta foi roubada por um vizinho.|-0 <1'],
  ['-|Gastou R$ 400 e comprou metade do necessário.|-400','+|Achou promoção e levou tudo pela metade.|+100 >2','-|O mercado errou o troco.|-60']);
@@ -56,7 +56,7 @@ SIT('baixa,media','🛒','Feira livre','O feirante grita "tomate a 1 real!". O p
 SIT('baixa,media','🚪','Despejo à vista','O dono do imóvel avisou: "daqui 30 dias, o aluguel sobe 40%". Você não tem pra onde ir.','Negociar','Procurar outro imóvel',
  ['+|O dono cedeu e reduziu o aumento pra 15%.|+0 >2','-|O dono disse "é pegar ou largar".|-0 <1','-|O dono te chamou de "inadimplente".|-0'],
  ['+|Achou um apartamento melhor por metade do preço.|+200 >3','-|Rodou 20 imóveis e nenhum servia.|-0 <2','-|Foi enganado por um falso corretor.|-400']);
-SIT('baixa,media','👜','Bolsa roubada','Roubaram sua bolsa no ônibus. O celular, a carteira e a marmita estavam dentro.','Ir à delegacia','Pedir dinheiro emprestado',
+SIT('baixa,media','👜','Bolsa roubada','Roubaram sua bolsa no ônibus. O celular, a carteira e a marmita esestavam dentro.','Ir à delegacia','Pedir dinheiro emprestado',
  ['-|A delegacia disse "faça o B.O. online".|-0 <1','+|A polícia achou a bolsa na esquina. Estava intacta.|+0 >2','-|Ficou 4 horas na delegacia e voltou sem nada.|-0 P'],
  ['+|Um amigo emprestou R$ 200 e você se recuperou.|+0 >2','-|Ninguém tinha. Voltou a pé.|-0 <2','-|Foi enganado por um golpista que fingia ser amigo.|-100']);
 SIT('baixa,media','🛵','Moto financiada','Você financiou uma moto em 48 parcelas. A parcela subiu 30% sem aviso.','Reclamar','Vender a moto',
@@ -119,8 +119,8 @@ SIT('baixa,media','🎵','Show de graça','Um cantor famoso faz um show de graç
 SIT('baixa,media','🕯️','Procissão do bairro','A procissão do santo do bairro passa na sua rua. Todo mundo reza. Você prefere a cerveja.','Participar','Ficar na janela',
  ['+|A fé te deu paz e uma sacolinha de doces.|+0 >2','-|Foi chamado pra carregar o andor e quase caiu.|-0 <1','-|Derramou a cerveja no andor. Vergonha.|-0 <2'],
  ['+|Viu tudo da janela e ficou sossegado.|+0 >1','-|O padre te viu e te chamou de "pecador".|-0 <1','-|Alguém jogou uma vela no seu quintal.|-30']);
-SIT('baixa,media','🧙','Benzedeira da rua','A benzedeira do bairro te chama: "meu filho, tá carregado de energia ruim".','Aceitar a benção','Recusar',
- ['+|Saiu leve e ganhou uma garrafada de graça.|+0 >2','-|A benção durou 2 horas e cobrou R$ 40.|-40','-|Ela te deu um remédio caseiro que te deu dor de barriga.|-0 P'],
+SIT('baixa,media','🧙','Benzedeira da rua','A benzedeira do bairro te chama: "meu filho, tá carregado de energia ruim".','Aceitar a bênção','Recusar',
+ ['+|Saiu leve e ganhou uma garrafada de graça.|+0 >2','-|A bênção durou 2 horas e cobrou R$ 40.|-40','-|Ela te deu um remédio caseiro que te deu dor de barriga.|-0 P'],
  ['-|Ela te rogou praga: "vai chover no seu churrasco".|-0 <1','+|Ela riu e disse "tá protegido, anda".|+0 >1','-|Tropeçou no caminho e sentiu o peso da praga.|-0']);
 SIT('baixa,media','🐓','Briga de galo','Alguém te convidou pra uma rinha clandestina. Prêmio: R$ 1.000. Você acha cruel.','Recusar','Denunciar',
  ['+|Ficou de fora e dormiu com a consciência limpa.|+0 >2','-|O organizador te ameaçou.|-0 <2','-|Perdeu a amizade do cara.|-0 <1'],

@@ -115,7 +115,7 @@ SIT('*','🏄','Praia do Leblon','No Leblon, um surfista famoso te cumprimenta. 
  ['-|Ele ficou ofendido e te xingou.|-0 <2','+|Ele riu e continuou.|+0 >1','-|Alguém fotografou a cena.|-0 <1']);
 SIT('*','🌃','Noite na Lapa','A Lapa tá pulsando. Todos os bares lotados. Um segurança te diz "só entra quem tá bem vestido".','Mostrar o dinheiro','Voltar',
  ['+|O segurança te deixou entrar.|+0 >3','-|Pagou R$ 100 de "taxa de entrada".|-100','-|Era golpe do segurança.|-100 <1'],
- ['+|Achou um bar melhor no caminho.|+0 >2','-|Todos os bares tavam lotados.|-0 <2','-|Foi assaltado na volta.|-250']);
+ ['+|Achou um bar melhor no caminho.|+0 >2','-|Todos os bares estavam lotados.|-0 <2','-|Foi assaltado na volta.|-250']);
 SIT('*','🚖','Táxi no aeroporto','No aeroporto do Galeão, um taxista diz "R$ 300 pra Copacabana". O trajeto custa R$ 90.','Aceitar','Pegar o aplicativo',
  ['-|Pagou R$ 300 e o taxista te deixou na esquina errada.|-300','+|O taxista tava com pressa e cobrou R$ 90.|+0 >2','-|O taxista deu uma volta de 40 minutos.|-150 <1'],
  ['+|O Uber chegou em 3 minutos.|+0 >3','-|O Uber cancelou e você perdeu o voo.|-0 <3','-|O Uber cobrou 3x.|-200']);

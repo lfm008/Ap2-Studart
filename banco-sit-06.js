@@ -82,7 +82,7 @@ SIT('estudante','🎓','Orientador sumido','Seu orientador sumiu há 2 meses. O 
  ['+|Achou o orientador num bar e ele assinou tudo.|+0 >3','-|Achou, mas ele estava de licença.|-0 <2','-|O orientador te chamou de "maluco".|-0 <1'],
  ['+|Escreveu em 12 horas e tirou 9.|+100 >3','-|Dormiu e perdeu o prazo.|-0 <3','-|O TCC saiu cheio de erros.|-0 <2']);
 SIT('estudante','🖨️','Impressora quebrada','A impressora do campus quebrou. Você tem que entregar o trabalho em 10 minutos.','Procurar outra','Entregar à mão',
- ['+|Achou uma impressora funcionando e entregou a tempo.|+0 >2','-|Todas estavam quebradas. Perdeu o prazo.|-0 <2','-|Pagou R$ 15 numa copiadora.|-15'],
+ ['+|Achou uma impressora funcionando e entregou a tempo.|+0 >2','-|Todas esestavam quebradas. Perdeu o prazo.|-0 <2','-|Pagou R$ 15 numa copiadora.|-15'],
  ['-|A letra era ilegível. O professor deu 4.|-0 <2','+|O professor achou "artístico" e deu 8.|+0 >2','-|Chuva molhou o papel.|-0 <1']);
 SIT('estudante','🧃','Máquina de refrigerante','A máquina de refrigerante do campus só aceita moedas de R$ 1. Você só tem notas.','Pedir troco','Ir embora com sede',
  ['+|Um colega te deu o troco e você bebeu em paz.|+0 >1','-|Ninguém tinha. Passou 20 minutos procurando.|-0 <1','-|A máquina engoliu sua moeda.|-1'],

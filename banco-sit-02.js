@@ -7,7 +7,7 @@ SIT('*','🎵','Vizinho cantor','O vizinho de cima ensaia ópera às 6h da manh�
  ['+|O vídeo viralizou e ele foi contratado por um teatro. Foi embora!|+0 >3','-|Ele descobriu e te processou.|-150','-|O vídeo bombou e você virou "o vizinho chato".|-0 <1']);
 SIT('*','🐕','Cocô no corredor','Alguém deixou um presente canino no corredor do prédio. Todo mundo acusa o vizinho do 302.','Limpar e ficar quieto','Descobrir o culpado',
  ['+|O vizinho do 302 percebeu e te deu um bolo de agradecimento.|+10 >1','-|Era o seu cachorro. Você limpou aterrorizado.|-0 <1','-|Pisou nele na hora de limpar.|-20'],
- ['+|Descobriu pelas câmeras e todo mundo te aplaudiu.|+0 >2','-|O culpado era o síndico e você virou persona non grata.|-0 <2','-|As câmeras tavam quebradas.|-0 P']);
+ ['+|Descobriu pelas câmeras e todo mundo te aplaudiu.|+0 >2','-|O culpado era o síndico e você virou persona non grata.|-0 <2','-|As câmeras estavam quebradas.|-0 P']);
 SIT('*','🎉','Festa do vizinho','O vizinho faz festa até as 4h. A música é "o pior do axé de 2003".','Reclamar','Entrar na festa',
  ['-|Ele te chamou pra beber e você aceitou. Dia seguinte, ressaca.|-0 P','+|Ele baixou o volume e agradeceu.|+0 >1','-|Ele aumentou o volume em sinal de protesto.|-0 <1'],
  ['+|A festa era ótima e você virou o "vizinho legal".|+0 >3','-|Derramaram cerveja no seu celular.|-250','-|A polícia chegou e levou todo mundo.|-100 P']);
@@ -43,7 +43,7 @@ SIT('*','📡','Internet caiu','A internet caiu na hora da reunião. O técnico 
  ['-|Ficou 2 horas na espera ouvindo música de elevador.|-0 P','+|A atendente era gente fina e resolveu em 5 minutos.|+0 >2','-|A operadora cobrou "taxa de reparo".|-90']);
 SIT('*','🔋','Celular sem bateria','O celular morre na hora que você precisa de um Uber. Está longe de casa.','Pedir carregador emprestado','Procurar tomada pública',
  ['+|Um estranho gentil te emprestou o carregador e uma cerveja.|+0 >2','-|O carregador era de outra marca. Nada funcionou.|-0 <1','-|Pediu a 8 pessoas. Todas negaram.|-0 P'],
- ['+|Achou uma tomada e carregou 40%.|+0 >2','-|A tomada era falsa e deu choque.|-30 <1','-|Todas estavam ocupadas por outros viciados.|-0']);
+ ['+|Achou uma tomada e carregou 40%.|+0 >2','-|A tomada era falsa e deu choque.|-30 <1','-|Todas esestavam ocupadas por outros viciados.|-0']);
 SIT('*','💻','Notebook com vírus','Seu notebook começou a mostrar anúncios de "mulheres lindas na sua região". Todas de 70 anos.','Chamar um técnico','Formatar sozinho',
  ['+|O técnico resolveu e ainda recuperou suas fotos.|+0 >2','-|Cobrou R$ 350 e deu uma palestra sobre antivírus.|-350','-|O técnico viu suas fotos e fez piada.|-0 <1'],
  ['+|Formatou e ficou novo.|+0 >2','-|Perdeu todos os arquivos, inclusive o TCC.|-0 <3','-|O notebook travou e não ligou mais.|-300']);
