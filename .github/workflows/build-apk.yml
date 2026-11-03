@@ -50,12 +50,12 @@ jobs:
       - name: Renomear o APK
         run: |
           mkdir -p dist
-          cp android/app/build/outputs/apk/release/app-release.apk "dist/RJ-Tabuleiro-0.2.${{ github.run_number }}.apk"
+          cp android/app/build/outputs/apk/release/app-release.apk "dist/Vida-Carioca-0.2.${{ github.run_number }}.apk"
           ls -la dist
 
       - uses: actions/upload-artifact@v4
         with:
-          name: RJ-Tabuleiro-APK
+          name: Vida-Carioca-APK
           path: dist/*.apk
           retention-days: 90
 
@@ -65,6 +65,6 @@ jobs:
         run: |
           TAG="apk-${{ github.run_number }}"
           gh release create "$TAG" dist/*.apk \
-            --title "RJ Tabuleiro 0.2.${{ github.run_number }}" \
+            --title "Vida Carioca 0.2.${{ github.run_number }}" \
             --notes "APK de teste. Baixe no celular Android, abra o arquivo e permita a instalação de fontes desconhecidas se o Android pedir. Instala por cima da versão anterior." \
             --target "${{ github.sha }}" --latest

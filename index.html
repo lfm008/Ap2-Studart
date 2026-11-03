@@ -8,9 +8,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RJ Tabuleiro">
+<meta name="apple-mobile-web-app-title" content="Vida Carioca">
 <meta name="format-detection" content="telephone=no">
-<title>RJ Tabuleiro</title>
+<title>Vida Carioca</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -49,7 +49,7 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 /* HOME */
 #home{align-items:center;text-align:center;justify-content:space-between;padding-top:34px}
 .logo{margin-top:30px;position:relative;z-index:1}
-.logo .rj{font-family:var(--hand);font-size:120px;line-height:.9;color:#fff;transform:rotate(-4deg);text-shadow:4px 4px 0 #000,0 0 0 #fff}
+.logo .rj{font-family:var(--hand);font-size:96px;line-height:.9;color:#fff;transform:rotate(-4deg);text-shadow:4px 4px 0 #000,0 0 0 #fff}
 .logo .crown{position:absolute;left:50%;top:-34px;transform:translateX(-50%) rotate(-8deg);width:70px;height:48px}
 .logo .tab{font-family:var(--display);font-size:42px;color:var(--y);letter-spacing:.12em;margin-top:4px}
 .logo p{font-family:var(--hand);color:var(--ink);font-size:17px;margin:6px 0}
@@ -181,8 +181,8 @@ nav button.lock{opacity:.35}
 .turn-ov .av{width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid var(--y)}
 .turn-ov .av svg{width:100%;height:100%}
 @media(min-height:820px){:root{--d:140px}.result{font-size:84px;height:92px}}
-@media(max-height:760px){:root{--d:100px}.scene{margin:18px 0 28px}.result{font-size:60px;height:66px}.who h2{font-size:26px}.logo .rj{font-size:96px}.logo .tab{font-size:36px}}
-@media(max-height:680px){:root{--d:84px}.scene{margin:10px 0 20px}.result{font-size:48px;height:52px}.stage{min-height:200px}.front{padding:10px}.title{font-size:20px}.sub{margin-bottom:6px;font-size:12px}.who h2{font-size:22px}.tchip{width:34px;height:34px}.btn{font-size:18px;padding:11px 16px}.logo{margin-top:14px}.logo .rj{font-size:80px}.logo .tab{font-size:30px}.screen{padding-left:16px;padding-right:16px}}
+@media(max-height:760px){:root{--d:100px}.scene{margin:18px 0 28px}.result{font-size:60px;height:66px}.who h2{font-size:26px}.logo .rj{font-size:80px}.logo .tab{font-size:36px}}
+@media(max-height:680px){:root{--d:84px}.scene{margin:10px 0 20px}.result{font-size:48px;height:52px}.stage{min-height:200px}.front{padding:10px}.title{font-size:20px}.sub{margin-bottom:6px;font-size:12px}.who h2{font-size:22px}.tchip{width:34px;height:34px}.btn{font-size:18px;padding:11px 16px}.logo{margin-top:14px}.logo .rj{font-size:64px}.logo .tab{font-size:30px}.screen{padding-left:16px;padding-right:16px}}
 @media(max-height:600px){:root{--d:70px}.scene{margin:4px 0 14px}.result{font-size:40px;height:44px}.stage{min-height:170px}.hint{font-size:11px}.turnbar{margin-bottom:4px}}
 @media(max-width:340px){.pcard .pic{width:84px}.btn{font-size:17px}}
 </style>
@@ -194,8 +194,8 @@ nav button.lock{opacity:.35}
   <section id="home" class="screen on">
     <div class="logo">
       <svg class="crown" viewBox="0 0 70 48"><path d="M6 40 L2 12 L22 26 L35 4 L48 26 L68 12 L64 40 Z"/><circle cx="2" cy="10" r="3"/><circle cx="35" cy="3" r="3"/><circle cx="68" cy="10" r="3"/></svg>
-      <div class="rj">RJ</div>
-      <div class="tab">TABULEIRO</div>
+      <div class="rj">Vida</div>
+      <div class="tab">CARIOCA</div>
       <p>Seu jogo, mais completo.</p>
     </div>
     <svg class="hbg" id="hbg" viewBox="0 0 430 780" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -295,7 +295,7 @@ nav button.lock{opacity:.35}
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
     <div class="sec"><h3>Jogadores</h3><div id="board" class="roster"></div></div>
-    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · versão <span id="ver">0.3</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
+    <div class="sec"><h3>Sobre</h3><p>Vida Carioca · versão <span id="ver">0.3</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
   </section>
 
   <div id="modal"><div id="modalBox"><div id="modalBody"></div><button class="btn" id="modalClose">Fechar</button></div></div>

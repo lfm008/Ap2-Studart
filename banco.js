@@ -1,5 +1,5 @@
 // ============================================================================
-//  BANCO DE SITUAÇÕES — RJ Tabuleiro
+//  BANCO DE SITUAÇÕES — Vida Carioca
 //  Cada situação: SIT(perfis, emoji, título, texto, opçãoA, opçãoB, [3 desfechos A], [3 desfechos B], idade?)
 //    perfis : '*' (qualquer um) ou lista: baixa,media,alta,crime,legal,alto,estudante
 //    idade  : opcional  '60+' (só 60 anos ou mais) · '<=25' (até 25 anos) · '30+' ...

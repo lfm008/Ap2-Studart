@@ -1,6 +1,6 @@
 {
-  "name": "RJ Tabuleiro",
-  "short_name": "RJ Tabuleiro",
+  "name": "Vida Carioca",
+  "short_name": "Vida Carioca",
   "description": "Assistente do jogo de tabuleiro: personagens, dado 3D e cartas de Sorte/Revés.",
   "lang": "pt-BR",
   "start_url": "./index.html",

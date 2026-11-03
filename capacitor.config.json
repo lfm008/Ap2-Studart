@@ -1,6 +1,6 @@
 {
   "appId": "com.rjtabuleiro.app",
-  "appName": "RJ Tabuleiro",
+  "appName": "Vida Carioca",
   "webDir": "www",
   "backgroundColor": "#0d0d0d",
   "server": { "androidScheme": "https" },
