@@ -68,6 +68,12 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .pcard .fam{margin-top:8px;border-top:1.5px dashed #9b917b;padding-top:6px;font-size:12px}
 .pcard .luck{font-family:var(--hand);text-align:center;font-size:15px;margin-top:8px;color:#222}
 .pcard .tag{position:absolute;top:-15px;right:10px;white-space:nowrap;background:var(--y);color:#111;font-family:var(--display);font-size:13px;padding:2px 8px;border-radius:3px;transform:rotate(3deg)}
+.tema{background:var(--paper);color:#1a1a1a;border:2px solid #111;border-radius:8px;padding:22px 16px;text-align:center;box-shadow:0 8px 24px #000a;transform:rotate(-.6deg);animation:pop .35s cubic-bezier(.2,1.4,.4,1);display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px}
+.tema .modo{background:#111;color:var(--y);font:800 13px var(--ui);text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border-radius:99px}
+.tema small{font-family:var(--hand);color:#7a7160;font-size:15px}
+.tema .tt{font-family:var(--display);font-size:32px;line-height:1.1;text-transform:uppercase}
+.tema p{margin:0;font-size:13px;color:#555}
+#temaBox .empty{margin-bottom:18px}
 .empty{border:2px dashed var(--line);border-radius:10px;padding:34px 16px;text-align:center;color:var(--mut);font-family:var(--hand)}
 .roster{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
@@ -239,7 +245,7 @@ nav button.lock{opacity:.35}
   <!-- DADO -->
   <section id="dice" class="screen">
     <div class="turnbar" id="turnbar"></div>
-    <div class="who"><small>Vez de</small><h2 id="whoName">—</h2><span id="whoInfo"></span><span id="whoMoney" style="color:var(--y);font-weight:800;font-size:15px;margin-top:2px"></span></div>
+    <div class="who"><small>Vez de</small><h2 id="whoName">—</h2><span id="whoInfo"></span></div>
     <div class="stage">
       <div class="scene"><div class="dice-wrap" id="diceWrap"><div class="cube" id="cube">
         <div class="face f1"></div><div class="face f2"></div><div class="face f3"></div><div class="face f4"></div><div class="face f5"></div><div class="face f6"></div>
@@ -275,13 +281,21 @@ nav button.lock{opacity:.35}
     </div>
   </section>
 
+  <!-- TEMAS -->
+  <section id="temas" class="screen">
+    <h2 class="title">Gerador de temas</h2>
+    <p class="sub">Sorteie um tema do Rio. Quem tirou faz a mímica ou desenha de olho fechado, e o resto da mesa tenta adivinhar.</p>
+    <div id="temaBox"><div class="empty">Nenhum tema ainda…<br>Aperte o botão e boa sorte.</div></div>
+    <div class="actions"><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
+  </section>
+
   <!-- CONFIG -->
   <section id="cfg" class="screen">
     <h2 class="title">Config</h2>
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
-    <div class="sec"><h3>Placar</h3><div id="board" class="roster"></div></div>
-    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · versão <span id="ver">0.2</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
+    <div class="sec"><h3>Jogadores</h3><div id="board" class="roster"></div></div>
+    <div class="sec"><h3>Sobre</h3><p>RJ Tabuleiro · versão <span id="ver">0.3</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
   </section>
 
   <div id="modal"><div id="modalBox"><div id="modalBody"></div><button class="btn" id="modalClose">Fechar</button></div></div>
@@ -290,8 +304,9 @@ nav button.lock{opacity:.35}
 
   <nav id="nav">
     <button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
-    <button data-go="dice" class="lock"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r=".8"/><circle cx="16" cy="16" r=".8"/><circle cx="12" cy="12" r=".8"/></svg>Dado</button>
+    <button data-go="dice"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r=".8"/><circle cx="16" cy="16" r=".8"/><circle cx="12" cy="12" r=".8"/></svg>Dado</button>
     <button data-go="card" class="lock"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M3 6v13M21 6v13"/></svg>Carta</button>
+    <button data-go="temas"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>Temas</button>
     <button data-go="cfg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Config</button>
   </nav>
 </div>
@@ -410,7 +425,7 @@ function pickDireta(p){
   return l.length?dr('dir_'+p.classe,l):null;
 }
 function ajustaCarta(){const f=$('#front'),n=f.innerText.length;f.dataset.len=n>230?'l':n>150?'m':'s'}
-function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
+function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}`}
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
   (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
@@ -420,7 +435,7 @@ function fmtEff(r){const a=[];
   if(r.money)a.push((r.money>0?'+ ':'– ')+money(Math.abs(r.money)));
   if(r.move)a.push(r.move>0?`Avance ${r.move} casa${r.move>1?'s':''}`:`Volte ${-r.move} casa${r.move<-1?'s':''}`);
   if(r.perde)a.push('Perca a próxima vez'); if(r.again)a.push('Jogue de novo');
-  return a.join(' · ')||'Nada muda'}
+  return a.join(' · ')}
 function nice(v){const a=Math.abs(v),st=a<200?10:a<2000?50:a<20000?500:2500;return Math.sign(v)*Math.max(st,Math.round(a/st)*st)}
 // se o texto cita um único valor em R$ igual ao do efeito base, o texto passa a citar o valor realmente aplicado
 function textoComValor(x,base,v){
@@ -441,7 +456,8 @@ function adaptar(res,p){
     else if(p.idade<=25&&r.move<0){notas.push('Jovem: se recupera rápido');r.move+=1}
     if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
   }
-  return {eff:fmtEff(r),notas,money:r.money,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
+  r.money=0; // o jogo não usa mais dinheiro: valores em R$ ficam só no texto da história
+  return {eff:fmtEff(r),notas,money:0,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha','Ferreira','Ribeiro','Araújo','Costa','Martins','Alves','Rodrigues','Castro','Dias','Teixeira','Moreira','Cardoso','Pinto','Machado','Monteiro','Freitas','Vieira','Batista','Ramos','Moraes','dos Santos','de Souza','Xavier','Fontes'];
@@ -640,7 +656,7 @@ const CAMISA=['#e0483a','#f7a81b','#3fbf6a','#3b7ddd','#f4efe4','#8d4fd1','#222'
 
 /* ============ ESTADO ============ */
 const S={players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
-// guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores, saldo nem a vez
+// guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores nem a vez
 function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face}))}catch(e){}}
 function load(){try{const o=JSON.parse(localStorage.getItem('rjt_state')||'null');
   if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1})}}catch(e){}}
@@ -690,7 +706,6 @@ function gerar(){
   let oc=fem?(pr.f||femize(pr.m)):pr.m;
   const rico=pr.r[1]>=20000, step=rico?500:50;
   const renda=Math.round((pr.r[0]+Math.random()*(pr.r[1]-pr.r[0]))/step)*step;
-  const grana=Math.max(step,Math.round(renda*(.5+Math.random())/step)*step); // reserva = 0,5x a 1,5x a renda
   const popular=cat==='baixa'||cat==='crime';
   const nome=dr('nm_'+(fem?'f':'m')+(popular?'p':'n'),(fem?NOMES_F:NOMES_M).filter(n=>popular||!/^(Dona|Seu)/.test(n)));
   const ag=pr.ag||(cat==='alta'?[30,65]:cat==='media'?[22,65]:cat==='alto'?[45,70]:cat==='legal'?[24,55]:cat==='estudante'?[18,25]:[18,61]);
@@ -698,7 +713,7 @@ function gerar(){
   return {
     id:Date.now()+Math.random(), classe:cat, tag:CAT[cat].tag,
     nome:nome+' '+dr('sob',SOBRE), idade:ag[0]+rnd(ag[1]-ag[0]+1),
-    bairro:dr('br_'+cat,{baixa:BAIRROS,media:BAIRROS_MEDIA,alta:BAIRROS_RICO,crime:BAIRROS_CRIME,legal:BAIRROS_LEI,alto:BAIRROS_ALTO,estudante:BAIRROS_UNI}[cat]), ocup:oc, renda, grana, rico,
+    bairro:dr('br_'+cat,{baixa:BAIRROS,media:BAIRROS_MEDIA,alta:BAIRROS_RICO,crime:BAIRROS_CRIME,legal:BAIRROS_LEI,alto:BAIRROS_ALTO,estudante:BAIRROS_UNI}[cat]), ocup:oc, renda, rico,
     traco:dr('tr_'+pr.m,pr.t), fam:dr('fam_'+cat,fams)+(Math.random()<.7?' '+dr('fx',FAM_EXTRA):''), sorte:dr('sorte',SORTES),
     av:{fem,tom:pick(TOM),cab:pick(CAB),cam:pick(CAMISA),style:Math.random()<.5,barba:Math.random()<.4,oculos:Math.random()<.25,sorriso:Math.random()<.6}
   };
@@ -721,7 +736,6 @@ function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.tag?p.t
    <span class="lbl">Mora em</span><span class="v">${p.bairro}</span>
    <span class="lbl">Ocupação</span><span class="v">${p.ocup}</span>
    <span class="lbl">Renda mensal</span><span class="v">${money(p.renda)}</span>
-   <span class="lbl">Dinheiro na mão</span><span class="v" style="color:#1f8a47">${money(p.grana)}</span>
    <span class="lbl">Habilidade especial</span><span class="v">${p.traco}</span></div></div>
   <div class="pcard" style="margin-top:-6px;transform:rotate(.4deg);display:block"><b style="font-family:var(--hand);font-size:11px;color:#7a7160">FAMÍLIA</b><div class="fam" style="border:0;margin:0;padding:2px 0 0">${p.fam}</div><div class="luck">${p.sorte}</div></div>`}
 
@@ -734,7 +748,7 @@ function renderGen(){
   $('#preview').innerHTML=S.pending?pcardHTML(S.pending,n+1):`<div class="empty">${n?'Passa pro próximo jogador!':'Ninguém na fila ainda…<br>Aperte o botão para ver quem você vai ser.'}</div>`;
   $('#count').className='count'+(n<2?' warn':'');
   $('#count').innerHTML=`<span>👥 ${n} jogador${n===1?'':'es'} pronto${n===1?'':'s'}</span><span class="dots">${[...Array(6)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span>`;
-  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-view="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><span style="font-weight:800;font-size:12px;color:var(--y)">${money(p.grana)}</span><span class="chev">›</span></div>`).join('');
+  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-view="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><span class="chev">›</span></div>`).join('');
   $('#btnPlay').disabled=n<2||!!S.pending;
   $('#btnPlay').lastChild.textContent=jogando?' Voltar ao jogo':' Começar o jogo';
   $('#minHint').textContent=jogando?'Para trocar os jogadores, reinicie a partida em Config':n<2?`Faltam ${2-n} jogador${2-n>1?'es':''} para começar (mínimo 2)`:(full?'Mesa cheia — bora jogar!':'Pode começar ou adicionar até 6 jogadores');
@@ -743,7 +757,7 @@ $('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=ger
 $('#btnOk').onclick=()=>{if(!S.pending)return;S.players.push(S.pending);S.pending=null;save();renderGen()};
 $('#roster').onclick=e=>{const r=e.target.closest('[data-view]');if(r)verPersonagem(+r.dataset.view)};
 $('#board').onclick=e=>{const r=e.target.closest('[data-pid]');if(r){const i=S.players.findIndex(p=>String(p.id)===r.dataset.pid);if(i>=0)verPersonagem(i)}};
-function verPersonagem(i){const p=S.players[i];if(!p)return;$('#modalBody').innerHTML=pcardHTML(p,i+1)+`<div class="count" style="margin-top:12px">💰 Saldo atual: ${money(p.grana)}</div>`;$('#modal').classList.add('on')}
+function verPersonagem(i){const p=S.players[i];if(!p)return;$('#modalBody').innerHTML=pcardHTML(p,i+1);$('#modal').classList.add('on')}
 $('#modalClose').onclick=()=>$('#modal').classList.remove('on');
 $('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
 $('#btnPlay').onclick=()=>{
@@ -755,14 +769,14 @@ $('#btnPlay').onclick=()=>{
 
 /* ============ NAV ============ */
 function go(id){
-  if((id==='dice'||id==='card')&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
+  if(id==='card'&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
   $$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
   $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id||(id==='gen'&&b.dataset.go==='home')));
   const sc=$('#'+id);if(sc)sc.scrollTop=0;
-  if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen();
+  if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen(); if(id==='dice')renderTurn();
   $('#nav').style.display='flex';
 }
-function updateLocks(){$$('nav [data-go=dice],nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
+function updateLocks(){$$('nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
 $('#nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
 $('#btnStart').onclick=()=>go(S.started?'dice':'gen');
 
@@ -777,23 +791,31 @@ function setFace(v,anim){
 }
 function faceHTML(){$$('.face').forEach(f=>f.innerHTML='<i></i>'.repeat(9))}
 function renderTurn(){
-  const p=S.players[S.cur]; if(!p)return;
+  const p=S.started&&S.players[S.cur];
+  $('#btnEnd').style.display=p?'':'none';
+  if(!p){ // dado livre: sem partida, gira quantas vezes quiser
+    $('#turnbar').innerHTML=''; $('#whoName').textContent='Dado livre'; $('#whoInfo').textContent='Gire quantas vezes quiser';
+    $('#result').textContent=S.freeFace||'?'; $('#result').classList.toggle('show',!!S.freeFace);
+    $('#btnRoll').disabled=false; $('#diceHint').textContent='Toque para girar o dado'; return}
   $('#turnbar').innerHTML=S.players.map((q,i)=>`<div class="tchip ${i===S.cur?'cur':''}">${avatar(q.av)}</div>`).join('');
-  $('#whoName').textContent=p.nome; $('#whoInfo').textContent=`${p.ocup} · ${p.bairro}`; $('#whoMoney').textContent='💰 '+money(p.grana);
+  $('#whoName').textContent=p.nome; $('#whoInfo').textContent=`${p.ocup} · ${p.bairro}`;
   $('#result').textContent=S.rolled?S.face:'?'; $('#result').classList.toggle('show',!!S.rolled);
   $('#btnRoll').disabled=S.rolled; $('#btnEnd').disabled=!S.rolled;
   $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize sua vez':'Toque para girar o dado';
 }
 function roll(){
-  if(S.rolling||S.rolled)return;
+  const livre=!S.started;
+  if(S.rolling||(S.rolled&&!livre))return;
   S.rolling=true; $('#btnRoll').disabled=true; $('#diceHint').textContent='Rolando…';
-  const v=1+rnd(6); S.face=v;
+  const v=1+rnd(6); S.face=v; if(livre)S.freeFace=v;
   const w=$('#diceWrap'); w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop');
   $('#cube').style.transition=''; setFace(v,true);
   if(navigator.vibrate)navigator.vibrate(30);
   setTimeout(()=>{
-    S.rolling=false;S.rolled=true;save();
+    S.rolling=false;
     const r=$('#result');r.textContent=v;r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
+    if(livre){$('#btnRoll').disabled=false;$('#diceHint').textContent='Caiu '+v+'. Toque para girar de novo';return}
+    S.rolled=true;save();
     $('#btnEnd').disabled=false;
     $('#diceHint').textContent=`${S.players[S.cur].nome} andou ${v} casa${v>1?'s':''}. Caiu em Sorte/Revés? Vá na aba Carta.`;
   },1450);
@@ -821,15 +843,15 @@ function cardRender(){
   draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
 }
 function frontSit(sc){return `<span class="kind sit">SITUAÇÃO</span><div class="ico">${sc.ico}</div><div class="ct">${sc.t}</div><div class="tx">${sc.x}</div>`}
-function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}<div class="eff ${g?'g':'r'}">${ad.eff}</div><div class="saldo">${d?(d>0?'+':'–')+' '+money(Math.abs(d))+' · ':''}Saldo: ${money(p.grana)}</div>`}
+function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'SORTE':'REVÉS'}</span><div class="ico">${g?'🍀':'💥'}</div><div class="ct">${o.l}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}`}
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
   const p=S.players[S.cur], dir=pickDireta(p);
   if(dir){
-    const ad=adaptar(dir,p),d=ad.money; p.grana+=d;
+    const ad=adaptar(dir,p),d=0;
     $('#front').className='front res'; $('#front').innerHTML=frontDireta(dir,ad,d,p); ajustaCarta();
-    $('#whoMoney').textContent='💰 '+money(p.grana);
+   
     $('#btnDraw').style.display='none'; $('#pile').classList.add('drawing'); $('#flipper').classList.add('go');
     setTimeout(()=>{$('#btnCardOk').style.display=''},850);
     if(navigator.vibrate)navigator.vibrate(dir.g?20:[40,30,40]);
@@ -847,21 +869,30 @@ $('#btnDraw').onclick=()=>{
 // 50% de chance de sorte e 50% de azar quando a opção tem os dois tipos; senão sorteia entre os desfechos que existem
 function sortearDesfecho(r){const g=r.filter(x=>x.g),b=r.filter(x=>!x.g);return g.length&&b.length?pick(Math.random()<.5?g:b):pick(r)}
 function choose(i){
-  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=ad.money;p.grana+=d;S.choosing=false;save();
+  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=0;S.choosing=false;save();
   $('#front').className='front res'; $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad); ajustaCarta();
-  $('#choices').style.display='none'; $('#btnCardOk').style.display=''; $('#whoMoney').textContent='💰 '+money(p.grana);
+  $('#choices').style.display='none'; $('#btnCardOk').style.display='';
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
 }
 $('#opt0').onclick=()=>choose(0); $('#opt1').onclick=()=>choose(1);
 $('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
 
+/* ============ TEMAS ============ */
+const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos.'},{ico:'🙈',t:'Desenhar de olho fechado',d:'Olho fechado do início ao fim, sem escrever letras.'}];
+$('#btnTema').onclick=()=>{
+  const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
+  const t=dr('tema',l), m=pick(MODOS);
+  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>`;
+  if(navigator.vibrate)navigator.vibrate(20);
+};
+
 /* ============ CONFIG ============ */
 function cfgRender(){
-  $('#board').innerHTML=[...S.players].sort((a,b)=>b.grana-a.grana).map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span style="font-weight:800;font-size:13px;color:${p.grana<0?'var(--red)':'var(--y)'}">${money(p.grana)}</span></div>`).join('')||'<p>Sem jogadores ainda.</p>';
+  $('#board').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b></div>`).join('')||'<p>Sem jogadores ainda.</p>';
   $('#cfgInfo').innerHTML=S.started?`Jogo em andamento com <b>${S.players.length}</b> jogadores. Vez de <b>${S.players[S.cur].nome}</b>.`:`Nenhum jogo em andamento (${S.players.length}/6 personagens).`;
 }
 $('#btnReset').onclick=()=>{
-  $('#modalBody').innerHTML='<div class="sec" style="margin:0"><h3>Reiniciar partida?</h3><p>Todos os personagens e saldos serão apagados. Não dá para desfazer.</p><button class="btn" id="btnResetOk">Sim, reiniciar</button></div>';
+  $('#modalBody').innerHTML='<div class="sec" style="margin:0"><h3>Reiniciar partida?</h3><p>Todos os personagens serão apagados. Não dá para desfazer.</p><button class="btn" id="btnResetOk">Sim, reiniciar</button></div>';
   $('#modal').classList.add('on');
   $('#btnResetOk').onclick=()=>{
     Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,choosing:false,face:1});
@@ -907,6 +938,7 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&!window.Ca
 </script>
 <script src="banco.js"></script>
 <script src="banco-cartas.js"></script>
+<script src="banco-temas.js"></script>
 <script src="banco-sit-01.js"></script>
 <script src="banco-sit-02.js"></script>
 <script src="banco-sit-03.js"></script>
