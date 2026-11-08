@@ -1,5 +1,5 @@
 // Service worker do modo "instalar na tela inicial" (iPhone/Android pelo navegador): deixa o app abrir sem internet.
-const V = 'rjt-v0.3.2';
+const V = 'rjt-v0.4.0';
 self.addEventListener('install', (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== V).map((k) => caches.delete(k)))).then(() => self.clients.claim()));

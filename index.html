@@ -74,6 +74,16 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .tema .tt{font-family:var(--display);font-size:32px;line-height:1.1;text-transform:uppercase}
 .tema p{margin:0;font-size:13px;color:#555}
 #temaBox .empty{margin-bottom:18px}
+#mgBtns{display:flex;flex-direction:column-reverse;gap:12px}
+.qz{background:var(--paper);color:#1a1a1a;border:2px solid #111;border-radius:8px;padding:16px;box-shadow:0 8px 24px #000a;margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.qz .top{display:flex;justify-content:space-between;font:800 12px var(--ui);color:#7a7160;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.qz .qq{font:800 18px/1.3 var(--ui);margin-bottom:12px}
+.qz button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:2px solid #111;border-radius:8px;padding:10px 12px;margin-top:8px;font:600 15px/1.3 var(--ui);color:#1a1a1a;cursor:pointer}
+.qz button b{font-family:var(--display);font-size:17px;min-width:18px}
+.qz button.ok{background:#bfe8c9;border-color:#1f8a47}.qz button.no{background:#f4c4bf;border-color:#c0352a}
+.qz button[disabled]{cursor:default}
+.qz .fim{font-family:var(--display);font-size:56px;text-align:center;line-height:1}
+.qz .msg{text-align:center;font-family:var(--hand);font-size:17px;margin-top:6px}
 .empty{border:2px dashed var(--line);border-radius:10px;padding:34px 16px;text-align:center;color:var(--mut);font-family:var(--hand)}
 .roster{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
@@ -283,10 +293,10 @@ nav button.lock{opacity:.35}
 
   <!-- TEMAS -->
   <section id="temas" class="screen">
-    <h2 class="title">Gerador de temas</h2>
-    <p class="sub">Sorteie um tema do Rio. Quem tirou faz a mímica ou desenha de olho fechado, e o resto da mesa tenta adivinhar.</p>
-    <div id="temaBox"><div class="empty">Nenhum tema ainda…<br>Aperte o botão e boa sorte.</div></div>
-    <div class="actions"><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
+    <h2 class="title">Minigames</h2>
+    <p class="sub">Caiu na casa de minigame? Gere um tema com desafio ou jogue o Quiz Carioca.</p>
+    <div id="temaBox"><div class="empty">Escolha um minigame…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio.</div></div>
+    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg> Quiz Carioca</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
   </section>
 
   <!-- CONFIG -->
@@ -295,7 +305,7 @@ nav button.lock{opacity:.35}
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
     <div class="sec"><h3>Jogadores</h3><div id="board" class="roster"></div></div>
-    <div class="sec"><h3>Sobre</h3><p>Vida Carioca · versão <span id="ver">0.3</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
+    <div class="sec"><h3>Sobre</h3><p>Vida Carioca · versão <span id="ver">0.4</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
   </section>
 
   <div id="modal"><div id="modalBox"><div id="modalBody"></div><button class="btn" id="modalClose">Fechar</button></div></div>
@@ -878,10 +888,36 @@ $('#opt0').onclick=()=>choose(0); $('#opt1').onclick=()=>choose(1);
 $('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
 
 /* ============ TEMAS ============ */
-const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos.'},{ico:'🙈',t:'Desenhar de olho fechado',d:'Olho fechado do início ao fim, sem escrever letras.'}];
+const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos.'},{ico:'🙈',t:'Desenhar de olho fechado',d:'Olho fechado do início ao fim, sem escrever letras.'},{ico:'🗣️',t:'Adivinhação',d:'Descreva com palavras, sem dizer o tema nem pedaços dele.'}];
+// Quiz Carioca: 10 perguntas por rodada, sem repetir até esgotar o banco; alternativas embaralhadas A–E
+const QZ={list:[],i:0,pts:0};
+function quizStart(){
+  const b=window.QUIZ||[]; if(b.length<10){toast('Banco do quiz vazio');return}
+  QZ.list=[];while(QZ.list.length<10){const q=dr('quiz',b);if(!QZ.list.includes(q))QZ.list.push(q)}
+  QZ.i=0;QZ.pts=0;$('#mgBtns').style.display='none';quizShow();
+}
+function quizShow(){
+  const q=QZ.list[QZ.i],ops=shuffle([q.c,...q.e]);
+  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Pergunta ${QZ.i+1}/10</span><span>✅ ${QZ.pts}</span></div><div class="qq">${q.q}</div>${ops.map((o,k)=>`<button data-o="${k}"><b>${'ABCDE'[k]}</b><span>${o}</span></button>`).join('')}</div><button class="btn" id="qzNext" style="display:none"></button>`;
+  $$('.qz [data-o]').forEach(bt=>bt.onclick=()=>{
+    const ok=ops[+bt.dataset.o]===q.c; if(ok)QZ.pts++;
+    $$('.qz [data-o]').forEach(x=>{x.disabled=true;if(ops[+x.dataset.o]===q.c)x.classList.add('ok')});
+    if(!ok)bt.classList.add('no');
+    $('.qz .top span:last-child').textContent='✅ '+QZ.pts;
+    if(navigator.vibrate)navigator.vibrate(ok?20:[40,30,40]);
+    const n=$('#qzNext');n.textContent=QZ.i<9?'Próxima':'Ver resultado';n.style.display='';
+    n.onclick=()=>{QZ.i++;if(QZ.i<10)quizShow();else quizEnd();$('#temas').scrollTop=0};
+  });
+}
+function quizEnd(){
+  const p=QZ.pts,m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
+  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div></div>`;
+  $('#mgBtns').style.display='';
+}
+$('#btnQuiz').onclick=quizStart;
 $('#btnTema').onclick=()=>{
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
-  const t=dr('tema',l), m=pick(MODOS);
+  const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
   $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>`;
   if(navigator.vibrate)navigator.vibrate(20);
 };
@@ -939,6 +975,7 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&!window.Ca
 <script src="banco.js"></script>
 <script src="banco-cartas.js"></script>
 <script src="banco-temas.js"></script>
+<script src="banco-quiz.js"></script>
 <script src="banco-sit-01.js"></script>
 <script src="banco-sit-02.js"></script>
 <script src="banco-sit-03.js"></script>
