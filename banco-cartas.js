@@ -152,3 +152,18 @@ C('*','+','🎓','Estágio remunerado','Apareceu um estágio com bolsa e vale-re
 C('*','+','📱','Seguidor famoso','Um famoso te seguiu no Instagram e você ganhou fama.','+50 >2','<=30');
 C('*','-','🎮','Perdeu o jogo','Perdeu a final do campeonato de videogame.','-30 <1','<=30');
 C('*','-','🍺','Ressaca épica','Acordou sem lembrar nada e com 14 mensagens estranhas.','-60 P','<=30');
+
+// ---- cartas extremas: avance 5 casas ou volte ao início
+C('*','+','🚀','Pegou o BRT expresso','O BRT veio vazio, sem parar em nenhuma estação e com ar-condicionado funcionando. Ninguém acredita.','>5');
+C('*','+','🎰','Deu milhar no bicho','Cravou a milhar seca da cabra. O bicheiro pagou chorando.','>5');
+C('*','+','🏍️','Garupa do motoboy','Um motoboy te deu carona e cortou a cidade pelo corredor a 120 por hora.','>5');
+C('*','+','🛣️','Linha Amarela livre','Pegou a Linha Amarela às 6 da tarde sem nenhum carro. Recorde de tempo.','>5');
+C('*','+','🎉','Virou o rei do camarote','Entrou de penetra na Sapucaí e saiu na TV com a rainha de bateria.','>5');
+C('*','+','🌊','Surfou a onda do século','Pegou a maior onda do Arpoador e foi parar três casas depois do ponto final.','>5');
+C('*','+','🙏','Promessa pra São Sebastião','Fez promessa pro padroeiro e foi atendido na hora. Avançou na fé.','>5');
+C('*','-','🔫','Arrastão completo','Levaram celular, chinelo, canga e a sua dignidade. Volta pra casa a pé, do zero.','I');
+C('*','-','🚨','Enquadro do BOPE','Estava no lugar errado, na hora errada, com a cara errada. Começa tudo de novo.','I');
+C('*','-','🌧️','Enchente levou tudo','Choveu 20 minutos e a enxurrada te levou de volta pro ponto de partida.','I');
+C('*','-','🚇','Dormiu no metrô','Dormiu na Linha 2, foi até a Pavuna, voltou e foi de novo. Recomeça.','I');
+C('*','-','📱','Golpe do Pix','Caiu no golpe do falso parente e perdeu até a senha do Wi-Fi. Volta pro início.','I');
+C('*','-','🍻','Ressaca de Quarta de Cinzas','Acordou na Quarta de Cinzas sem saber a cidade, o nome e o caminho de casa.','I');

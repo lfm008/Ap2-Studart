@@ -6,19 +6,19 @@
 //  Desfecho: 'tipo|texto|efeito'
 //    tipo   : '+' sorte · '-' azar · '!' azar com dano físico (idoso internado, SUS, clínica particular…)
 //    efeito : tokens separados por espaço →  +300 / -150 (R$ base, escala com a renda)
-//             >2 (avance 2 casas) · <3 (volte 3 casas) · P (perca a próxima vez) · J (jogue de novo)
+//             >2 (avance 2 casas) · <3 (volte 3 casas) · I (volte ao início) · P (perca a próxima vez) · J (jogue de novo)
 // ============================================================================
 (function(){
   const fmt=t=>{
-    let money=0,move=0,perde=false,again=false;
+    let money=0,move=0,perde=false,again=false,inicio=false;
     t.split(/\s+/).filter(Boolean).forEach(k=>{
-      if(k==='P')perde=true; else if(k==='J')again=true;
+      if(k==='P')perde=true; else if(k==='J')again=true; else if(k==='I')inicio=true;
       else if(k[0]==='>')move+=+k.slice(1); else if(k[0]==='<')move-=+k.slice(1);
       else money+=+k;
     });
     const a=[];
     if(money)a.push((money>0?'+ ':'– ')+'R$ '+Math.abs(money).toLocaleString('pt-BR'));
-    if(move)a.push(move>0?`Avance ${move} casa${move>1?'s':''}`:`Volte ${-move} casa${move<-1?'s':''}`);
+    if(inicio)a.push('Volte ao início'); else if(move)a.push(move>0?`Avance ${move} casa${move>1?'s':''}`:`Volte ${-move} casa${move<-1?'s':''}`);
     if(perde)a.push('Perca a próxima vez'); if(again)a.push('Jogue de novo');
     return a.join(' · ')||'Nada muda';
   };

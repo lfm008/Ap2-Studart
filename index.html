@@ -444,10 +444,10 @@ function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sort
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
   (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
   let m=/Avance (\d+)/.exec(e);if(m)r.move=+m[1]; m=/Volte (\d+)/.exec(e);if(m)r.move=-m[1];
-  r.perde=/Perca a pr/.test(e); r.again=/Jogue de novo/.test(e); return r}
+  r.perde=/Perca a pr/.test(e); r.again=/Jogue de novo/.test(e); r.inicio=/Volte ao início/.test(e); return r}
 function fmtEff(r){const a=[];
   if(r.money)a.push((r.money>0?'+ ':'– ')+money(Math.abs(r.money)));
-  if(r.move)a.push(r.move>0?`Avance ${r.move} casa${r.move>1?'s':''}`:`Volte ${-r.move} casa${r.move<-1?'s':''}`);
+  if(r.inicio)a.push('Volte ao início'); else if(r.move)a.push(r.move>0?`Avance ${r.move} casa${r.move>1?'s':''}`:`Volte ${-r.move} casa${r.move<-1?'s':''}`);
   if(r.perde)a.push('Perca a próxima vez'); if(r.again)a.push('Jogue de novo');
   return a.join(' · ')}
 function nice(v){const a=Math.abs(v),st=a<200?10:a<2000?50:a<20000?500:2500;return Math.sign(v)*Math.max(st,Math.round(a/st)*st)}
