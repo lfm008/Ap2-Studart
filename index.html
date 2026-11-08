@@ -84,6 +84,9 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0;text-transform:upperca
 .qz button[disabled]{cursor:default}
 .qz .fim{font-family:var(--display);font-size:56px;text-align:center;line-height:1}
 .qz .msg{text-align:center;font-family:var(--hand);font-size:17px;margin-top:6px}
+.qz .prem{margin-top:14px;border-radius:8px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-size:22px;line-height:1.15;text-transform:uppercase}
+.qz .prem small{display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px}
+.qz .prem.g{background:var(--green)}.qz .prem.r{background:var(--red)}.qz .prem.n{background:#555}
 .empty{border:2px dashed var(--line);border-radius:10px;padding:34px 16px;text-align:center;color:var(--mut);font-family:var(--hand)}
 .roster{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
@@ -913,9 +916,17 @@ function quizShow(){
     n.onclick=()=>{QZ.i++;if(QZ.i<10)quizShow();else quizEnd();$('#temas').scrollTop=0};
   });
 }
+// Prêmio/castigo do quiz por faixa de acertos (sorteia um da faixa)
+const QZ_FX=[
+ {min:10,g:'g',l:['Avance 5 casas','Troque de lugar com quem você quiser','Avance 3 casas e jogue de novo','Escolha um jogador para voltar ao início','Escolha um jogador para perder a próxima vez']},
+ {min:8,g:'g',l:['Avance 3 casas','Avance 2 casas e jogue de novo','Escolha um jogador para voltar 3 casas','Jogue de novo','Troque de lugar com o jogador da sua frente']},
+ {min:6,g:'g',l:['Avance 2 casas','Avance 1 casa','Jogue de novo','Escolha um jogador para voltar 1 casa']},
+ {min:4,g:'n',l:['Fique onde está','Avance 1 casa','Volte 1 casa','Fique onde está, mas o próximo jogador avança 1 casa']},
+ {min:2,g:'r',l:['Volte 2 casas','Volte 3 casas','Perca a próxima vez','Troque de lugar com o jogador de trás']},
+ {min:0,g:'r',l:['Volte ao início','Volte 5 casas','Perca as próximas 2 vezes','Troque de lugar com o último colocado','O jogador da sua escolha avança 3 casas']}];
 function quizEnd(){
-  const p=QZ.pts,m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
-  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div></div>`;
+  const p=QZ.pts,fx=QZ_FX.find(f=>p>=f.min),efx=pick(fx.l),m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
+  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div><div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':fx.g==='r'?'DEU RED':'NEM GREEN NEM RED'}</small>${efx}</div></div>`;
   $('#mgBtns').style.display='';
 }
 $('#btnQuiz').onclick=quizStart;
