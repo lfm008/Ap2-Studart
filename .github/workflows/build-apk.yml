@@ -51,6 +51,8 @@ jobs:
         run: |
           mkdir -p dist
           cp android/app/build/outputs/apk/release/app-release.apk "dist/Vida-Carioca-0.2.${{ github.run_number }}.apk"
+          # nome fixo: o link .../releases/latest/download/Vida-Carioca.apk (e o QR code) sempre baixa a versão mais nova
+          cp android/app/build/outputs/apk/release/app-release.apk dist/Vida-Carioca.apk
           ls -la dist
 
       - uses: actions/upload-artifact@v4

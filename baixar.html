@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0d">
+<title>Baixar Vida Carioca</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--y:#f7a81b;--ink:#f4efe4;--mut:#9a958a;--card:#1e1e1e;--line:#2e2e2e}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#0d0d0d;color:var(--ink);font-family:'Inter',system-ui,sans-serif}
+body{min-height:100vh;min-height:100dvh;display:flex;justify-content:center;padding:calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
+main{width:100%;max-width:430px;display:flex;flex-direction:column;gap:14px}
+img.ic{width:96px;height:96px;border-radius:22px;align-self:center;box-shadow:0 8px 30px #000a}
+h1{font-family:'Anton',Impact,sans-serif;font-weight:400;text-transform:uppercase;text-align:center;margin:0;font-size:30px;letter-spacing:.02em}
+h1 span{color:var(--y)}
+p{margin:0;color:var(--mut);font-size:14px;line-height:1.45;text-align:center}
+.btn{display:block;text-align:center;text-decoration:none;font-family:'Anton',Impact,sans-serif;text-transform:uppercase;font-size:20px;letter-spacing:.04em;border-radius:10px;padding:15px 18px;background:var(--y);color:#111;box-shadow:0 4px 0 #a06a0a}
+.btn.ghost{background:#2a2a2a;color:var(--ink);box-shadow:0 4px 0 #111}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.box h2{margin:0 0 8px;font-family:'Anton',Impact,sans-serif;font-weight:400;text-transform:uppercase;color:var(--y);font-size:17px;letter-spacing:.05em}
+.box ol{margin:0;padding-left:20px;color:var(--ink);font-size:14px;line-height:1.6}
+.box p{text-align:left}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <img class="ic" src="icons/icon-192.png" alt="">
+  <h1>Vida <span>Carioca</span></h1>
+  <p>Escolha a sua versão. O link e o QR code são sempre os mesmos e entregam a versão mais nova.</p>
+
+  <section id="android" class="box">
+    <h2>📱 Android</h2>
+    <a class="btn" href="https://github.com/lfm008/Ap2-Studart/releases/latest/download/Vida-Carioca.apk">Baixar o app (APK)</a>
+    <ol style="margin-top:12px">
+      <li>Toque em <b>Baixar o app</b> e abra o arquivo quando terminar.</li>
+      <li>Se o Android avisar, permita instalar de <b>fontes desconhecidas</b>.</li>
+      <li>Para atualizar, é só baixar de novo: instala por cima e mantém a partida.</li>
+    </ol>
+  </section>
+
+  <section id="ios" class="box">
+    <h2>🍎 iPhone / iPad</h2>
+    <a class="btn ghost" href="./index.html">Abrir o app no navegador</a>
+    <ol style="margin-top:12px">
+      <li>Abra esta página no <b>Safari</b>.</li>
+      <li>Toque em <b>Abrir o app no navegador</b>.</li>
+      <li>Toque no botão de compartilhar e em <b>Adicionar à Tela de Início</b>.</li>
+    </ol>
+    <p style="margin-top:8px">O ícone fica na tela inicial e funciona como app, até sem internet.</p>
+  </section>
+</main>
+<script>
+// destaca a versão do aparelho: Android vê o APK primeiro, iPhone vê a instalação pelo Safari
+(function(){
+  var ua=navigator.userAgent||'', ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1), and=/Android/.test(ua);
+  var m=document.querySelector('main'), a=document.getElementById('android'), i=document.getElementById('ios');
+  if(ios){m.insertBefore(i,a);a.style.opacity='.6'}
+  else if(and){i.style.opacity='.6'}
+})();
+</script>
+</body>
+</html>
