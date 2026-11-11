@@ -89,6 +89,17 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .qz .fim{font-family:var(--serif);font-weight:900;font-size:52px;text-align:center;line-height:1}
 .qz .msg{text-align:center;font-weight:700;font-size:15px;margin-top:6px}
 .qz .prem{margin-top:14px;border-radius:8px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:17px;line-height:1.15;text-transform:uppercase}
+.timer{--tc:var(--ink);text-align:center;margin:0 0 14px}
+.qz .timer{--tc:var(--txt);margin:0 0 6px}
+.timer .tn{font-family:var(--serif);font-weight:900;font-size:44px;line-height:1;color:var(--tc)}
+.timer .tbar{height:8px;border-radius:99px;background:#ffffff26;overflow:hidden;margin:8px 0 10px}
+.qz .timer .tbar{background:#102D4320}
+.timer .tbar i{display:block;height:100%;width:100%;background:var(--y2);border-radius:99px;transform-origin:left;transition:transform .25s linear}
+.timer.run .tn{color:var(--y2)}.qz .timer.run .tn{color:var(--y)}
+.timer.low .tn{color:var(--red);animation:tick 1s ease-in-out infinite}.timer.low .tbar i{background:var(--red)}
+.timer.fim .tn{color:var(--red);font-size:26px;padding:9px 0}
+@keyframes tick{50%{transform:scale(1.12)}}
+.qz [data-o][disabled]:not(.ok):not(.no){opacity:.55}
 .acertos{margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
 .acertos h4{margin:0 0 4px;font:800 14px var(--ui);color:var(--ink);text-align:center}
 .acertos>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
@@ -925,6 +936,23 @@ $('#opt0').onclick=()=>choose(0); $('#opt1').onclick=()=>choose(1);
 $('#btnCardOk').onclick=()=>{S.livre=false;resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
 
 /* ============ TEMAS ============ */
+// Contador regressivo: só começa quando a pessoa toca em Iniciar (dá tempo de ler). 50s para desenho de olho fechado; o resto, 30s.
+const TM={h:null,ac:null};
+function beep(f,d){try{TM.ac=TM.ac||new (window.AudioContext||window.webkitAudioContext)();const o=TM.ac.createOscillator(),g=TM.ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(TM.ac.destination);o.start();o.stop(TM.ac.currentTime+d)}catch(e){}}
+function timerHTML(sec){return `<div class="timer" data-sec="${sec}"><div class="tn">${sec}s</div><div class="tbar"><i></i></div><button class="btn sm" data-tstart style="width:100%">Iniciar ${sec}s</button></div>`}
+function stopTimer(){clearInterval(TM.h);TM.h=null}
+function startTimer(box,onStart,onEnd){
+  stopTimer();const sec=+box.dataset.sec,fim=Date.now()+sec*1000,n=box.querySelector('.tn'),bar=box.querySelector('.tbar i'),bt=box.querySelector('[data-tstart]');
+  bt.style.display='none';box.classList.add('run');beep(660,.12);if(onStart)onStart();
+  let ult=sec+1;
+  const tick=()=>{
+    const rest=Math.max(0,fim-Date.now()),t=Math.ceil(rest/1000);
+    bar.style.transform=`scaleX(${rest/(sec*1000)})`;
+    if(t!==ult){ult=t;n.textContent=t+'s';if(t<=5&&t>0){box.classList.add('low');beep(880,.07)}}
+    if(rest<=0){stopTimer();box.classList.remove('run','low');box.classList.add('fim');n.textContent='⏰ Acabou o tempo!';beep(440,.5);if(navigator.vibrate)navigator.vibrate([200,80,200]);if(onEnd)onEnd()}
+  };
+  tick();TM.h=setInterval(tick,200);
+}
 const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos.'},{ico:'🙈',t:'Desenhar de olho fechado',d:'Olho fechado do início ao fim, sem escrever letras.'},{ico:'🗣️',t:'Adivinhação',d:'Descreva com palavras, sem dizer o tema nem pedaços dele.'}];
 // Quiz Carioca: 10 perguntas por rodada, sem repetir até esgotar o banco; alternativas embaralhadas A–E
 const QZ={list:[],i:0,pts:0};
@@ -935,16 +963,22 @@ function quizStart(){
 }
 function quizShow(){
   const q=QZ.list[QZ.i],ops=shuffle([q.c,...q.e]);
-  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Pergunta ${QZ.i+1}/10</span><span>✅ ${QZ.pts}</span></div><div class="qq">${q.q}</div>${ops.map((o,k)=>`<button data-o="${k}"><b>${'ABCDE'[k]}</b><span>${o}</span></button>`).join('')}</div><button class="btn" id="qzNext" style="display:none"></button>`;
-  $$('.qz [data-o]').forEach(bt=>bt.onclick=()=>{
-    const ok=ops[+bt.dataset.o]===q.c; if(ok)QZ.pts++;
-    $$('.qz [data-o]').forEach(x=>{x.disabled=true;if(ops[+x.dataset.o]===q.c)x.classList.add('ok')});
-    if(!ok)bt.classList.add('no');
+  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Pergunta ${QZ.i+1}/10</span><span>✅ ${QZ.pts}</span></div><div class="qq">${q.q}</div>${timerHTML(30)}${ops.map((o,k)=>`<button data-o="${k}"><b>${'ABCDE'[k]}</b><span>${o}</span></button>`).join('')}</div><button class="btn" id="qzNext" style="display:none"></button>`;
+  const opts=$$('.qz [data-o]'),box=$('.qz .timer');let feito=false;
+  opts.forEach(x=>x.disabled=true); // as alternativas só liberam quando a pessoa inicia os 30s (depois de ler a pergunta)
+  const fim=bt=>{ // bt = alternativa tocada; null = o tempo acabou (conta como erro)
+    if(feito)return;feito=true;stopTimer();box.classList.remove('run','low');
+    const ok=!!bt&&ops[+bt.dataset.o]===q.c;if(ok)QZ.pts++;
+    opts.forEach(x=>{x.disabled=true;if(ops[+x.dataset.o]===q.c)x.classList.add('ok')});
+    if(bt&&!ok)bt.classList.add('no');
+    if(bt)box.style.display='none';
     $('.qz .top span:last-child').textContent='✅ '+QZ.pts;
-    if(navigator.vibrate)navigator.vibrate(ok?20:[40,30,40]);
+    if(navigator.vibrate&&bt)navigator.vibrate(ok?20:[40,30,40]);
     const n=$('#qzNext');n.textContent=QZ.i<9?'Próxima':'Ver resultado';n.style.display='';
     n.onclick=()=>{QZ.i++;if(QZ.i<10)quizShow();else quizEnd();$('#temas').scrollTop=0};
-  });
+  };
+  $('.qz [data-tstart]').onclick=()=>startTimer(box,()=>opts.forEach(x=>x.disabled=false),()=>fim(null));
+  opts.forEach(bt=>bt.onclick=()=>fim(bt));
 }
 // Prêmio/castigo do quiz por faixa de acertos (sorteia um da faixa)
 const QZ_FX=[
@@ -955,6 +989,7 @@ const QZ_FX=[
  {min:2,g:'r',l:['Volte 2 casas','Volte 3 casas','Perca a próxima vez','Troque de lugar com o jogador de trás']},
  {min:0,g:'r',l:['Volte ao início','Volte 5 casas','Perca as próximas 2 vezes','Troque de lugar com o último colocado','O jogador da sua escolha avança 3 casas']}];
 function quizEnd(){
+  stopTimer();
   const p=QZ.pts,fx=QZ_FX.find(f=>p>=f.min),efx=pick(fx.l),m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
   $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div><div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':fx.g==='r'?'DEU RED':'NEM GREEN NEM RED'}</small>${efx}</div></div>`;
   $('#mgBtns').style.display='';
@@ -963,7 +998,8 @@ $('#btnQuiz').onclick=quizStart;
 $('#btnTema').onclick=()=>{
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
   const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
-  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${acertosHTML()}`;
+  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:30)}${acertosHTML()}`;
+  stopTimer();$('#temaBox [data-tstart]').onclick=()=>startTimer($('#temaBox .timer'));
   $$('#temaBox .nums button').forEach(bt=>bt.onclick=()=>acertou(+bt.dataset.n));
   if(navigator.vibrate)navigator.vibrate(20);
 };
