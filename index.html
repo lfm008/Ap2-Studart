@@ -89,6 +89,17 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .qz .fim{font-family:var(--serif);font-weight:900;font-size:52px;text-align:center;line-height:1}
 .qz .msg{text-align:center;font-weight:700;font-size:15px;margin-top:6px}
 .qz .prem{margin-top:14px;border-radius:8px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:17px;line-height:1.15;text-transform:uppercase}
+.acertos{margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.acertos h4{margin:0 0 4px;font:800 14px var(--ui);color:var(--ink);text-align:center}
+.acertos>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
+.acertos .nums{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.acertos .nums button{aspect-ratio:1;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:900 22px var(--serif);cursor:pointer;padding:0}
+.acertos .nums button:active:not([disabled]){transform:scale(.95)}
+.acertos .nums button[disabled]{opacity:.28;cursor:default}
+.acertos .nums button.sel{background:var(--y);border-color:var(--y2);color:var(--txt);opacity:1}
+.acertos .prem{margin-top:12px;border-radius:12px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:17px;line-height:1.15;text-transform:uppercase}
+.acertos .prem small{display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px}
+.acertos .prem.g{background:var(--green)}.acertos .prem.r{background:var(--red)}.acertos .prem.n{background:var(--blue)}
 .qz .prem small{display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px}
 .qz .prem.g{background:var(--green)}.qz .prem.r{background:var(--red)}.qz .prem.n{background:var(--blue)}
 .empty{border:2px dashed var(--line);border-radius:12px;padding:34px 16px;text-align:center;color:var(--mut);font-weight:600;font-size:14px;line-height:1.5}
@@ -952,9 +963,30 @@ $('#btnQuiz').onclick=quizStart;
 $('#btnTema').onclick=()=>{
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
   const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
-  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>`;
+  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${acertosHTML()}`;
+  $$('#temaBox .nums button').forEach(bt=>bt.onclick=()=>acertou(+bt.dataset.n));
   if(navigator.vibrate)navigator.vibrate(20);
 };
+// Quantos jogadores acertaram o tema: só vale até (jogadores − 1), já que quem fez o tema não adivinha — evita abuso.
+// O prêmio/castigo de quem fez o tema depende da proporção de acertos (nunca passa de 5 casas).
+const AC_FX=[
+ {g:'r',l:['Volte 3 casas','Volte 4 casas','Volte 2 casas e perca a próxima vez','Volte 5 casas']},
+ {g:'r',l:['Volte 1 casa','Volte 2 casas']},
+ {g:'g',l:['Avance 1 casa','Avance 2 casas']},
+ {g:'g',l:['Avance 3 casas','Avance 4 casas']},
+ {g:'g',l:['Avance 5 casas','Avance 4 casas e jogue de novo','Avance 5 casas']}];
+function acertosHTML(){
+  const n=S.players.length,max=Math.max(0,n-1),quem=S.started&&S.players[S.cur]?S.players[S.cur].nome:'quem fez o tema';
+  return `<div class="acertos"><h4>Quantos jogadores acertaram?</h4><p>Vale para ${quem}. Só dá para marcar até ${max} (todos menos quem fez o tema).</p><div class="nums">${[0,1,2,3,4,5].map(k=>`<button data-n="${k}"${k>max?' disabled':''}>${k}</button>`).join('')}</div><div id="acRes"></div></div>`;
+}
+function acertou(k){
+  const max=Math.max(1,S.players.length-1),r=k/max;
+  const fx=k===0?AC_FX[0]:r<.5?AC_FX[1]:r<.8?AC_FX[2]:r<1?AC_FX[3]:AC_FX[4];
+  const quem=S.started&&S.players[S.cur]?S.players[S.cur].nome:'Quem fez o tema';
+  $$('#temaBox .nums button').forEach(b=>{b.disabled=true;b.classList.toggle('sel',+b.dataset.n===k)}); // uma marcação só por tema
+  $('#acRes').innerHTML=`<div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':'DEU RED'} · ${quem}</small>${pick(fx.l)}</div>`;
+  if(navigator.vibrate)navigator.vibrate(fx.g==='g'?20:[40,30,40]);
+}
 
 /* ============ CONFIG ============ */
 function cfgRender(){
