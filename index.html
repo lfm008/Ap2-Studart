@@ -1040,6 +1040,8 @@ function acertou(k){
   const fx=k===0?AC_FX[0]:r<.5?AC_FX[1]:r<.8?AC_FX[2]:r<1?AC_FX[3]:AC_FX[4];
   const quem=S.started&&S.players[S.cur]?S.players[S.cur].nome:'Quem fez o tema';
   $$('#temaBox .nums button').forEach(b=>{b.disabled=true;b.classList.toggle('sel',+b.dataset.n===k)}); // uma marcação só por tema
+  stopTimer(); // deu Green/Red: o relógio para
+  const tb=$('#temaBox .timer');if(tb){tb.classList.remove('run','low','fim');tb.style.opacity='.4';const sb=tb.querySelector('[data-tstart]');if(sb)sb.style.display='none'}
   $('#acRes').innerHTML=`<div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':'DEU RED'} · ${quem}</small>${pick(fx.l)}</div>`;
   if(navigator.vibrate)navigator.vibrate(fx.g==='g'?20:[40,30,40]);
 }
