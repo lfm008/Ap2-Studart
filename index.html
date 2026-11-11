@@ -335,9 +335,9 @@ nav button.lock{opacity:.35}
   <!-- TEMAS -->
   <section id="temas" class="screen">
     <h2 class="title">Outros</h2>
-    <p class="sub">Minigames e extras: gere um tema com desafio, jogue o Quiz Carioca ou gire o dado livre.</p>
-    <div id="temaBox"><div class="empty">Escolha um minigame…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio.</div></div>
-    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnLivre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Dado livre</button><button class="btn ghost" id="btnQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg> Quiz Carioca</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
+    <p class="sub">Caiu na casa de desafio? Gere um desafio: pode cair mímica, desenho de olho fechado, adivinhação ou o Quiz Carioca. Também dá para girar o dado livre.</p>
+    <div id="temaBox"><div class="empty">Aperte Gerar desafio…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio em 50 segundos.</div></div>
+    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnLivre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Dado livre</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar desafio</button></div>
   </section>
 
   <!-- CONFIG -->
@@ -957,29 +957,27 @@ const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos
 // Quiz Carioca: 10 perguntas por rodada, sem repetir até esgotar o banco; alternativas embaralhadas A–E
 const QZ={list:[],i:0,pts:0};
 function quizStart(){
-  const b=window.QUIZ||[]; if(b.length<10){toast('Banco do quiz vazio');return}
+  const b=window.QUIZ||[]; if(b.length<10)return false;
   QZ.list=[];while(QZ.list.length<10){const q=dr('quiz',b);if(!QZ.list.includes(q))QZ.list.push(q)}
-  QZ.i=0;QZ.pts=0;$('#mgBtns').style.display='none';quizShow();
+  QZ.i=0;QZ.pts=0;QZ.resp=0;clearTimeout(QZ.t);$('#mgBtns').style.display='none';
+  $('#temaBox').innerHTML=`<div id="qzT">${timerHTML(50)}</div><div id="qzQ"><div class="qz"><div class="top"><span>Desafio</span><span>Quiz Carioca</span></div><div class="qq">Quiz Carioca</div><p style="margin:0;font-size:14px;line-height:1.45">São <b>10 perguntas</b> e você tem <b>50 segundos</b> para responder todas. Pergunta sem resposta vale erro. Leia com calma e toque em <b>Iniciar 50s</b>: a primeira pergunta aparece na hora.</p></div></div>`;
+  $('#qzT [data-tstart]').onclick=()=>startTimer($('#qzT .timer'),()=>quizShow(),quizTempo);
+  return true;
 }
 function quizShow(){
   const q=QZ.list[QZ.i],ops=shuffle([q.c,...q.e]);
-  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Pergunta ${QZ.i+1}/10</span><span>✅ ${QZ.pts}</span></div><div class="qq">${q.q}</div>${timerHTML(30)}${ops.map((o,k)=>`<button data-o="${k}"><b>${'ABCDE'[k]}</b><span>${o}</span></button>`).join('')}</div><button class="btn" id="qzNext" style="display:none"></button>`;
-  const opts=$$('.qz [data-o]'),box=$('.qz .timer');let feito=false;
-  opts.forEach(x=>x.disabled=true); // as alternativas só liberam quando a pessoa inicia os 30s (depois de ler a pergunta)
-  const fim=bt=>{ // bt = alternativa tocada; null = o tempo acabou (conta como erro)
-    if(feito)return;feito=true;stopTimer();box.classList.remove('run','low');
-    const ok=!!bt&&ops[+bt.dataset.o]===q.c;if(ok)QZ.pts++;
+  $('#qzQ').innerHTML=`<div class="qz"><div class="top"><span>Pergunta ${QZ.i+1}/10</span><span>✅ ${QZ.pts}</span></div><div class="qq">${q.q}</div>${ops.map((o,k)=>`<button data-o="${k}"><b>${'ABCDE'[k]}</b><span>${o}</span></button>`).join('')}</div>`;
+  const opts=$$('#qzQ [data-o]');
+  opts.forEach(bt=>bt.onclick=()=>{
+    const ok=ops[+bt.dataset.o]===q.c;if(ok)QZ.pts++;QZ.resp++;
     opts.forEach(x=>{x.disabled=true;if(ops[+x.dataset.o]===q.c)x.classList.add('ok')});
-    if(bt&&!ok)bt.classList.add('no');
-    if(bt)box.style.display='none';
-    $('.qz .top span:last-child').textContent='✅ '+QZ.pts;
-    if(navigator.vibrate&&bt)navigator.vibrate(ok?20:[40,30,40]);
-    const n=$('#qzNext');n.textContent=QZ.i<9?'Próxima':'Ver resultado';n.style.display='';
-    n.onclick=()=>{QZ.i++;if(QZ.i<10)quizShow();else quizEnd();$('#temas').scrollTop=0};
-  };
-  $('.qz [data-tstart]').onclick=()=>startTimer(box,()=>opts.forEach(x=>x.disabled=false),()=>fim(null));
-  opts.forEach(bt=>bt.onclick=()=>fim(bt));
+    if(!ok)bt.classList.add('no');
+    $('#qzQ .top span:last-child').textContent='✅ '+QZ.pts;
+    if(navigator.vibrate)navigator.vibrate(ok?20:[40,30,40]);
+    QZ.t=setTimeout(()=>{QZ.i++;if(QZ.i<10)quizShow();else quizEnd()},650); // segue sozinho: o tempo é curto
+  });
 }
+function quizTempo(){clearTimeout(QZ.t);quizEnd(true)} // acabou os 50s: o que ficou sem resposta vale erro
 // Prêmio/castigo do quiz por faixa de acertos (sorteia um da faixa)
 const QZ_FX=[
  {min:10,g:'g',l:['Avance 5 casas','Troque de lugar com quem você quiser','Avance 3 casas e jogue de novo','Escolha um jogador para voltar ao início','Escolha um jogador para perder a próxima vez']},
@@ -988,14 +986,15 @@ const QZ_FX=[
  {min:4,g:'n',l:['Fique onde está','Avance 1 casa','Volte 1 casa','Fique onde está, mas o próximo jogador avança 1 casa']},
  {min:2,g:'r',l:['Volte 2 casas','Volte 3 casas','Perca a próxima vez','Troque de lugar com o jogador de trás']},
  {min:0,g:'r',l:['Volte ao início','Volte 5 casas','Perca as próximas 2 vezes','Troque de lugar com o último colocado','O jogador da sua escolha avança 3 casas']}];
-function quizEnd(){
-  stopTimer();
+function quizEnd(estourou){
+  stopTimer();clearTimeout(QZ.t);
   const p=QZ.pts,fx=QZ_FX.find(f=>p>=f.min),efx=pick(fx.l),m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
-  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div><div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':fx.g==='r'?'DEU RED':'NEM GREEN NEM RED'}</small>${efx}</div></div>`;
+  $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div><div class="msg" style="font-size:12px;opacity:.8">${estourou?`⏰ Acabou o tempo: ${QZ.resp} de 10 respondidas`:`Respondeu tudo a tempo`}</div><div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':fx.g==='r'?'DEU RED':'NEM GREEN NEM RED'}</small>${efx}</div></div>`;
   $('#mgBtns').style.display='';
 }
-$('#btnQuiz').onclick=quizStart;
 $('#btnTema').onclick=()=>{
+  stopTimer();clearTimeout(QZ.t);
+  if(Math.random()<.25&&quizStart())return; // às vezes o desafio é o Quiz Carioca
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
   const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
   $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:30)}${acertosHTML()}`;
