@@ -852,9 +852,16 @@ $('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('o
 $('#btnPlay').onclick=()=>{
   if(S.started){go('dice');return}
   if(S.players.length<2){toast('Mínimo de 2 jogadores!');return}
+  const n=S.players.length;
+  $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Iniciar o jogo?</h3><p>Tem certeza que quer começar com <b>${n} jogadores</b>? Depois de iniciar, não dá para trocar os personagens.</p><button class="btn" id="iniSim">Sim, iniciar</button><button class="btn ghost" id="iniNao" style="margin-top:10px">Não</button></div>`;
+  $('#modal').classList.add('on');
+  $('#iniNao').onclick=()=>$('#modal').classList.remove('on');
+  $('#iniSim').onclick=()=>{$('#modal').classList.remove('on');iniciarJogo()};
+};
+function iniciarJogo(){
   S.livre=false;S.pending=null;S.started=true;S.cur=0;S.rolled=false;S.drawn=false;S.face=1;
   save();updateLocks();renderTurn();go('dice');
-};
+}
 
 /* ============ NAV ============ */
 function go(id){
