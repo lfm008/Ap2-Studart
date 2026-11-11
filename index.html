@@ -76,6 +76,9 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .tema .modo{background:var(--roxo);color:#fff;font:800 12px var(--ui);text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border-radius:99px}
 .tema small{font-weight:700;color:var(--soft);font-size:13px}
 .tema .tt{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1.1}
+.tema .tt{transition:filter .25s}
+.tema.oculto .tt{filter:blur(14px);opacity:.75;pointer-events:none}
+.tema .btn.sm{background:var(--blue);color:#fff;box-shadow:0 3px 0 #0E3556}
 .tema p{margin:0;font-size:13px;color:var(--txt2)}
 #temaBox .empty{margin-bottom:18px}
 #mgBtns{display:flex;flex-direction:column-reverse;gap:12px}
@@ -1030,7 +1033,8 @@ $('#btnTema').onclick=()=>{
   if(Math.random()<.25&&quizStart())return; // às vezes o desafio é o Quiz Carioca
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
   const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
-  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:60,true)}${acertosHTML()}`;
+  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p><button class="btn sm" id="btnEsconde" style="width:100%;margin-top:6px">🙈 Esconder tema</button></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:60,true)}${acertosHTML()}`;
+  $('#btnEsconde').onclick=()=>{const c=$('#temaBox .tema'),h=c.classList.toggle('oculto');$('#btnEsconde').textContent=h?'👁️ Mostrar tema':'🙈 Esconder tema'};
   stopTimer();startTimer($('#temaBox .timer')); // o tempo começa sozinho assim que o desafio aparece
   $$('#temaBox .nums button').forEach(bt=>bt.onclick=()=>acertou(+bt.dataset.n));
   if(navigator.vibrate)navigator.vibrate(20);
