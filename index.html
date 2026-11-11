@@ -1094,9 +1094,10 @@ function tretaGira(){
     if(a===b){ // empate: giram de novo
       $('#trRes').innerHTML=`<div class="prem n"><small>EMPATE · ${a} x ${b}</small>Giram de novo!</div>`;bt.disabled=false;bt.textContent='🎲 Girar de novo';return}
     const ganhou=a>b;dA.classList.add(ganhou?'vence':'perde');dB.classList.add(ganhou?'perde':'vence');
-    $('#trRes').innerHTML=ganhou
-      ?`<div class="prem g"><small>DEU GREEN · ${A.nome} tirou ${a} contra ${b}</small>${A.nome} avança ${Math.min(a,3)} casa${a>1?'s':''}${a>3?' (máximo de 3)':''}</div>`
-      :`<div class="prem r"><small>DEU RED · ${B.nome} tirou ${b} contra ${a}</small>${A.nome} volta ${b} casa${b>1?'s':''}</div>`;
+    // vencedor avança o que tirou (no máximo 3); perdedor volta o número do vencedor (no máximo 5) — vale para os dois jogadores
+    const cs=n=>n+' casa'+(n>1?'s':''),av=Math.min(Math.max(a,b),3),vo=Math.min(Math.max(a,b),5);
+    $('#trRes').innerHTML=`<div class="prem ${ganhou?'g':'r'}"><small>${ganhou?'DEU GREEN':'DEU RED'} · ${A.nome} ${a} x ${b} ${B.nome}</small>${A.nome}: ${ganhou?'avança '+cs(av):'volta '+cs(vo)}</div>`
+      +`<div class="prem ${ganhou?'r':'g'}" style="margin-top:8px"><small>${ganhou?'DEU RED':'DEU GREEN'} · OPONENTE</small>${B.nome}: ${ganhou?'volta '+cs(vo):'avança '+cs(av)}</div>`;
     bt.style.display='none';$('#trSair').textContent='Concluir';
     if(navigator.vibrate)navigator.vibrate(ganhou?20:[40,30,40]);
   },1300);
