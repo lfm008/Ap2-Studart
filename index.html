@@ -530,8 +530,8 @@ function adaptar(res,p){
     if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
   }
   r.money=0; // o jogo não usa mais dinheiro: valores em R$ ficam só no texto da história
-  // sem efeito de movimento (era só dinheiro): sorteia de 1 a 5 casas — Deu Green avança, Deu Red volta
-  if(!r.inicio&&!r.move&&!r.perde&&!r.again)r.move=(res.g?1:-1)*(1+rnd(5));
+  // sem efeito de movimento (era só dinheiro): Deu Green avança de 1 a 3 casas, Deu Red volta de 1 a 5 (avançar 5 só nas cartas raras do banco)
+  if(!r.inicio&&!r.move&&!r.perde&&!r.again)r.move=res.g?1+rnd(3):-(1+rnd(5));
   r.move=Math.max(-5,Math.min(5,r.move)); // nunca passa de 5 casas, nem para avançar nem para voltar
   return {eff:fmtEff(r),notas,money:0,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
@@ -960,17 +960,19 @@ $('#btnCardOk').onclick=()=>{S.livre=false;resetCard();$('#btnDraw').disabled=tr
 // Contador regressivo: só começa quando a pessoa toca em Iniciar (dá tempo de ler). 50s para desenho de olho fechado; o resto, 30s.
 const TM={h:null,ac:null};
 function beep(f,d){try{TM.ac=TM.ac||new (window.AudioContext||window.webkitAudioContext)();const o=TM.ac.createOscillator(),g=TM.ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(TM.ac.destination);o.start();o.stop(TM.ac.currentTime+d)}catch(e){}}
-function timerHTML(sec){return `<div class="timer" data-sec="${sec}"><div class="tn">${sec}s</div><div class="tbar"><i></i></div><button class="btn sm" data-tstart style="width:100%">Iniciar ${sec}s</button></div>`}
+function timerHTML(sec,auto){return `<div class="timer" data-sec="${sec}"><div class="tn">${sec}s</div><div class="tbar"><i></i></div>${auto?'':`<button class="btn sm" data-tstart style="width:100%">Iniciar ${sec}s</button>`}</div>`}
+// alarme de fim de tempo: sirene de ~3 segundos
+function alarme(){for(let k=0;k<10;k++)setTimeout(()=>beep(k%2?720:980,.2),k*300);if(navigator.vibrate)navigator.vibrate([300,100,300,100,300,100,300])}
 function stopTimer(){clearInterval(TM.h);TM.h=null}
 function startTimer(box,onStart,onEnd){
   stopTimer();const sec=+box.dataset.sec,fim=Date.now()+sec*1000,n=box.querySelector('.tn'),bar=box.querySelector('.tbar i'),bt=box.querySelector('[data-tstart]');
-  bt.style.display='none';box.classList.add('run');beep(660,.12);if(onStart)onStart();
+  if(bt)bt.style.display='none';box.classList.add('run');beep(660,.12);if(onStart)onStart();
   let ult=sec+1;
   const tick=()=>{
     const rest=Math.max(0,fim-Date.now()),t=Math.ceil(rest/1000);
     bar.style.transform=`scaleX(${rest/(sec*1000)})`;
     if(t!==ult){ult=t;n.textContent=t+'s';if(t<=5&&t>0){box.classList.add('low');beep(880,.07)}}
-    if(rest<=0){stopTimer();box.classList.remove('run','low');box.classList.add('fim');n.textContent='⏰ Acabou o tempo!';beep(440,.5);if(navigator.vibrate)navigator.vibrate([200,80,200]);if(onEnd)onEnd()}
+    if(rest<=0){stopTimer();box.classList.remove('run','low');box.classList.add('fim');n.textContent='⏰ Acabou o tempo!';alarme();if(onEnd)onEnd()}
   };
   tick();TM.h=setInterval(tick,200);
 }
@@ -1018,8 +1020,8 @@ $('#btnTema').onclick=()=>{
   if(Math.random()<.25&&quizStart())return; // às vezes o desafio é o Quiz Carioca
   const l=window.TEMAS||[]; if(!l.length){toast('Nenhum tema no banco');return}
   const t=dr('tema',l), m=pick(MODOS); $('#mgBtns').style.display='';
-  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:30)}${acertosHTML()}`;
-  stopTimer();$('#temaBox [data-tstart]').onclick=()=>startTimer($('#temaBox .timer'));
+  $('#temaBox').innerHTML=`<div class="tema"><span class="modo">${m.ico} ${m.t}</span><small>Seu tema é:</small><div class="tt">${t}</div><p>${m.d}</p></div>${timerHTML(m.t==='Desenhar de olho fechado'?50:60,true)}${acertosHTML()}`;
+  stopTimer();startTimer($('#temaBox .timer')); // o tempo começa sozinho assim que o desafio aparece
   $$('#temaBox .nums button').forEach(bt=>bt.onclick=()=>acertou(+bt.dataset.n));
   if(navigator.vibrate)navigator.vibrate(20);
 };
@@ -1029,8 +1031,8 @@ const AC_FX=[
  {g:'r',l:['Volte 3 casas','Volte 4 casas','Volte 2 casas e perca a próxima vez','Volte 5 casas']},
  {g:'r',l:['Volte 1 casa','Volte 2 casas']},
  {g:'g',l:['Avance 1 casa','Avance 2 casas']},
- {g:'g',l:['Avance 3 casas','Avance 4 casas']},
- {g:'g',l:['Avance 5 casas','Avance 4 casas e jogue de novo','Avance 5 casas']}];
+ {g:'g',l:['Avance 2 casas','Avance 3 casas']},
+ {g:'g',l:['Avance 3 casas','Avance 3 casas e jogue de novo']}];
 function acertosHTML(){
   const n=S.players.length,max=Math.max(0,n-1),quem=S.started&&S.players[S.cur]?S.players[S.cur].nome:'quem fez o tema';
   return `<div class="acertos"><h4>Quantos jogadores acertaram?</h4><p>Vale para ${quem}. Só dá para marcar até ${max} (todos menos quem fez o tema).</p><div class="nums">${[0,1,2,3,4,5].map(k=>`<button data-n="${k}"${k>max?' disabled':''}>${k}</button>`).join('')}</div><div id="acRes"></div></div>`;
@@ -1079,7 +1081,7 @@ function tretaGira(){
       $('#trRes').innerHTML=`<div class="prem n"><small>EMPATE · ${a} x ${b}</small>Giram de novo!</div>`;bt.disabled=false;bt.textContent='🎲 Girar de novo';return}
     const ganhou=a>b;dA.classList.add(ganhou?'vence':'perde');dB.classList.add(ganhou?'perde':'vence');
     $('#trRes').innerHTML=ganhou
-      ?`<div class="prem g"><small>DEU GREEN · ${A.nome} tirou ${a} contra ${b}</small>${A.nome} avança ${a} casa${a>1?'s':''}</div>`
+      ?`<div class="prem g"><small>DEU GREEN · ${A.nome} tirou ${a} contra ${b}</small>${A.nome} avança ${Math.min(a,3)} casa${a>1?'s':''}${a>3?' (máximo de 3)':''}</div>`
       :`<div class="prem r"><small>DEU RED · ${B.nome} tirou ${b} contra ${a}</small>${A.nome} volta ${b} casa${b>1?'s':''}</div>`;
     bt.style.display='none';$('#trSair').textContent='Concluir';
     if(navigator.vibrate)navigator.vibrate(ganhou?20:[40,30,40]);
