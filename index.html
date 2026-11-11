@@ -312,10 +312,10 @@ nav button.lock{opacity:.35}
 
   <!-- TEMAS -->
   <section id="temas" class="screen">
-    <h2 class="title">Minigames</h2>
-    <p class="sub">Caiu na casa de minigame? Gere um tema com desafio ou jogue o Quiz Carioca.</p>
+    <h2 class="title">Outros</h2>
+    <p class="sub">Minigames e extras: gere um tema com desafio, jogue o Quiz Carioca ou gire o dado livre.</p>
     <div id="temaBox"><div class="empty">Escolha um minigame…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio.</div></div>
-    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg> Quiz Carioca</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
+    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnLivre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Dado livre</button><button class="btn ghost" id="btnQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg> Quiz Carioca</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar tema</button></div>
   </section>
 
   <!-- CONFIG -->
@@ -335,7 +335,7 @@ nav button.lock{opacity:.35}
     <button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
     <button data-go="dice"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r=".8"/><circle cx="16" cy="16" r=".8"/><circle cx="12" cy="12" r=".8"/></svg>Dado</button>
     <button data-go="card" class="lock"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M3 6v13M21 6v13"/></svg>Carta</button>
-    <button data-go="temas"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>Temas</button>
+    <button data-go="temas"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>Outros</button>
     <button data-go="cfg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Config</button>
   </nav>
 </div>
@@ -486,6 +486,9 @@ function adaptar(res,p){
     if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
   }
   r.money=0; // o jogo não usa mais dinheiro: valores em R$ ficam só no texto da história
+  // sem efeito de movimento (era só dinheiro): sorteia de 1 a 5 casas — Deu Green avança, Deu Red volta
+  if(!r.inicio&&!r.move&&!r.perde&&!r.again)r.move=(res.g?1:-1)*(1+rnd(5));
+  r.move=Math.max(-5,Math.min(5,r.move)); // nunca passa de 5 casas, nem para avançar nem para voltar
   return {eff:fmtEff(r),notas,money:0,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
@@ -684,7 +687,7 @@ const CAB=['#1a1a1a','#3b2314','#5a3a1b','#9a6a2a','#d9c27a','#7a1d1d','#333'];
 const CAMISA=['#D43D32','#C77A18','#238447','#24649B','#F7F2E9','#783D87','#102D43'];
 
 /* ============ ESTADO ============ */
-const S={players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
+const S={livre:false,players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
 // guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores nem a vez
 function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face}))}catch(e){}}
 function load(){try{const o=JSON.parse(localStorage.getItem('rjt_state')||'null');
@@ -792,7 +795,7 @@ $('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('o
 $('#btnPlay').onclick=()=>{
   if(S.started){go('dice');return}
   if(S.players.length<2){toast('Mínimo de 2 jogadores!');return}
-  S.pending=null;S.started=true;S.cur=0;S.rolled=false;S.drawn=false;S.face=1;
+  S.livre=false;S.pending=null;S.started=true;S.cur=0;S.rolled=false;S.drawn=false;S.face=1;
   save();updateLocks();renderTurn();go('dice');
 };
 
@@ -800,13 +803,15 @@ $('#btnPlay').onclick=()=>{
 function go(id){
   if(id==='card'&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
   $$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
-  $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id||(id==='gen'&&b.dataset.go==='home')));
+  const ativo=id==='dice'&&S.livre&&S.started?'temas':id==='gen'?'home':id; // o dado livre é aberto pela aba Outros
+  $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===ativo));
   const sc=$('#'+id);if(sc)sc.scrollTop=0;
   if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen(); if(id==='dice')renderTurn();
   $('#nav').style.display='flex';
 }
 function updateLocks(){$$('nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
-$('#nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.go==='dice')S.livre=false;if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
+$('#btnLivre').onclick=()=>{if(S.rolling)return;S.livre=true;go('dice')};
 $('#btnStart').onclick=()=>go(S.started?'dice':'gen');
 
 /* ============ DADO ============ */
@@ -819,24 +824,26 @@ function setFace(v,anim){
   cube.style.transform=`rotateX(${x+ex-24}deg) rotateY(${y+ey+28}deg)`;
 }
 function faceHTML(){$$('.face').forEach(f=>f.innerHTML='<i></i>'.repeat(9))}
+const emLivre=()=>!S.started||S.livre;
 function renderTurn(){
-  const p=S.started&&S.players[S.cur];
-  $('#btnEnd').style.display=p?'':'none';
-  if(!p){ // dado livre: sem partida, gira quantas vezes quiser
-    $('#turnbar').innerHTML=''; $('#whoName').textContent='Dado livre'; $('#whoInfo').textContent='Gire quantas vezes quiser';
+  const livre=emLivre(), p=S.started&&S.players[S.cur];
+  $('#btnEnd').style.display=livre?'none':'';
+  $('.who small').textContent=livre?'Sem vez':'Vez de';
+  if(livre||!p){ // dado livre: gira quando quiser, sem mexer na vez de ninguém
+    $('#turnbar').innerHTML=''; $('#whoName').textContent='Dado livre'; $('#whoInfo').textContent='Gire quando quiser, sem mudar a vez de ninguém';
     $('#result').textContent=S.freeFace||'?'; $('#result').classList.toggle('show',!!S.freeFace);
-    $('#btnRoll').disabled=false; $('#diceHint').textContent='Toque para girar o dado'; return}
+    $('#btnRoll').disabled=S.rolling; $('#diceHint').textContent='Toque para girar o dado'; return}
   $('#turnbar').innerHTML=S.players.map((q,i)=>`<div class="tchip ${i===S.cur?'cur':''}">${avatar(q.av)}</div>`).join('');
   $('#whoName').textContent=p.nome; $('#whoInfo').textContent=`${p.ocup} · ${p.bairro}`;
   $('#result').textContent=S.rolled?S.face:'?'; $('#result').classList.toggle('show',!!S.rolled);
-  $('#btnRoll').disabled=S.rolled; $('#btnEnd').disabled=!S.rolled;
+  $('#btnRoll').disabled=S.rolled||S.rolling; $('#btnEnd').disabled=!S.rolled;
   $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize sua vez':'Toque para girar o dado';
 }
 function roll(){
-  const livre=!S.started;
+  const livre=emLivre();
   if(S.rolling||(S.rolled&&!livre))return;
   S.rolling=true; $('#btnRoll').disabled=true; $('#diceHint').textContent='Rolando…';
-  const v=1+rnd(6); S.face=v; if(livre)S.freeFace=v;
+  const v=1+rnd(6); if(livre)S.freeFace=v; else S.face=v;
   const w=$('#diceWrap'); w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop');
   $('#cube').style.transition=''; setFace(v,true);
   if(navigator.vibrate)navigator.vibrate(30);
@@ -852,7 +859,7 @@ function roll(){
 $('#btnRoll').onclick=roll; $('.scene').onclick=roll;
 $('#btnEnd').onclick=()=>{
   if(!S.rolled)return;
-  S.cur=(S.cur+1)%S.players.length; S.rolled=false; S.drawn=false; save();
+  S.livre=false; S.cur=(S.cur+1)%S.players.length; S.rolled=false; S.drawn=false; save();
   showOverlay(S.players[S.cur]); resetCard(); renderTurn(); go('dice');
 };
 function showOverlay(p){
@@ -904,7 +911,7 @@ function choose(i){
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
 }
 $('#opt0').onclick=()=>choose(0); $('#opt1').onclick=()=>choose(1);
-$('#btnCardOk').onclick=()=>{resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
+$('#btnCardOk').onclick=()=>{S.livre=false;resetCard();$('#btnDraw').disabled=true;cardRender();go('dice')};
 
 /* ============ TEMAS ============ */
 const MODOS=[{ico:'🤐',t:'Mímica',d:'Sem falar nada e sem apontar pra objetos.'},{ico:'🙈',t:'Desenhar de olho fechado',d:'Olho fechado do início ao fim, sem escrever letras.'},{ico:'🗣️',t:'Adivinhação',d:'Descreva com palavras, sem dizer o tema nem pedaços dele.'}];
