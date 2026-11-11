@@ -214,11 +214,10 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .back .ring{position:absolute;inset:calc(var(--ph)*.03);border:1.5px solid #F7F2E9cc;border-radius:calc(var(--ph)*.03)}
 .back .wv{position:absolute;left:calc(var(--ph)*.075);right:calc(var(--ph)*.075);height:calc(var(--w)*.4167*3);background:var(--wave) 0 0/var(--w) calc(var(--w)*.4167) repeat;opacity:.9}
 .back .wv.t{top:calc(var(--ph)*.075)}.back .wv.b{bottom:calc(var(--ph)*.075)}
-.back .sun{width:calc(var(--ph)*.2);height:calc(var(--ph)*.2);margin-bottom:calc(var(--ph)*.03)}
-.back .bv{font-family:var(--serif);font-weight:900;font-style:italic;font-size:calc(var(--ph)*.09);line-height:1;color:var(--red);letter-spacing:.02em}
-.back .bc{font-family:var(--serif);font-weight:900;font-size:calc(var(--ph)*.118);line-height:.95;color:var(--ink)}
-.back .bt{display:flex;align-items:center;gap:calc(var(--ph)*.012);margin-top:calc(var(--ph)*.03);font:800 calc(var(--ph)*.028)/1 var(--ui);letter-spacing:.2em;color:var(--y2)}
-.back .bt i{height:1.5px;width:calc(var(--ph)*.055);background:var(--y2);opacity:.8}
+.back .dgr{width:calc(var(--ph)*.44);height:calc(var(--ph)*.44);margin-bottom:calc(var(--ph)*.02);filter:drop-shadow(0 4px 0 #0B2133)}
+.back .bn{font:800 calc(var(--ph)*.062)/1.12 var(--ui);letter-spacing:.05em;color:var(--ink);text-align:center}
+.back .bt{display:flex;align-items:center;gap:calc(var(--ph)*.015);margin-top:calc(var(--ph)*.035);font-size:calc(var(--ph)*.026);color:var(--y2)}
+.back .bt i{height:1.5px;width:calc(var(--ph)*.1);background:var(--ink);opacity:.8}
 .flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.45,.05,.25,1);transform:translateZ(14px)}
 .flipper.go{transform:translateZ(30px) rotateY(180deg)}
 /* frente: ilustração do Rio no topo com medalhão da coroa, corpo off-white e faixa de ondas (Carta/Frente do Figma) */
@@ -354,8 +353,11 @@ nav button.lock{opacity:.35}
       <div class="pl" style="transform:translateZ(9px)"></div><div class="pl" style="transform:translateZ(12px)"></div>
       <div class="flipper" id="flipper">
         <div class="back"><div class="ring"></div><div class="wv t"></div><div class="wv b"></div>
-          <svg class="sun" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="15" fill="#C77A18"/><g stroke="#C77A18" stroke-width="3" stroke-linecap="round"><path d="M40 6v8M40 66v8M6 40h8M66 40h8M16 16l5.6 5.6M58.4 58.4L64 64M64 16l-5.6 5.6M21.6 58.4L16 64"/></g></svg>
-          <div class="bv">VIDA</div><div class="bc">CARIOCA</div><div class="bt"><i></i>UMA LUTA DIÁRIA<i></i></div></div>
+          <svg class="dgr" viewBox="0 0 120 120" aria-hidden="true">
+            <g transform="rotate(-7 48 40)"><rect x="12" y="10" width="70" height="52" rx="9" fill="#238447"/><path d="M34 50 L62 22 M46 22 H62 V38" fill="none" stroke="#F7F2E9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+            <g transform="rotate(6 76 88)"><rect x="40" y="62" width="70" height="48" rx="9" fill="#D43D32"/><path d="M62 76 L90 98 M90 82 V98 H74" fill="none" stroke="#F7F2E9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
+          <div class="bn">DEU GREEN<br>DEU RED</div><div class="bt"><i></i>◆<i></i></div></div>
         <div class="front" id="front"></div>
       </div>
     </div></div>
