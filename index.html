@@ -100,6 +100,28 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .timer.fim .tn{color:var(--red);font-size:26px;padding:9px 0}
 @keyframes tick{50%{transform:scale(1.12)}}
 .qz [data-o][disabled]:not(.ok):not(.no){opacity:.55}
+.treta{animation:pop .35s cubic-bezier(.2,1.4,.4,1);margin-bottom:14px}
+.treta h4{margin:0 0 4px;font:800 15px var(--ui);color:var(--ink);text-align:center}
+.treta>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
+.duelo{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;background:var(--paper);color:var(--txt);border:3px solid var(--bg2);border-radius:12px;padding:14px 10px;box-shadow:0 8px 24px #0009}
+.duelo .lado{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;text-align:center}
+.duelo .lado .av{width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--bg2)}
+.duelo .lado .av svg{width:100%;height:100%;display:block}
+.duelo .lado b{font:800 12px/1.2 var(--ui);max-width:100%;overflow-wrap:anywhere}
+.duelo .lado small{font:800 9px var(--ui);letter-spacing:.08em;color:var(--soft);text-transform:uppercase}
+.duelo .vs{font-family:var(--serif);font-weight:900;font-size:22px;color:var(--red)}
+.d2{width:78px;height:78px;background:linear-gradient(145deg,#FFFDF8,#E3D9C8);border:2px solid var(--bg2);border-radius:14px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:10px;box-shadow:inset 0 0 14px #0002,0 4px 0 #0B2133}
+.d2 i{width:14px;height:14px;border-radius:50%;background:var(--bg);place-self:center;visibility:hidden}
+.d2[data-v="1"] i:nth-child(5),.d2[data-v="2"] i:nth-child(1),.d2[data-v="2"] i:nth-child(9),.d2[data-v="3"] i:nth-child(1),.d2[data-v="3"] i:nth-child(5),.d2[data-v="3"] i:nth-child(9),
+.d2[data-v="4"] i:nth-child(1),.d2[data-v="4"] i:nth-child(3),.d2[data-v="4"] i:nth-child(7),.d2[data-v="4"] i:nth-child(9),
+.d2[data-v="5"] i:nth-child(1),.d2[data-v="5"] i:nth-child(3),.d2[data-v="5"] i:nth-child(5),.d2[data-v="5"] i:nth-child(7),.d2[data-v="5"] i:nth-child(9),
+.d2[data-v="6"] i:nth-child(1),.d2[data-v="6"] i:nth-child(3),.d2[data-v="6"] i:nth-child(4),.d2[data-v="6"] i:nth-child(6),.d2[data-v="6"] i:nth-child(7),.d2[data-v="6"] i:nth-child(9){visibility:visible}
+.d2.roda{animation:chacoalha .18s linear infinite}
+@keyframes chacoalha{0%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(7deg) translateY(-6px)}100%{transform:rotate(-7deg) translateY(0)}}
+.d2.vence{outline:4px solid var(--green);outline-offset:3px}.d2.perde{opacity:.55}
+.treta .prem{margin-top:12px;border-radius:12px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:16px;line-height:1.2;text-transform:uppercase}
+.treta .prem small{display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px}
+.treta .prem.g{background:var(--green)}.treta .prem.r{background:var(--red)}.treta .prem.n{background:var(--roxo)}
 .acertos{margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
 .acertos h4{margin:0 0 4px;font:800 14px var(--ui);color:var(--ink);text-align:center}
 .acertos>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
@@ -335,9 +357,9 @@ nav button.lock{opacity:.35}
   <!-- TEMAS -->
   <section id="temas" class="screen">
     <h2 class="title">Outros</h2>
-    <p class="sub">Caiu na casa de desafio? Gere um desafio: pode cair mímica, desenho de olho fechado, adivinhação ou o Quiz Carioca. Também dá para girar o dado livre.</p>
+    <p class="sub">Caiu na casa de desafio? Gere um desafio: pode cair mímica, desenho de olho fechado, adivinhação ou o Quiz Carioca. Ou sorteie uma Treta de dados.</p>
     <div id="temaBox"><div class="empty">Aperte Gerar desafio…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio em 50 segundos.</div></div>
-    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnLivre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Dado livre</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar desafio</button></div>
+    <div class="actions" id="mgBtns"><button class="btn ghost" id="btnTreta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Treta de dados</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar desafio</button></div>
   </section>
 
   <!-- CONFIG -->
@@ -833,7 +855,6 @@ function go(id){
 }
 function updateLocks(){$$('nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
 $('#nav').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.go==='dice')S.livre=false;if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
-$('#btnLivre').onclick=()=>{if(S.rolling)return;S.livre=true;go('dice')};
 $('#btnStart').onclick=()=>go(S.started?'dice':'gen');
 
 /* ============ DADO ============ */
@@ -1022,6 +1043,47 @@ function acertou(k){
   $('#acRes').innerHTML=`<div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':'DEU RED'} · ${quem}</small>${pick(fx.l)}</div>`;
   if(navigator.vibrate)navigator.vibrate(fx.g==='g'?20:[40,30,40]);
 }
+
+/* ============ TRETA DE DADOS ============ */
+// Quem tirou a Treta escolhe o próprio nome; o app sorteia o oponente entre os outros jogadores. Os dois giram:
+// se o desafiante tirar mais, avança o número que ele tirou; se o oponente tirar mais, o desafiante volta o número do oponente.
+const TR={a:null,b:null,busy:false};
+const pipsD2=v=>`<div class="d2" data-v="${v}">${'<i></i>'.repeat(9)}</div>`;
+function tretaStart(){
+  stopTimer();clearTimeout(QZ.t);
+  if(S.players.length<2){toast('Crie pelo menos 2 personagens para a Treta de dados');return}
+  $('#mgBtns').style.display='none';TR.a=TR.b=null;TR.busy=false;
+  $('#temaBox').innerHTML=`<div class="treta"><h4>🎲 Treta de dados</h4><p>Quem tirou a Treta de dados? Toque no jogador. O oponente é sorteado entre os outros.</p><div class="roster" style="margin-top:0" id="trPick">${S.players.map((p,i)=>`<div class="rrow tap" data-i="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span class="chev">›</span></div>`).join('')}</div><button class="btn ghost" id="trCancel" style="margin-top:12px">Cancelar</button></div>`;
+  $('#trPick').onclick=e=>{const r=e.target.closest('[data-i]');if(!r)return;tretaDuelo(+r.dataset.i)};
+  $('#trCancel').onclick=tretaFim;
+}
+function tretaFim(){TR.busy=false;$('#mgBtns').style.display='';$('#temaBox').innerHTML='<div class="empty">Aperte Gerar desafio…<br>Tema: o resto da mesa tenta adivinhar.<br>Quiz: 10 perguntas sobre o Rio em 50 segundos.</div>'}
+function tretaDuelo(i){
+  const outros=S.players.map((p,k)=>k).filter(k=>k!==i);TR.a=i;TR.b=pick(outros);
+  const A=S.players[TR.a],B=S.players[TR.b];
+  $('#temaBox').innerHTML=`<div class="treta"><h4>🎲 Treta de dados</h4><div class="duelo"><div class="lado"><small>Desafiante</small><div class="av">${avatar(A.av)}</div><b>${A.nome}</b><div id="dA">${pipsD2(1)}</div></div><div class="vs">VS</div><div class="lado"><small>Oponente</small><div class="av">${avatar(B.av)}</div><b>${B.nome}</b><div id="dB">${pipsD2(1)}</div></div></div><div id="trRes"></div><button class="btn" id="trRoll" style="margin-top:12px">🎲 Girar os dois dados</button><button class="btn ghost" id="trSair" style="margin-top:10px">Cancelar</button></div>`;
+  $('#trRoll').onclick=tretaGira;$('#trSair').onclick=tretaFim;
+}
+function tretaGira(){
+  if(TR.busy)return;TR.busy=true;
+  const dA=$('#dA .d2'),dB=$('#dB .d2'),bt=$('#trRoll');bt.disabled=true;$('#trRes').innerHTML='';
+  dA.className='d2 roda';dB.className='d2 roda';
+  const h=setInterval(()=>{dA.dataset.v=1+rnd(6);dB.dataset.v=1+rnd(6)},90);
+  if(navigator.vibrate)navigator.vibrate(40);
+  setTimeout(()=>{
+    clearInterval(h);const a=1+rnd(6),b=1+rnd(6);dA.dataset.v=a;dB.dataset.v=b;dA.className='d2';dB.className='d2';
+    const A=S.players[TR.a],B=S.players[TR.b];TR.busy=false;
+    if(a===b){ // empate: giram de novo
+      $('#trRes').innerHTML=`<div class="prem n"><small>EMPATE · ${a} x ${b}</small>Giram de novo!</div>`;bt.disabled=false;bt.textContent='🎲 Girar de novo';return}
+    const ganhou=a>b;dA.classList.add(ganhou?'vence':'perde');dB.classList.add(ganhou?'perde':'vence');
+    $('#trRes').innerHTML=ganhou
+      ?`<div class="prem g"><small>DEU GREEN · ${A.nome} tirou ${a} contra ${b}</small>${A.nome} avança ${a} casa${a>1?'s':''}</div>`
+      :`<div class="prem r"><small>DEU RED · ${B.nome} tirou ${b} contra ${a}</small>${A.nome} volta ${b} casa${b>1?'s':''}</div>`;
+    bt.style.display='none';$('#trSair').textContent='Concluir';
+    if(navigator.vibrate)navigator.vibrate(ganhou?20:[40,30,40]);
+  },1300);
+}
+$('#btnTreta').onclick=tretaStart;
 
 /* ============ CONFIG ============ */
 function cfgRender(){
