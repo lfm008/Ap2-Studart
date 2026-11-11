@@ -897,16 +897,18 @@ function renderTurn(){
   if(livre||!p){ // dado livre: gira quando quiser, sem mexer na vez de ninguém
     $('#turnbar').innerHTML=''; $('#whoName').textContent='Dado livre'; $('#whoInfo').textContent='Gire quando quiser, sem mudar a vez de ninguém';
     $('#result').textContent=S.freeFace||'?'; $('#result').classList.toggle('show',!!S.freeFace);
-    $('#btnRoll').disabled=S.rolling; $('#diceHint').textContent='Toque para girar o dado'; return}
+    $('#btnRoll').disabled=S.rolling;$('#btnRoll').lastChild.textContent=' Girar dado'; $('#diceHint').textContent='Toque para girar o dado'; return}
   $('#turnbar').innerHTML=S.players.map((q,i)=>`<div class="tchip ${i===S.cur?'cur':''}">${avatar(q.av)}</div>`).join('');
   $('#whoName').textContent=p.nome; $('#whoInfo').textContent=`${p.ocup} · ${p.bairro}`;
   $('#result').textContent=S.rolled?S.face:'?'; $('#result').classList.toggle('show',!!S.rolled);
-  $('#btnRoll').disabled=S.rolled||S.rolling; $('#btnEnd').disabled=!S.rolled;
-  $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize sua vez':'Toque para girar o dado';
+  $('#btnRoll').disabled=S.rolling; $('#btnEnd').disabled=!S.rolled;
+  $('#btnRoll').lastChild.textContent=S.rolled?' Girar de novo':' Girar dado';
+  $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize a vez. Carta mandou jogar de novo? Toque em Girar de novo.':'Toque para girar o dado';
 }
-function roll(){
+function roll(denovo){
   const livre=emLivre();
-  if(S.rolling||(S.rolled&&!livre))return;
+  if(S.rolling||(S.rolled&&!livre&&denovo!==true))return;
+  if(S.rolled&&!livre){S.drawn=false;resetCard()} // girou de novo: pode cair em outra casa e pegar outra carta
   S.rolling=true; $('#btnRoll').disabled=true; $('#diceHint').textContent='Rolando…';
   const v=1+rnd(6); if(livre)S.freeFace=v; else S.face=v;
   const w=$('#diceWrap'); w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop');
@@ -917,11 +919,20 @@ function roll(){
     const r=$('#result');r.textContent=v;r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
     if(livre){$('#btnRoll').disabled=false;$('#diceHint').textContent='Caiu '+v+'. Toque para girar de novo';return}
     S.rolled=true;save();
-    $('#btnEnd').disabled=false;
+    $('#btnEnd').disabled=false;$('#btnRoll').disabled=false;$('#btnRoll').lastChild.textContent=' Girar de novo';
     $('#diceHint').textContent=`${S.players[S.cur].nome} andou ${v} casa${v>1?'s':''}. Caiu em Deu Green / Deu Red? Vá na aba Carta.`;
   },1450);
 }
-$('#btnRoll').onclick=roll; $('.scene').onclick=roll;
+// Girar de novo na mesma vez (cartas de "Jogue de novo"): pede confirmação para não girar sem querer
+function pedeRoll(){
+  if(S.rolling)return;
+  if(emLivre()||!S.rolled){roll();return}
+  $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Girar de novo?</h3><p>Só gire de novo se a carta ou o desafio mandou <b>jogar de novo</b>. O novo número vale no lugar do anterior.</p><button class="btn" id="rgSim">Sim, girar de novo</button><button class="btn ghost" id="rgNao" style="margin-top:10px">Não</button></div>`;
+  $('#modal').classList.add('on');
+  $('#rgNao').onclick=()=>$('#modal').classList.remove('on');
+  $('#rgSim').onclick=()=>{$('#modal').classList.remove('on');roll(true)};
+}
+$('#btnRoll').onclick=pedeRoll; $('.scene').onclick=pedeRoll;
 $('#btnEnd').onclick=()=>{
   if(!S.rolled)return;
   S.livre=false; S.cur=(S.cur+1)%S.players.length; S.rolled=false; S.drawn=false; save();
