@@ -134,6 +134,25 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .win p{margin:0 0 14px;font-size:13px;color:var(--txt2)}
 .win .btn+.btn{margin-top:10px}
 .rrow.venc{border-color:var(--y2);box-shadow:0 0 0 2px #E39A3355}
+.pwb{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--paper);border:2px solid var(--bg2);flex:none}
+.peoes{margin-top:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.peoes h4{margin:0 0 8px;font:800 14px var(--ui);text-align:center;color:var(--ink)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pbt{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 4px 8px;color:var(--ink);font:700 10px/1.15 var(--ui);cursor:pointer;text-align:center}
+.pbt.on{border-color:var(--y2);background:#1E4A69;box-shadow:0 0 0 2px #E39A3355}
+.pbt[disabled]{opacity:.35;cursor:default}
+.pbt em{position:absolute;top:4px;right:4px;font:800 8px var(--ui);font-style:normal;background:var(--red);color:#fff;border-radius:4px;padding:1px 4px}
+.wst{display:flex!important;align-items:center;justify-content:center;gap:8px;color:var(--y2)!important;font-size:13px!important;margin-top:6px}
+#lojaJog{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.lj{display:flex;align-items:center;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:99px;padding:4px 14px 4px 4px;color:var(--ink);font:800 12px var(--ui);cursor:pointer}
+.lj.on{border-color:var(--y2);background:#1E4A69}
+.ljst{font:800 16px var(--ui);color:var(--y2);margin:0 0 12px}
+.adjbox{margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+.adjbox summary{font:800 12px var(--ui);color:var(--mut);cursor:pointer;list-style:none}
+.adjbox summary::-webkit-details-marker{display:none}
+.adj{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.adj button{background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--ink);font:800 11px var(--ui);padding:9px 2px;cursor:pointer}
+.adj button[disabled]{opacity:.3}
 .acertos{margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
 .acertos h4{margin:0 0 4px;font:800 14px var(--ui);color:var(--ink);text-align:center}
 .acertos>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
@@ -330,7 +349,7 @@ nav button.lock{opacity:.35}
   <!-- DADO -->
   <section id="dice" class="screen">
     <div class="turnbar" id="turnbar"></div>
-    <div class="who"><small>Vez de</small><h2 id="whoName">—</h2><span id="whoInfo"></span></div>
+    <div class="who"><small>Vez de</small><h2 id="whoName">—</h2><span id="whoInfo"></span><span id="whoStats" class="wst"></span></div>
     <div class="stage">
       <div class="scene"><div class="dice-wrap" id="diceWrap"><div class="cube" id="cube">
         <div class="face f1"></div><div class="face f2"></div><div class="face f3"></div><div class="face f4"></div><div class="face f5"></div><div class="face f6"></div>
@@ -342,6 +361,7 @@ nav button.lock{opacity:.35}
       <div class="hint" id="diceHint">Toque para girar o dado</div>
       <button class="btn ghost" id="btnRoll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Girar dado</button>
       <button class="btn" id="btnEnd" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M4 12l5 5L20 6"/></svg> Finalizar vez</button>
+      <button class="btn ghost" id="btnChegada">🏁 Chegou na chegada</button>
     </div>
   </section>
 
@@ -377,12 +397,20 @@ nav button.lock{opacity:.35}
     <div class="actions" id="mgBtns"><button class="btn ghost" id="btnTreta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="12" cy="12" r="1"/></svg> Treta de dados</button><button class="btn" id="btnTema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5 15a8 8 0 0 0 14 2M19 9A8 8 0 0 0 5 7"/></svg> Gerar desafio</button></div>
   </section>
 
+  <!-- LOJA -->
+  <section id="loja" class="screen">
+    <h2 class="title">Loja</h2>
+    <p class="sub">Compre pontos turísticos com dinheiro. Quando alguém chegar na chegada, ganha quem tiver mais pontos.</p>
+    <div id="lojaJog"></div>
+    <div class="sec" id="lojaBox"></div>
+  </section>
+
   <!-- CONFIG -->
   <section id="cfg" class="screen">
     <h2 class="title">Config</h2>
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
-    <div class="sec"><h3>Vencedor</h3><p id="winInfo"></p><div id="winPick" class="roster" style="margin-top:0"></div><button class="btn ghost" id="winClear" style="display:none;margin-top:10px">Limpar vencedor</button></div>
+    <div class="sec"><h3>Ranking</h3><p id="winInfo"></p><div id="winPick" class="roster" style="margin-top:0"></div><button class="btn ghost" id="winClear" style="display:none;margin-top:10px">Reabrir o jogo</button></div>
     <div class="sec"><h3>Jogadores</h3><div id="board" class="roster"></div></div>
     <div class="sec"><h3>Sobre</h3><p>Vida Carioca · versão <span id="ver">0.4</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
   </section>
@@ -396,6 +424,7 @@ nav button.lock{opacity:.35}
     <button data-go="dice"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r=".8"/><circle cx="16" cy="16" r=".8"/><circle cx="12" cy="12" r=".8"/></svg>Dado</button>
     <button data-go="card" class="lock"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M3 6v13M21 6v13"/></svg>Carta</button>
     <button data-go="temas"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>Outros</button>
+    <button data-go="loja" class="lock"><svg viewBox="0 0 24 24"><path d="M4 9h16l-1 11H5L4 9z"/><path d="M8 9V7a4 4 0 0 1 8 0v2"/></svg>Loja</button>
     <button data-go="cfg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Config</button>
   </nav>
 </div>
@@ -514,7 +543,7 @@ function pickDireta(p){
   return l.length?dr('dir_'+p.classe,l):null;
 }
 function ajustaCarta(){const f=$('#front'),n=f.innerText.length;f.dataset.len=n>230?'l':n>150?'m':'s'}
-function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'DEU GREEN':'DEU RED'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}`}
+function frontDireta(c,ad,d,p){const g=!!c.g;return `<span class="kind ${g?'sorte':'reves'}">${g?'DEU GREEN':'DEU RED'}</span><div class="ico">${c.ico}</div><div class="ct">${c.t}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}${S.started?`<div class="saldo">${stats(p)}</div>`:''}`}
 // efeitos que dependem do personagem: dinheiro escala com a renda; dano físico depende de idade/classe/profissão
 function parseEff(e){const r={money:0,move:0,perde:false,again:false};
   (e||'').replace(/([+–-])\s*R\$\s*([\d.]+)/g,(m,s,n)=>{r.money+=(s==='+'?1:-1)*parseInt(n.replace(/\./g,''),10)});
@@ -533,10 +562,13 @@ function textoComValor(x,base,v){
   let n=parseFloat(m[0][1].replace(/\./g,''));if(m[0][2]===' mil')n*=1e3;else if(m[0][2])n*=1e6;
   return n===base?x.replace(re,'R$ '+Math.abs(v).toLocaleString('pt-BR')):x;
 }
+const CARTAS_COM_DINHEIRO=true,CARTA_MAX=1000;
+function aplicaGrana(p,m){const ant=p.grana|0;p.grana=Math.max(0,ant+(m|0));return p.grana-ant}
 function adaptar(res,p){
-  const r=parseEff(res.eff),notas=[],f=Math.min(30,Math.max(.6,p.renda/3000));
-  r.money=r.money?nice(r.money*f):0;
-  const shown=r.money; // valor escalado (sem custos de dano) — o texto passa a citar exatamente esse valor
+  const r=parseEff(res.eff),notas=[],f=1; // dinheiro das cartas: valores base do banco (CARTAS_COM_DINHEIRO=false desliga)
+  if(!CARTAS_COM_DINHEIRO)r.money=0;
+  r.money=Math.sign(r.money)*Math.min(Math.abs(r.money),CARTA_MAX); // limite por carta, para caber na economia da loja
+  const shown=r.money;
   if(res.d){
     const alto=p.classe==='alta'||p.classe==='alto';
     if(p.idade>=60){notas.push(alto?'Idoso: internado em clínica particular':'Idoso: internado no hospital');r.move-=2;r.money-=nice(150*f)*(alto?2:1);if(!alto)r.perde=true}
@@ -545,11 +577,10 @@ function adaptar(res,p){
     else if(p.idade<=25&&r.move<0){notas.push('Jovem: se recupera rápido');r.move+=1}
     if(p.classe==='legal'&&r.move<0){notas.push('Colete e treino: aguentou o tranco');r.move+=1}
   }
-  r.money=0; // o jogo não usa mais dinheiro: valores em R$ ficam só no texto da história
   // sem efeito de movimento (era só dinheiro): Deu Green avança de 1 a 3 casas, Deu Red volta de 1 a 5 (avançar 5 só nas cartas raras do banco)
   if(!r.inicio&&!r.move&&!r.perde&&!r.again)r.move=res.g?1+rnd(3):-(1+rnd(5));
   r.move=Math.max(-5,Math.min(5,r.move)); // nunca passa de 5 casas, nem para avançar nem para voltar
-  return {eff:fmtEff(r),notas,money:0,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
+  return {eff:fmtEff(r),notas,money:r.money,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha','Ferreira','Ribeiro','Araújo','Costa','Martins','Alves','Rodrigues','Castro','Dias','Teixeira','Moreira','Cardoso','Pinto','Machado','Monteiro','Freitas','Vieira','Batista','Ramos','Moraes','dos Santos','de Souza','Xavier','Fontes'];
@@ -749,9 +780,9 @@ const CAMISA=['#D43D32','#C77A18','#238447','#24649B','#F7F2E9','#783D87','#102D
 /* ============ ESTADO ============ */
 const S={livre:false,players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
 // guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores nem a vez
-function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face,venc:S.venc||null}))}catch(e){}}
+function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face,fim:S.fim||null}))}catch(e){}}
 function load(){try{const o=JSON.parse(localStorage.getItem('rjt_state')||'null');
-  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1,venc:o.players.some(p=>String(p.id)===String(o.venc))?String(o.venc):null})}}catch(e){}}
+  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1,fim:o.fim&&o.players.some(p=>String(p.id)===String(o.fim))?String(o.fim):null});S.players.forEach(p=>{p.pts=p.pts|0;p.grana=p.grana|0;p.peao=p.peao||null})}}catch(e){}}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 // Sacola persistente: sorteia sem repetir até esgotar a lista (guardada no aparelho, vale entre partidas)
 const MEMO={};
@@ -769,6 +800,23 @@ const rnd=n=>Math.floor(Math.random()*n), pick=a=>a[rnd(a.length)];
 const money=v=>(v<0?'– ':'')+'R$ '+Math.abs(v).toLocaleString('pt-BR');
 
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ============ PEÕES, PONTOS TURÍSTICOS E DINHEIRO ============ */
+// Cada jogador escolhe um peão (não pode repetir). Ganha quem tiver mais pontos turísticos quando alguém chegar na chegada.
+const PEOES=[{k:'cristo',n:'Cristo Redentor'},{k:'coco',n:'Coco'},{k:'bike',n:'Bicicleta'},{k:'havaiana',n:'Havaiana'},{k:'prancha',n:'Prancha de surf'},{k:'bola',n:'Bola de futebol'}];
+const PEAO_SVG={
+ cristo:'<rect x="19" y="33" width="10" height="11" rx="1" fill="#8FA7BA"/><rect x="21" y="18" width="6" height="17" rx="2" fill="#5F7F99"/><rect x="7" y="17" width="34" height="5" rx="2.5" fill="#5F7F99"/><circle cx="24" cy="12" r="5" fill="#5F7F99"/>',
+ coco:'<ellipse cx="23" cy="29" rx="14" ry="14" fill="#2E7D4F"/><ellipse cx="18" cy="23" rx="5" ry="3.5" fill="#6FB58A" opacity=".7"/><path d="M26 16 L33 6 M33 6 h6" stroke="#D43D32" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="23" cy="17" r="3" fill="#F7F2E9"/>',
+ bike:'<g fill="none" stroke="#102D43" stroke-width="3"><circle cx="11" cy="33" r="8"/><circle cx="37" cy="33" r="8"/></g><path d="M11 33 L20 17 L31 33 M20 17 H30 L37 33 M17 13 H23" fill="none" stroke="#C77A18" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>',
+ havaiana:'<ellipse cx="24" cy="26" rx="11" ry="19" fill="#F7F2E9" stroke="#102D43" stroke-width="2.5"/><path d="M24 12 L15 28 M24 12 L33 28" stroke="#238447" stroke-width="4.5" stroke-linecap="round"/><path d="M24 12 L24 8" stroke="#C77A18" stroke-width="4" stroke-linecap="round"/>',
+ prancha:'<g transform="rotate(35 24 24)"><path d="M24 2 C34 12 34 36 24 46 C14 36 14 12 24 2Z" fill="#C77A18"/><path d="M24 4 V44" stroke="#F7F2E9" stroke-width="3"/><path d="M22 42 l-3 5 h5z" fill="#102D43"/></g>',
+ bola:'<circle cx="24" cy="24" r="18" fill="#F7F2E9" stroke="#102D43" stroke-width="2.5"/><path d="M24 14 l7 5 -3 8 h-8 l-3 -8z" fill="#102D43"/><path d="M24 14 V6 M31 19 l8 -3 M28 27 l5 7 M20 27 l-5 7 M17 19 l-8 -3" stroke="#102D43" stroke-width="2" fill="none"/>'};
+const pawnBadge=(k,sz=30)=>k&&PEAO_SVG[k]?`<span class="pwb" style="width:${sz}px;height:${sz}px" title="${PEOES.find(x=>x.k===k).n}"><svg width="${sz*.78}" height="${sz*.78}" viewBox="0 0 48 48" aria-hidden="true">${PEAO_SVG[k]}</svg></span>`:'';
+const pawnNome=k=>(PEOES.find(x=>x.k===k)||{}).n||'';
+// Loja: pacotes de pontos turísticos (ajuste os preços aqui). Todos começam com R$ 0.
+const LOJA_ITENS=[{pts:1,preco:100},{pts:3,preco:270},{pts:5,preco:400}];
+const stats=p=>`⭐ ${p.pts|0} ponto${(p.pts|0)===1?'':'s'} · 💰 ${money(p.grana|0)}`;
+function ranking(){return [...S.players].sort((a,b)=>(b.pts|0)-(a.pts|0)||(b.grana|0)-(a.grana|0)||(String(b.id)===String(S.fim)?1:0)-(String(a.id)===String(S.fim)?1:0))}
 
 /* ============ AVATAR (SVG procedural) ============ */
 function avatar(a){
@@ -818,6 +866,7 @@ function gerarUnico(){
     const dup=S.players.some(q=>q.nome===g.nome||q.nome.split(' ')[0]===g.nome.split(' ')[0]||q.ocup===g.ocup||q.traco===g.traco||q.fam.split('. ')[0]===g.fam.split('. ')[0]);
     if(!dup)break;
   }
+  g.pts=0;g.grana=0;g.peao=null;
   return g;
 }
 function femize(n){return n.replace(/^Vendedor/,'Vendedora').replace(/^Garçom/,'Garçonete').replace(/^Professor/,'Professora').replace(/^Dançarino/,'Dançarina').replace(/^Barraqueiro/,'Barraqueira').replace(/^Porteiro/,'Porteira').replace(/^Estagiário/,'Estagiária').replace(/^Dono/,'Dona').replace(/^Aviãozinho/,'Aviãozinha').replace(/^Radinho/,'Radinha')}
@@ -827,29 +876,35 @@ function pcardHTML(p,i){return `<div class="pcard"><span class="tag">${p.tag?p.t
    <span class="lbl">Idade</span><span class="v">${p.idade} anos</span>
    <span class="lbl">Mora em</span><span class="v">${p.bairro}</span>
    <span class="lbl">Ocupação</span><span class="v">${p.ocup}</span>
-   <span class="lbl">Renda mensal</span><span class="v">${money(p.renda)}</span>
+   ${p.peao?`<span class="lbl">Peão</span><span class="v" style="display:flex;align-items:center;gap:6px">${pawnBadge(p.peao,22)} ${pawnNome(p.peao)}</span>`:''}
    <span class="lbl">Habilidade especial</span><span class="v">${p.traco}</span></div></div>
   <div class="pcard" style="margin-top:-6px;transform:rotate(.4deg);display:block"><b style="font-weight:800;font-size:9px;letter-spacing:.08em;color:var(--soft)">FAMÍLIA</b><div class="fam" style="border:0;margin:0;padding:2px 0 0">${p.fam}</div><div class="luck">${p.sorte}</div></div>`}
 
+function peaoPickerHTML(){
+  const usados=S.players.map(q=>q.peao),sel=S.pending&&S.pending.peao;
+  return `<div class="peoes"><h4>Escolha o peão de ${S.pending.nome.split(' ')[0]}</h4><div class="pgrid">${PEOES.map(x=>{const uso=usados.includes(x.k);return `<button class="pbt${sel===x.k?' on':''}" data-pw="${x.k}"${uso?' disabled':''}>${pawnBadge(x.k,44)}<span>${x.n}</span>${uso?'<em>em uso</em>':''}</button>`}).join('')}</div></div>`;
+}
 function renderGen(){
   const n=S.players.length, full=n>=6;
   const jogando=S.started;
   $('#btnGen').disabled=full||!!S.pending||jogando;
   $('#btnGen').lastChild.textContent=' '+(jogando?'Partida em andamento':full?'Mesa cheia (6/6)':'Gerar personagem');
   $('#okRow').style.display=S.pending?'block':'none';
-  $('#preview').innerHTML=S.pending?pcardHTML(S.pending,n+1):`<div class="empty">${n?'Passa pro próximo jogador!':'Ninguém na fila ainda…<br>Aperte o botão para ver quem você vai ser.'}</div>`;
+  $('#btnOk').disabled=!(S.pending&&S.pending.peao);
+  $('#preview').innerHTML=S.pending?pcardHTML(S.pending,n+1)+peaoPickerHTML():`<div class="empty">${n?'Passa pro próximo jogador!':'Ninguém na fila ainda…<br>Aperte o botão para ver quem você vai ser.'}</div>`;
   $('#count').className='count'+(n<2?' warn':'');
   $('#count').innerHTML=`<span>👥 ${n} jogador${n===1?'':'es'} pronto${n===1?'':'s'}</span><span class="dots">${[...Array(6)].map((_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</span>`;
-  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-view="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b><span class="chev">›</span></div>`).join('');
+  $('#roster').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-view="${i}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup} · ${p.bairro}</small></b>${pawnBadge(p.peao,28)}<span class="chev">›</span></div>`).join('');
   $('#btnPlay').disabled=n<2||!!S.pending;
   $('#btnPlay').lastChild.textContent=jogando?' Voltar ao jogo':' Começar o jogo';
   $('#minHint').textContent=jogando?'Para trocar os jogadores, reinicie a partida em Config':n<2?`Faltam ${2-n} jogador${2-n>1?'es':''} para começar (mínimo 2)`:(full?'Mesa cheia — bora jogar!':'Pode começar ou adicionar até 6 jogadores');
 }
 $('#btnGen').onclick=()=>{if(S.players.length>=6||S.pending)return;S.pending=gerarUnico();renderGen()};
-$('#btnOk').onclick=()=>{if(!S.pending)return;S.players.push(S.pending);S.pending=null;save();renderGen()};
+$('#preview').onclick=e=>{const b=e.target.closest('[data-pw]');if(!b||b.disabled||!S.pending)return;S.pending.peao=b.dataset.pw;renderGen()};
+$('#btnOk').onclick=()=>{if(!S.pending||!S.pending.peao){toast('Escolha o peão primeiro');return}S.players.push(S.pending);S.pending=null;save();renderGen()};
 $('#roster').onclick=e=>{const r=e.target.closest('[data-view]');if(r)verPersonagem(+r.dataset.view)};
 $('#board').onclick=e=>{const r=e.target.closest('[data-pid]');if(r){const i=S.players.findIndex(p=>String(p.id)===r.dataset.pid);if(i>=0)verPersonagem(i)}};
-function verPersonagem(i){const p=S.players[i];if(!p)return;$('#modalBody').innerHTML=pcardHTML(p,i+1);$('#modal').classList.add('on')}
+function verPersonagem(i){const p=S.players[i];if(!p)return;$('#modalBody').innerHTML=pcardHTML(p,i+1)+(S.started?`<div class="count" style="margin-top:12px">${stats(p)}</div>`:'');$('#modal').classList.add('on')}
 $('#modalClose').onclick=()=>$('#modal').classList.remove('on');
 $('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
 $('#btnPlay').onclick=()=>{
@@ -868,15 +923,15 @@ function iniciarJogo(){
 
 /* ============ NAV ============ */
 function go(id){
-  if(id==='card'&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
+  if((id==='card'||id==='loja')&&!S.started){toast('Gere 2 a 6 personagens e comece o jogo');id='gen';}
   $$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
   const ativo=id==='dice'&&S.livre&&S.started?'temas':id==='gen'?'home':id; // o dado livre é aberto pela aba Outros
   $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===ativo));
   const sc=$('#'+id);if(sc)sc.scrollTop=0;
-  if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen(); if(id==='dice')renderTurn();
+  if(id==='cfg')cfgRender(); if(id==='card')cardRender(); if(id==='gen')renderGen(); if(id==='dice')renderTurn(); if(id==='loja')lojaRender();
   $('#nav').style.display='flex';
 }
-function updateLocks(){$$('nav [data-go=card]').forEach(b=>b.classList.toggle('lock',!S.started))}
+function updateLocks(){$$('nav [data-go=card],nav [data-go=loja]').forEach(b=>b.classList.toggle('lock',!S.started))}
 $('#nav').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.go==='dice')S.livre=false;if(b)go(b.dataset.go==='home'&&S.started?'home':b.dataset.go)};
 $('#btnStart').onclick=()=>go(S.started?'dice':'gen');
 
@@ -894,6 +949,8 @@ const emLivre=()=>!S.started||S.livre;
 function renderTurn(){
   const livre=emLivre(), p=S.started&&S.players[S.cur];
   $('#btnEnd').style.display=livre?'none':'';
+  $('#btnChegada').style.display=livre||S.fim?'none':'';
+  $('#whoStats').innerHTML=!livre&&p?`${pawnBadge(p.peao,24)} <b>${stats(p)}</b>`:'';
   $('.who small').textContent=livre?'Sem vez':'Vez de';
   if(livre||!p){ // dado livre: gira quando quiser, sem mexer na vez de ninguém
     $('#turnbar').innerHTML=''; $('#whoName').textContent='Dado livre'; $('#whoInfo').textContent='Gire quando quiser, sem mudar a vez de ninguém';
@@ -905,6 +962,7 @@ function renderTurn(){
   $('#btnRoll').disabled=S.rolling; $('#btnEnd').disabled=!S.rolled;
   $('#btnRoll').lastChild.textContent=S.rolled?' Girar de novo':' Girar dado';
   $('#diceHint').textContent=S.rolled?'Faça a ação da casa e finalize a vez. Carta mandou jogar de novo? Toque em Girar de novo.':'Toque para girar o dado';
+  if(S.fim){$('#btnRoll').disabled=true;$('#btnEnd').disabled=true;$('#diceHint').textContent='Jogo encerrado! Veja o ranking em Config.'}
 }
 function roll(denovo){
   const livre=emLivre();
@@ -927,6 +985,7 @@ function roll(denovo){
 // Girar de novo na mesma vez (cartas de "Jogue de novo"): pede confirmação para não girar sem querer
 function pedeRoll(){
   if(S.rolling)return;
+  if(S.fim&&!emLivre()){toast('Jogo encerrado');return}
   if(emLivre()||!S.rolled){roll();return}
   $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Girar de novo?</h3><p>Só gire de novo se a carta ou o desafio mandou <b>jogar de novo</b>. O novo número vale no lugar do anterior.</p><button class="btn" id="rgSim">Sim, girar de novo</button><button class="btn ghost" id="rgNao" style="margin-top:10px">Não</button></div>`;
   $('#modal').classList.add('on');
@@ -956,13 +1015,14 @@ function cardRender(){
   draw.disabled=S.drawn||!S.rolled||$('#flipper').classList.contains('go');
 }
 function frontSit(sc){return `<span class="kind sit">SITUAÇÃO</span><div class="ico">${sc.ico}</div><div class="ct">${sc.t}</div><div class="tx">${sc.x}</div>`}
-function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'DEU GREEN':'DEU RED'}</span><div class="ico">${g?'🤑':'😵'}</div><div class="ct">${o.l}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}`}
+function frontRes(sc,o,good,res,d,p,ad){const g=good;return `<span class="kind ${g?'sorte':'reves'}">${g?'DEU GREEN':'DEU RED'}</span><div class="ico">${g?'🤑':'😵'}</div><div class="ct">${o.l}</div><div class="tx">${ad.x}</div>${ad.notas.map(n=>`<div class="nota">${n}</div>`).join('')}${ad.eff?`<div class="eff ${g?'g':'r'}">${ad.eff}</div>`:''}${S.started?`<div class="saldo">${stats(p)}</div>`:''}`}
 $('#btnDraw').onclick=()=>{
   if(!S.rolled){toast('Gire o dado primeiro');return}
   if(S.drawn)return;
+  if(S.fim){toast('Jogo encerrado');return}
   const p=S.players[S.cur], dir=pickDireta(p);
   if(dir){
-    const ad=adaptar(dir,p),d=0;
+    const ad=adaptar(dir,p),d=aplicaGrana(p,ad.money);
     $('#front').className='front res '+(dir.g?'g':'r'); $('#front').innerHTML=frontDireta(dir,ad,d,p); ajustaCarta();
    
     $('#btnDraw').style.display='none'; $('#pile').classList.add('drawing'); $('#flipper').classList.add('go');
@@ -982,7 +1042,7 @@ $('#btnDraw').onclick=()=>{
 // 50% de chance de sorte e 50% de azar quando a opção tem os dois tipos; senão sorteia entre os desfechos que existem
 function sortearDesfecho(r){const g=r.filter(x=>x.g),b=r.filter(x=>!x.g);return g.length&&b.length?pick(Math.random()<.5?g:b):pick(r)}
 function choose(i){
-  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=0;S.choosing=false;save();
+  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=aplicaGrana(p,ad.money);S.choosing=false;save();
   $('#front').className='front res '+(good?'g':'r'); $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad); ajustaCarta();
   $('#choices').style.display='none'; $('#btnCardOk').style.display='';
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
@@ -1163,26 +1223,58 @@ function tretaGira(){
 }
 $('#btnTreta').onclick=tretaStart;
 
-/* ============ CONFIG ============ */
-function vencedor(){return S.players.find(p=>String(p.id)===String(S.venc))||null}
-function winRender(){
-  const v=vencedor();
-  $('#winInfo').innerHTML=v?`🏆 <b>${v.nome}</b> foi marcado como vencedor da partida.`:'Quem chegou primeiro ao fim do tabuleiro? Toque no jogador para escolher o vencedor.';
-  $('#winPick').innerHTML=S.players.map((p,i)=>`<div class="rrow tap${v&&v.id===p.id?' venc':''}" data-wid="${p.id}"><span class="n">${v&&v.id===p.id?'🏆':i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span class="chev">›</span></div>`).join('')||'<p>Crie os personagens para escolher o vencedor.</p>';
-  $('#winClear').style.display=v?'':'none';
+/* ============ LOJA ============ */
+const LJ={sel:null};
+function lojaRender(){
+  if(!S.players.length)return;
+  if(LJ.sel==null||!S.players[LJ.sel])LJ.sel=S.cur;
+  const p=S.players[LJ.sel],enc=!!S.fim;
+  $('#lojaJog').innerHTML=S.players.map((q,i)=>`<button class="lj${i===LJ.sel?' on':''}" data-i="${i}">${pawnBadge(q.peao,28)}<span>${q.nome.split(' ')[0]}</span></button>`).join('');
+  $('#lojaBox').innerHTML=`<h3>${p.nome}</h3><div class="ljst">${stats(p)}</div>
+    <p>Pontos turísticos</p>
+    <div style="display:flex;flex-direction:column;gap:8px">${LOJA_ITENS.map((it,k)=>`<button class="btn${(p.grana|0)>=it.preco?'':' ghost'}" data-buy="${k}"${enc||(p.grana|0)<it.preco?' disabled':''}>⭐ ${it.pts} ponto${it.pts>1?'s':''} · ${money(it.preco)}</button>`).join('')}</div>
+    ${enc?'<p style="margin-top:10px">Jogo encerrado: a loja está fechada.</p>':(p.grana|0)<LOJA_ITENS[0].preco?`<p style="margin-top:10px">Faltam ${money(LOJA_ITENS[0].preco-(p.grana|0))} para o primeiro ponto.</p>`:''}
+    <details class="adjbox"><summary>🔧 Ajustes da mesa (rendimento das casas)</summary>
+      <p>Use para lançar o que a casa rendeu para ${p.nome.split(' ')[0]}.</p>
+      <div class="adj">${[50,100,200,500,-50,-100,-200,-500].map(v=>`<button data-m="${v}"${enc?' disabled':''}>${v>0?'+':'–'} R$ ${Math.abs(v)}</button>`).join('')}</div>
+      <div class="adj" style="margin-top:8px">${[1,2,3,-1].map(v=>`<button data-pt="${v}"${enc?' disabled':''}>${v>0?'+':'–'} ${Math.abs(v)} ⭐</button>`).join('')}</div>
+    </details>`;
 }
-$('#winPick').onclick=e=>{const r=e.target.closest('[data-wid]');if(!r)return;const p=S.players.find(q=>String(q.id)===r.dataset.wid);if(!p)return;
-  $('#modalBody').innerHTML=`<div class="win"><div class="tro">🏆</div><small>CONFIRMAR VENCEDOR</small><div class="av">${avatar(p.av)}</div><h3>${p.nome}</h3><p>${p.nome} venceu a partida?</p><button class="btn" id="winOk">Sim, é o vencedor</button><button class="btn ghost" id="winNo">Cancelar</button></div>`;
-  $('#modal').classList.add('on');
-  $('#winNo').onclick=()=>$('#modal').classList.remove('on');
-  $('#winOk').onclick=()=>{S.venc=String(p.id);save();winRender();cfgRender();
-    $('#modalBody').innerHTML=`<div class="win"><div class="tro">🎉🏆🎉</div><small>VENCEDOR</small><div class="av">${avatar(p.av)}</div><h3>${p.nome}</h3><p>Parabéns! ${p.nome} é o campeão do Vida Carioca.</p><button class="btn" id="winNova">Nova partida</button><button class="btn ghost" id="winFecha">Fechar</button></div>`;
-    $('#winFecha').onclick=()=>$('#modal').classList.remove('on');
-    $('#winNova').onclick=()=>{$('#modal').classList.remove('on');$('#btnReset').click()};
-    if(navigator.vibrate)navigator.vibrate([60,40,60,40,120]);
-  };
+$('#lojaJog').onclick=e=>{const b=e.target.closest('[data-i]');if(b){LJ.sel=+b.dataset.i;lojaRender()}};
+$('#lojaBox').onclick=e=>{
+  if(S.fim)return;const p=S.players[LJ.sel];if(!p)return;
+  const bu=e.target.closest('[data-buy]'),m=e.target.closest('[data-m]'),pt=e.target.closest('[data-pt]');
+  if(bu){const it=LOJA_ITENS[+bu.dataset.buy];if(!it||(p.grana|0)<it.preco)return;p.grana-=it.preco;p.pts=(p.pts|0)+it.pts;save();toast(`${p.nome.split(' ')[0]} comprou ${it.pts} ponto${it.pts>1?'s':''}!`);if(navigator.vibrate)navigator.vibrate(20);lojaRender();return}
+  if(m){p.grana=Math.max(0,(p.grana|0)+ +m.dataset.m);save();lojaRender();$('#lojaBox details').open=true;return}
+  if(pt){p.pts=Math.max(0,(p.pts|0)+ +pt.dataset.pt);save();lojaRender();$('#lojaBox details').open=true}
 };
-$('#winClear').onclick=()=>{S.venc=null;save();winRender();cfgRender()};
+/* ============ FIM DE JOGO ============ */
+$('#btnChegada').onclick=()=>{
+  if(S.fim||!S.started)return;const p=S.players[S.cur];
+  $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Chegou na chegada?</h3><p><b>${p.nome}</b> chegou na chegada? O jogo termina e ganha quem tiver mais pontos turísticos.</p><button class="btn" id="chSim">Sim, encerrar o jogo</button><button class="btn ghost" id="chNao" style="margin-top:10px">Não</button></div>`;
+  $('#modal').classList.add('on');
+  $('#chNao').onclick=()=>$('#modal').classList.remove('on');
+  $('#chSim').onclick=()=>{S.fim=String(p.id);save();renderTurn();mostraFim()};
+};
+function mostraFim(){
+  const r=ranking(),w=r[0],emp=r[1]&&(r[1].pts|0)===(w.pts|0)&&(r[1].grana|0)===(w.grana|0);
+  $('#modalBody').innerHTML=`<div class="win"><div class="tro">🎉🏆🎉</div><small>FIM DE JOGO</small><div class="av">${avatar(w.av)}</div><h3>${w.nome}</h3><p>${emp?'Empate total em pontos e dinheiro: a mesa decide!':`Venceu com <b>${w.pts|0} ponto${(w.pts|0)===1?'':'s'} turístico${(w.pts|0)===1?'':'s'}</b>!`}</p>
+    <div class="roster" style="margin:0 0 14px;text-align:left">${r.map((q,i)=>`<div class="rrow${i===0?' venc':''}"><span class="n">${i===0?'🏆':i+1}</span><div class="av">${avatar(q.av)}</div><b>${q.nome}<small>${pawnNome(q.peao)}</small></b><span style="font:800 12px var(--ui);color:var(--y2)">⭐ ${q.pts|0}</span></div>`).join('')}</div>
+    <button class="btn" id="winNova">Nova partida</button><button class="btn ghost" id="winFecha">Fechar</button></div>`;
+  $('#modal').classList.add('on');
+  $('#winFecha').onclick=()=>$('#modal').classList.remove('on');
+  $('#winNova').onclick=()=>{$('#modal').classList.remove('on');$('#btnReset').click()};
+  if(navigator.vibrate)navigator.vibrate([60,40,60,40,120]);
+}
+
+/* ============ CONFIG ============ */
+function winRender(){
+  const r=ranking(),fim=!!S.fim;
+  $('#winInfo').innerHTML=fim?`🏆 <b>${r[0].nome}</b> venceu a partida. O jogo foi encerrado quando ${(S.players.find(q=>String(q.id)===String(S.fim))||{nome:'alguém'}).nome} chegou na chegada.`:'Ranking por pontos turísticos (desempate: dinheiro). O jogo termina quando alguém chegar na chegada.';
+  $('#winPick').innerHTML=r.map((p,i)=>`<div class="rrow${fim&&i===0?' venc':''}"><span class="n">${fim&&i===0?'🏆':i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${pawnNome(p.peao)}</small></b><span style="font:800 12px var(--ui);color:var(--y2);text-align:right">⭐ ${p.pts|0}<br>${money(p.grana|0)}</span></div>`).join('')||'<p>Crie os personagens para ver o ranking.</p>';
+  $('#winClear').style.display=fim?'':'none';
+}
+$('#winClear').onclick=()=>{S.fim=null;save();winRender();cfgRender();renderTurn()};
 function cfgRender(){
   winRender();
   $('#board').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b></div>`).join('')||'<p>Sem jogadores ainda.</p>';
@@ -1192,7 +1284,7 @@ $('#btnReset').onclick=()=>{
   $('#modalBody').innerHTML='<div class="sec" style="margin:0"><h3>Reiniciar partida?</h3><p>Todos os personagens serão apagados. Não dá para desfazer.</p><button class="btn" id="btnResetOk">Sim, reiniciar</button></div>';
   $('#modal').classList.add('on');
   $('#btnResetOk').onclick=()=>{
-    Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,choosing:false,face:1,venc:null});
+    Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,choosing:false,face:1,fim:null});
     $('#btnStart').firstChild.textContent='Começar ';
     try{localStorage.removeItem('rjt_state')}catch(e){}
     $('#modal').classList.remove('on');updateLocks();resetCard();setFace(1,false);go('home');
