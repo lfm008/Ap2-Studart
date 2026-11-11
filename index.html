@@ -122,6 +122,15 @@ h1,h2{font-family:var(--serif);font-weight:900;margin:0}
 .treta .prem{margin-top:12px;border-radius:12px;padding:12px;text-align:center;color:#fff;font-family:var(--display);font-weight:800;font-size:16px;line-height:1.2;text-transform:uppercase}
 .treta .prem small{display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px}
 .treta .prem.g{background:var(--green)}.treta .prem.r{background:var(--red)}.treta .prem.n{background:var(--roxo)}
+.win{text-align:center;background:var(--paper);color:var(--txt);border:3px solid var(--bg2);border-radius:14px;padding:22px 16px;box-shadow:0 8px 24px #0009;animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+.win .tro{font-size:54px;line-height:1}
+.win small{display:block;font:800 11px var(--ui);letter-spacing:.2em;color:var(--soft);margin:8px 0 6px}
+.win .av{width:84px;height:84px;border-radius:50%;overflow:hidden;border:4px solid var(--y);margin:6px auto}
+.win .av svg{width:100%;height:100%;display:block}
+.win h3{font-family:var(--serif);font-weight:900;font-size:28px;margin:6px 0 2px;line-height:1.1}
+.win p{margin:0 0 14px;font-size:13px;color:var(--txt2)}
+.win .btn+.btn{margin-top:10px}
+.rrow.venc{border-color:var(--y2);box-shadow:0 0 0 2px #E39A3355}
 .acertos{margin-bottom:14px;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
 .acertos h4{margin:0 0 4px;font:800 14px var(--ui);color:var(--ink);text-align:center}
 .acertos>p{margin:0 0 10px;font-size:12px;color:var(--mut);text-align:center;line-height:1.35}
@@ -367,6 +376,7 @@ nav button.lock{opacity:.35}
     <h2 class="title">Config</h2>
     <div class="sec"><h3>Partida</h3><p id="cfgInfo"></p>
       <button class="btn ghost" id="btnReset">Reiniciar partida</button></div>
+    <div class="sec"><h3>Vencedor</h3><p id="winInfo"></p><div id="winPick" class="roster" style="margin-top:0"></div><button class="btn ghost" id="winClear" style="display:none;margin-top:10px">Limpar vencedor</button></div>
     <div class="sec"><h3>Jogadores</h3><div id="board" class="roster"></div></div>
     <div class="sec"><h3>Sobre</h3><p>Vida Carioca · versão <span id="ver">0.4</span>.<br>O aplicativo tem como objetivo <b>auxiliar</b> no decorrer do jogo.</p></div>
   </section>
@@ -733,9 +743,9 @@ const CAMISA=['#D43D32','#C77A18','#238447','#24649B','#F7F2E9','#783D87','#102D
 /* ============ ESTADO ============ */
 const S={livre:false,players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
 // guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores nem a vez
-function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face}))}catch(e){}}
+function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face,venc:S.venc||null}))}catch(e){}}
 function load(){try{const o=JSON.parse(localStorage.getItem('rjt_state')||'null');
-  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1})}}catch(e){}}
+  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1,venc:o.players.some(p=>String(p.id)===String(o.venc))?String(o.venc):null})}}catch(e){}}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 // Sacola persistente: sorteia sem repetir até esgotar a lista (guardada no aparelho, vale entre partidas)
 const MEMO={};
@@ -1090,7 +1100,27 @@ function tretaGira(){
 $('#btnTreta').onclick=tretaStart;
 
 /* ============ CONFIG ============ */
+function vencedor(){return S.players.find(p=>String(p.id)===String(S.venc))||null}
+function winRender(){
+  const v=vencedor();
+  $('#winInfo').innerHTML=v?`🏆 <b>${v.nome}</b> foi marcado como vencedor da partida.`:'Quem chegou primeiro ao fim do tabuleiro? Toque no jogador para escolher o vencedor.';
+  $('#winPick').innerHTML=S.players.map((p,i)=>`<div class="rrow tap${v&&v.id===p.id?' venc':''}" data-wid="${p.id}"><span class="n">${v&&v.id===p.id?'🏆':i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b><span class="chev">›</span></div>`).join('')||'<p>Crie os personagens para escolher o vencedor.</p>';
+  $('#winClear').style.display=v?'':'none';
+}
+$('#winPick').onclick=e=>{const r=e.target.closest('[data-wid]');if(!r)return;const p=S.players.find(q=>String(q.id)===r.dataset.wid);if(!p)return;
+  $('#modalBody').innerHTML=`<div class="win"><div class="tro">🏆</div><small>CONFIRMAR VENCEDOR</small><div class="av">${avatar(p.av)}</div><h3>${p.nome}</h3><p>${p.nome} venceu a partida?</p><button class="btn" id="winOk">Sim, é o vencedor</button><button class="btn ghost" id="winNo">Cancelar</button></div>`;
+  $('#modal').classList.add('on');
+  $('#winNo').onclick=()=>$('#modal').classList.remove('on');
+  $('#winOk').onclick=()=>{S.venc=String(p.id);save();winRender();cfgRender();
+    $('#modalBody').innerHTML=`<div class="win"><div class="tro">🎉🏆🎉</div><small>VENCEDOR</small><div class="av">${avatar(p.av)}</div><h3>${p.nome}</h3><p>Parabéns! ${p.nome} é o campeão do Vida Carioca.</p><button class="btn" id="winNova">Nova partida</button><button class="btn ghost" id="winFecha">Fechar</button></div>`;
+    $('#winFecha').onclick=()=>$('#modal').classList.remove('on');
+    $('#winNova').onclick=()=>{$('#modal').classList.remove('on');$('#btnReset').click()};
+    if(navigator.vibrate)navigator.vibrate([60,40,60,40,120]);
+  };
+};
+$('#winClear').onclick=()=>{S.venc=null;save();winRender();cfgRender()};
 function cfgRender(){
+  winRender();
   $('#board').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b></div>`).join('')||'<p>Sem jogadores ainda.</p>';
   $('#cfgInfo').innerHTML=S.started?`Jogo em andamento com <b>${S.players.length}</b> jogadores. Vez de <b>${S.players[S.cur].nome}</b>.`:`Nenhum jogo em andamento (${S.players.length}/6 personagens).`;
 }
@@ -1098,7 +1128,7 @@ $('#btnReset').onclick=()=>{
   $('#modalBody').innerHTML='<div class="sec" style="margin:0"><h3>Reiniciar partida?</h3><p>Todos os personagens serão apagados. Não dá para desfazer.</p><button class="btn" id="btnResetOk">Sim, reiniciar</button></div>';
   $('#modal').classList.add('on');
   $('#btnResetOk').onclick=()=>{
-    Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,choosing:false,face:1});
+    Object.assign(S,{players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,choosing:false,face:1,venc:null});
     $('#btnStart').firstChild.textContent='Começar ';
     try{localStorage.removeItem('rjt_state')}catch(e){}
     $('#modal').classList.remove('on');updateLocks();resetCard();setFace(1,false);go('home');
