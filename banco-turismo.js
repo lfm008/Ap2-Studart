@@ -1,5 +1,6 @@
 // Pontos turísticos do tabuleiro (casa = número da casa no tabuleiro). Troque/adicione à vontade.
-// Cada local tem historinhas: G(pontos, texto) = ganha pontos turísticos · B(pontos, texto) = perde pontos turísticos (1 a 5).
+// Cada local tem historinhas: G(pontos, texto) = ganha pontos turísticos · B(pontos, texto) = perde pontos turísticos.
+// Obs.: o app sorteia o valor de cada visita entre 5 e 10 (PTS_MIN/PTS_MAX no index.html); o número da historinha só indica ganho/perda.
 // TURISMO_GERAIS vale para qualquer local e se mistura às historinhas do local.
 (function(){
 const G=(n,x)=>({g:1,n,x}), B=(n,x)=>({g:0,n,x});

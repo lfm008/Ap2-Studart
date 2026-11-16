@@ -411,7 +411,7 @@ nav button.lock{opacity:.35}
   <!-- TURISMO -->
   <section id="tur" class="screen">
     <h2 class="title">Turismo</h2>
-    <p class="sub">Quando um jogador cair em um ponto turístico, toque no local. Cada visita rende uma historinha que dá ou tira de 1 a 5 pontos turísticos.</p>
+    <p class="sub">Quando um jogador cair em um ponto turístico, toque no local. Cada visita rende uma historinha que dá ou tira de 5 a 10 pontos turísticos.</p>
     <div id="turJog"></div>
     <div id="turGrid"></div>
     <details class="adjbox" id="turAdj"><summary>🔧 Ajustes da mesa (corrigir pontos)</summary><div id="turAdjBox"></div></details>
@@ -588,7 +588,9 @@ function adaptar(res,p){
   // sem efeito de movimento (era só dinheiro): Deu Green avança de 1 a 3 casas, Deu Red volta de 1 a 5 (avançar 5 só nas cartas raras do banco)
   if(!r.inicio&&!r.move&&!r.perde&&!r.again)r.move=res.g?1+rnd(3):-(1+rnd(5));
   r.move=Math.max(-5,Math.min(5,r.move)); // nunca passa de 5 casas, nem para avançar nem para voltar
-  return {eff:fmtEff(r),notas,money:r.money,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
+  const sg=r.inicio?-1:r.move?Math.sign(r.move):(r.perde?-1:0)+(r.again?1:0),pts=sg?Math.sign(sg)*pts68():0;
+  const eff=fmtEff(r)+(pts?(fmtEff(r)?' · ':'')+ptsTxt(pts):'');
+  return {eff,pts,notas,money:r.money,x:textoComValor(res.x,Math.abs(parseEff(res.eff).money),shown)}
 }
 const NOMES=['Zeca','Juliana','Thiago','Cris','Marcelo','Dona Neuza','Wesley','Tati','Rogerinho','Bia','Fabrício','Luana','Seu Jorge','Vanessa','Jefferson','Camila','Dudu','Patrícia','Lucas','Mônica'];
 const SOBRE=['da Silva','Pereira','Santos','Oliveira','Cabral','Nascimento','Souza','Barbosa','Lopes','Gomes','Mendes','do Nascimento','Carvalho','Rocha','Ferreira','Ribeiro','Araújo','Costa','Martins','Alves','Rodrigues','Castro','Dias','Teixeira','Moreira','Cardoso','Pinto','Machado','Monteiro','Freitas','Vieira','Batista','Ramos','Moraes','dos Santos','de Souza','Xavier','Fontes'];
@@ -788,9 +790,9 @@ const CAMISA=['#D43D32','#C77A18','#238447','#24649B','#F7F2E9','#783D87','#102D
 /* ============ ESTADO ============ */
 const S={livre:false,players:[],cur:0,started:false,rolled:false,drawn:false,pending:null,face:1,rolling:false,spins:0,choosing:false};
 // guarda a partida no aparelho: fechar o app (ou o celular desligar) não perde jogadores nem a vez
-function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face,fim:S.fim||null,visitou:S.visitou||null}))}catch(e){}}
+function save(){try{localStorage.setItem('rjt_state',JSON.stringify({players:S.players,cur:S.cur,started:S.started,rolled:S.rolled,drawn:S.drawn&&!S.choosing,face:S.face,fim:S.fim||null,bonus:S.bonus|0,visitou:S.visitou||null}))}catch(e){}}
 function load(){try{const o=JSON.parse(localStorage.getItem('rjt_state')||'null');
-  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1,fim:o.fim&&o.players.some(p=>String(p.id)===String(o.fim))?String(o.fim):null});S.players.forEach(p=>{p.pts=p.pts|0;delete p.grana;p.peao=p.peao||null;});S.visitou=o.visitou||null}}catch(e){}}
+  if(o&&Array.isArray(o.players)&&o.players.length&&o.players.every(p=>p&&p.av&&p.nome)){Object.assign(S,{players:o.players,cur:Math.min(o.cur|0,o.players.length-1),started:!!o.started&&o.players.length>=2,rolled:!!o.rolled,drawn:!!o.drawn,face:o.face>=1&&o.face<=6?o.face:1,fim:o.fim&&o.players.some(p=>String(p.id)===String(o.fim))?String(o.fim):null});S.players.forEach(p=>{p.pts=p.pts|0;delete p.grana;p.peao=p.peao||null;});S.visitou=o.visitou||null;S.bonus=o.bonus|0}}catch(e){}}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 // Sacola persistente: sorteia sem repetir até esgotar a lista (guardada no aparelho, vale entre partidas)
 const MEMO={};
@@ -820,6 +822,18 @@ const PEAO_SVG={
  bola:'<circle cx="24" cy="24" r="18" fill="#F7F2E9" stroke="#102D43" stroke-width="2.5"/><path d="M24 14 l7 5 -3 8 h-8 l-3 -8z" fill="#102D43"/><path d="M24 14 V6 M31 19 l8 -3 M28 27 l5 7 M20 27 l-5 7 M17 19 l-8 -3" stroke="#102D43" stroke-width="2" fill="none"/>'};
 const pawnBadge=(k,sz=30)=>k&&PEAO_SVG[k]?`<span class="pwb" style="width:${sz}px;height:${sz}px" title="${PEOES.find(x=>x.k===k).n}"><svg width="${sz*.78}" height="${sz*.78}" viewBox="0 0 48 48" aria-hidden="true">${PEAO_SVG[k]}</svg></span>`:'';
 const pawnNome=k=>(PEOES.find(x=>x.k===k)||{}).n||'';
+// Pontos turísticos: cartas, desafios, treta e visitas dão ou tiram pontos (de 5 a 10). Avançar/ganhar = +, voltar/perder = –.
+const BONUS_CHEGADA=30;
+const PTS_MIN=5,PTS_MAX=10,pts68=()=>PTS_MIN+rnd(PTS_MAX-PTS_MIN+1); // cada ganho/perda de pontos turísticos vale de 5 a 10
+function darPts(p,n){if(!p||!n)return 0;const ant=p.pts|0;p.pts=Math.max(0,ant+n);save();return p.pts-ant}
+const ptsTxt=n=>`${n>0?'+':'–'} ${Math.abs(n)} ponto${Math.abs(n)>1?'s':''} turístico${Math.abs(n)>1?'s':''}`;
+// converte um texto de prêmio/castigo ("Avance 3 casas", "Volte 2 casas", "Perca a próxima vez"...) em pontos para quem jogou
+function ptsDoTexto(t){
+  if(/^(Escolha|O jogador|Fique onde|Troque)/.test(t))return 0; // depende de outro jogador ou não anda: sem pontos automáticos
+  if(/Volte/.test(t)||(/Perca/.test(t)&&!/Avance|Jogue/.test(t)))return -pts68();
+  if(/Avance|Jogue de novo/.test(t))return pts68();
+  return /Perca/.test(t)?-pts68():0;
+}
 const stats=p=>`⭐ ${p.pts|0} ponto${(p.pts|0)===1?'':'s'} turístico${(p.pts|0)===1?'':'s'}`;
 function ranking(){return [...S.players].sort((a,b)=>(b.pts|0)-(a.pts|0))} // ganha quem tiver mais pontos turísticos, tenha chegado ou não
 
@@ -1027,7 +1041,7 @@ $('#btnDraw').onclick=()=>{
   if(S.fim){toast('Jogo encerrado');return}
   const p=S.players[S.cur], dir=pickDireta(p);
   if(dir){
-    const ad=adaptar(dir,p),d=0;
+    const ad=adaptar(dir,p),d=darPts(p,ad.pts);
     $('#front').className='front res '+(dir.g?'g':'r'); $('#front').innerHTML=frontDireta(dir,ad,d,p); ajustaCarta();
    
     $('#btnDraw').style.display='none'; $('#pile').classList.add('drawing'); $('#flipper').classList.add('go');
@@ -1047,7 +1061,7 @@ $('#btnDraw').onclick=()=>{
 // 50% de chance de sorte e 50% de azar quando a opção tem os dois tipos; senão sorteia entre os desfechos que existem
 function sortearDesfecho(r){const g=r.filter(x=>x.g),b=r.filter(x=>!x.g);return g.length&&b.length?pick(Math.random()<.5?g:b):pick(r)}
 function choose(i){
-  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=0;S.choosing=false;save();
+  const sc=S.sit,o=sc.opts[i],res=sortearDesfecho(o.r),good=!!res.g,p=S.players[S.cur],ad=adaptar(res,p),d=darPts(p,ad.pts);S.choosing=false;save();
   $('#front').className='front res '+(good?'g':'r'); $('#front').innerHTML=frontRes(sc,o,good,res,d,p,ad); ajustaCarta();
   $('#choices').style.display='none'; $('#btnCardOk').style.display='';
   if(navigator.vibrate)navigator.vibrate(good?20:[40,30,40]);
@@ -1110,8 +1124,9 @@ const QZ_FX=[
  {min:0,g:'r',l:['Volte ao início','Volte 5 casas','Perca as próximas 2 vezes','Troque de lugar com o último colocado','O jogador da sua escolha avança 3 casas']}];
 function quizEnd(estourou){
   stopTimer();clearTimeout(QZ.t);
-  const p=QZ.pts,fx=QZ_FX.find(f=>p>=f.min),efx=pick(fx.l),m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
+  const p=QZ.pts,fx=QZ_FX.find(f=>p>=f.min),efx0=pick(fx.l),jog=S.started&&S.players[S.cur],np=jog?ptsDoTexto(efx0):0,efx=efx0+(np?` · ${ptsTxt(np)}`:''),m=p===10?'Carioca da gema! Nota máxima.':p>=7?'Mandou bem, cria do Rio.':p>=4?'Mais ou menos… tá devendo uns rolés.':'Gringo detectado. Volta pro Galeão.';
   $('#temaBox').innerHTML=`<div class="qz"><div class="top"><span>Resultado</span><span>Quiz Carioca</span></div><div class="fim">${p}/10</div><div class="msg">${m}</div><div class="msg" style="font-size:12px;opacity:.8">${estourou?`⏰ Acabou o tempo: ${QZ.resp} de 10 respondidas`:`Respondeu tudo a tempo`}</div><div class="prem ${fx.g}"><small>${fx.g==='g'?'DEU GREEN':fx.g==='r'?'DEU RED':'NEM GREEN NEM RED'}</small>${efx}</div></div>`;
+  if(jog&&np)darPts(jog,np);
   $('#mgBtns').style.display='';
 }
 $('#btnTema').onclick=()=>{
@@ -1176,11 +1191,14 @@ function acFim(i,viaDados){
   $$('#acList .rrow').forEach(r=>{r.style.pointerEvents='none';r.classList.toggle('venc',i!==null&&+r.dataset.i===i)});
   $('#acBtns').style.display='none';
   if(i===null){
-    $('#acRes').innerHTML=`<div class="prem r" style="margin-top:10px"><small>DEU RED · ${Pn}</small>${pick(['Volte 3 casas','Volte 2 casas','Perca a próxima vez'])}</div>`;
+    const tx=pick(['Volte 3 casas','Volte 2 casas','Perca a próxima vez']),pn=ptsDoTexto(tx);if(P&&pn)darPts(P,pn);
+    $('#acRes').innerHTML=`<div class="prem r" style="margin-top:10px"><small>DEU RED · ${Pn}</small>${tx}${pn?' · '+ptsTxt(pn):''}</div>`;
     if(navigator.vibrate)navigator.vibrate([40,30,40]);return}
   const G=S.players[i],f=AC.f,n=f>=.66?3:f>=.33?2:1;
-  $('#acRes').innerHTML=(viaDados?$('#acRes').innerHTML:'')+`<div class="prem g" style="margin-top:10px"><small>DEU GREEN · ${G.nome} acertou primeiro${f>=.66?' (rapidão!)':''}</small>${G.nome} avança ${cs(n)}</div>`
-    +`<div class="prem g" style="margin-top:8px"><small>DEU GREEN · ${Pn}</small>${Pn} também avança ${cs(n)}</div>`;
+  const pn=f>=.66?PTS_MAX:f>=.33?Math.round((PTS_MIN+PTS_MAX)/2):PTS_MIN; // quanto mais rápido, mais pontos (10, 8 ou 5)
+  darPts(G,pn);if(P)darPts(P,pn);
+  $('#acRes').innerHTML=(viaDados?$('#acRes').innerHTML:'')+`<div class="prem g" style="margin-top:10px"><small>DEU GREEN · ${G.nome} acertou primeiro${f>=.66?' (rapidão!)':''}</small>${G.nome} avança ${cs(n)} · ${ptsTxt(pn)}</div>`
+    +`<div class="prem g" style="margin-top:8px"><small>DEU GREEN · ${Pn}</small>${Pn} também avança ${cs(n)} · ${ptsTxt(pn)}</div>`;
   if(navigator.vibrate)navigator.vibrate(20);
   setTimeout(()=>{const r=$('#acRes');if(r&&r.scrollIntoView)r.scrollIntoView({behavior:'smooth',block:'end'})},150);
 }
@@ -1221,8 +1239,8 @@ function tretaGira(){
     const cs=n=>n+' casa'+(n>1?'s':''),W=ganhou?A:B,L=ganhou?B:A,n=Math.max(a,b),av=Math.min(n,3),vo=Math.min(n,5);
     $('#trRes').innerHTML=`<div class="prem g"><small>${A.nome} ${a} x ${b} ${B.nome}</small>🏆 ${W.nome} venceu com ${n}! Escolha:</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><button class="btn" id="escA">Avançar ${cs(av)}</button><button class="btn ghost" id="escB">Fazer ${L.nome} voltar ${cs(vo)}</button></div>`;
     const fim=(g,t,sm)=>{$('#trRes').innerHTML=`<div class="prem ${g}"><small>${sm}</small>${t}</div>`;if(navigator.vibrate)navigator.vibrate(g==='g'?20:[40,30,40])};
-    $('#escA').onclick=()=>fim('g',`${W.nome} avança ${cs(av)}`,'DEU GREEN · '+W.nome);
-    $('#escB').onclick=()=>fim('r',`${L.nome} volta ${cs(vo)}`,'DEU RED · '+L.nome+' · escolha de '+W.nome);
+    $('#escA').onclick=()=>{const q=pts68();darPts(W,q);fim('g',`${W.nome} avança ${cs(av)} · ${ptsTxt(q)}`,'DEU GREEN · '+W.nome)};
+    $('#escB').onclick=()=>{const q=pts68();darPts(L,-q);fim('r',`${L.nome} volta ${cs(vo)} · ${ptsTxt(-q)}`,'DEU RED · '+L.nome+' · escolha de '+W.nome)};
     bt.style.display='none';$('#trSair').textContent='Concluir';
   },1300);
 }
@@ -1255,9 +1273,9 @@ function turVisita(k){
   const gerais=window.TURISMO_GERAIS||[];
   // ~25% das visitas caem numa historinha geral (assalto, Uber, sorvete...); as outras são do local. Sem repetir até esgotar.
   const lista=gerais.length&&Math.random()<.25?gerais:t.h, h=dr('tur_'+(lista===gerais?'gerais':k),lista);
-  const ant=p.pts|0;p.pts=Math.max(0,ant+(h.g?h.n:-h.n));const real=p.pts-ant;
+  const vn=pts68(),ant=p.pts|0;p.pts=Math.max(0,ant+(h.g?vn:-vn));const real=p.pts-ant;
   S.visitou=String(p.id);save();
-  $('#modalBody').innerHTML=`<div class="win"><div class="tro">${t.ico}</div><small>${t.n.toUpperCase()} · CASA ${String(t.casa).padStart(2,'0')}</small><h3 style="font-size:22px">${p.nome.split(' ')[0]} visitou!</h3><p style="font-size:15px;line-height:1.4;color:var(--txt)">${h.x}</p><div class="prem ${h.g?'g':'r'}" style="border-radius:12px;padding:12px;color:#fff;font:800 17px var(--ui);text-transform:uppercase;margin-bottom:12px;background:${h.g?'var(--green)':'var(--red)'}"><small style="display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px">${h.g?'DEU GREEN':'DEU RED'}</small>${real>=0?'+':'–'} ${Math.abs(h.n)} ponto${h.n>1?'s':''} turístico${h.n>1?'s':''}</div><p style="margin:0 0 12px">Total de ${p.nome.split(' ')[0]}: <b>⭐ ${p.pts|0}</b>${!h.g&&real!==-h.n?' (não fica abaixo de 0)':''}</p><button class="btn" id="vsOk">Fechar</button></div>`;
+  $('#modalBody').innerHTML=`<div class="win"><div class="tro">${t.ico}</div><small>${t.n.toUpperCase()} · CASA ${String(t.casa).padStart(2,'0')}</small><h3 style="font-size:22px">${p.nome.split(' ')[0]} visitou!</h3><p style="font-size:15px;line-height:1.4;color:var(--txt)">${h.x}</p><div class="prem ${h.g?'g':'r'}" style="border-radius:12px;padding:12px;color:#fff;font:800 17px var(--ui);text-transform:uppercase;margin-bottom:12px;background:${h.g?'var(--green)':'var(--red)'}"><small style="display:block;font:800 11px var(--ui);letter-spacing:.08em;opacity:.85;margin-bottom:4px">${h.g?'DEU GREEN':'DEU RED'}</small>${h.g?'+':'–'} ${vn} pontos turísticos</div><p style="margin:0 0 12px">Total de ${p.nome.split(' ')[0]}: <b>⭐ ${p.pts|0}</b>${!h.g&&real!==-vn?' (não fica abaixo de 0)':''}</p><button class="btn" id="vsOk">Fechar</button></div>`;
   $('#modal').classList.add('on');$('#vsOk').onclick=()=>{$('#modal').classList.remove('on');turRender()};
   if(navigator.vibrate)navigator.vibrate(h.g?20:[40,30,40]);
   turRender();
@@ -1265,14 +1283,14 @@ function turVisita(k){
 /* ============ FIM DE JOGO ============ */
 $('#btnChegada').onclick=()=>{
   if(S.fim||!S.started)return;const p=S.players[S.cur];
-  $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Chegou na chegada?</h3><p><b>${p.nome}</b> chegou na chegada? O jogo termina e ganha <b>quem tiver mais pontos turísticos</b>, mesmo que não seja quem chegou.</p><button class="btn" id="chSim">Sim, encerrar o jogo</button><button class="btn ghost" id="chNao" style="margin-top:10px">Não</button></div>`;
+  $('#modalBody').innerHTML=`<div class="sec" style="margin:0"><h3>Chegou na chegada?</h3><p><b>${p.nome}</b> chegou na chegada? Ganha <b>+${BONUS_CHEGADA} pontos turísticos</b> e o jogo termina: vence quem tiver mais pontos, mesmo que não seja quem chegou.</p><button class="btn" id="chSim">Sim, encerrar o jogo</button><button class="btn ghost" id="chNao" style="margin-top:10px">Não</button></div>`;
   $('#modal').classList.add('on');
   $('#chNao').onclick=()=>$('#modal').classList.remove('on');
-  $('#chSim').onclick=()=>{S.fim=String(p.id);save();renderTurn();mostraFim()};
+  $('#chSim').onclick=()=>{S.fim=String(p.id);S.bonus=darPts(p,BONUS_CHEGADA);save();renderTurn();mostraFim()};
 };
 function mostraFim(){
   const r=ranking(),w=r[0],emp=r[1]&&(r[1].pts|0)===(w.pts|0);
-  $('#modalBody').innerHTML=`<div class="win"><div class="tro">🎉🏆🎉</div><small>FIM DE JOGO</small><div class="av">${avatar(w.av)}</div><h3>${w.nome}</h3><p>${emp?'Empate em pontos turísticos: a mesa decide!':`Venceu com <b>${w.pts|0} ponto${(w.pts|0)===1?'':'s'} turístico${(w.pts|0)===1?'':'s'}</b>!`}</p>
+  $('#modalBody').innerHTML=`<div class="win"><div class="tro">🎉🏆🎉</div><small>FIM DE JOGO · ${(S.players.find(x=>String(x.id)===String(S.fim))||{nome:'Alguém'}).nome.split(' ')[0]} chegou e ganhou +${BONUS_CHEGADA}</small><div class="av">${avatar(w.av)}</div><h3>${w.nome}</h3><p>${emp?'Empate em pontos turísticos: a mesa decide!':`Venceu com <b>${w.pts|0} ponto${(w.pts|0)===1?'':'s'} turístico${(w.pts|0)===1?'':'s'}</b>!`}</p>
     <div class="roster" style="margin:0 0 14px;text-align:left">${r.map((q,i)=>`<div class="rrow${i===0?' venc':''}"><span class="n">${i===0?'🏆':i+1}</span><div class="av">${avatar(q.av)}</div><b>${q.nome}<small>${pawnNome(q.peao)}</small></b><span style="font:800 12px var(--ui);color:var(--y2)">⭐ ${q.pts|0}</span></div>`).join('')}</div>
     <button class="btn" id="winNova">Nova partida</button><button class="btn ghost" id="winFecha">Fechar</button></div>`;
   $('#modal').classList.add('on');
@@ -1288,7 +1306,7 @@ function winRender(){
   $('#winPick').innerHTML=r.map((p,i)=>`<div class="rrow${fim&&i===0?' venc':''}"><span class="n">${fim&&i===0?'🏆':i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${pawnNome(p.peao)}</small></b><span style="font:800 13px var(--ui);color:var(--y2)">⭐ ${p.pts|0}</span></div>`).join('')||'<p>Crie os personagens para ver o ranking.</p>';
   $('#winClear').style.display=fim?'':'none';
 }
-$('#winClear').onclick=()=>{S.fim=null;save();winRender();cfgRender();renderTurn()};
+$('#winClear').onclick=()=>{const q=S.players.find(x=>String(x.id)===String(S.fim));if(q&&S.bonus)darPts(q,-S.bonus);S.fim=null;S.bonus=0;save();winRender();cfgRender();renderTurn()};
 function cfgRender(){
   winRender();
   $('#board').innerHTML=S.players.map((p,i)=>`<div class="rrow tap" data-pid="${p.id}"><span class="n">${i+1}</span><div class="av">${avatar(p.av)}</div><b>${p.nome}<small>${p.ocup}</small></b></div>`).join('')||'<p>Sem jogadores ainda.</p>';
