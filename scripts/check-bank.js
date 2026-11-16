@@ -29,3 +29,7 @@ if(process.argv[2]==='-v')mism.forEach(p=>console.log(p));
 const erros=prob.filter(p=>/^(SORTE com perda|AZAR com ganho|AZAR sem efeito|SORTE sem efeito)/.test(p));
 if(erros.length||dup.length||mism.length){console.log('FALHOU: '+erros.length+' incoerência(s), '+dup.length+' título(s) repetido(s), '+mism.length+' texto(s) divergente(s)');erros.slice(0,20).forEach(p=>console.log(p));process.exit(1)}
 console.log('banco ok');
+
+// banco de turismo: 1 a 5 pontos por historinha, texto sem R$ (o jogo não usa dinheiro)
+if(global.TURISMO){const ruim=[];for(const t of TURISMO.concat([{n:'gerais',h:global.TURISMO_GERAIS||[]}]))for(const h of t.h){if(!(h.n>=1&&h.n<=5)||!h.x||/R\$/.test(h.x))ruim.push(t.n+': '+(h.x||'').slice(0,50))}
+ if(ruim.length){console.log('FALHOU turismo:',ruim);process.exit(1)}console.log('turismo ok:',TURISMO.length,'locais')}
